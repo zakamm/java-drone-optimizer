@@ -26,7 +26,7 @@ public class Explorer implements IExplorerRaid {
     @Override
     public String takeDecision() {
         JSONObject decision = new JSONObject();
-        decision.put("action", "stop"); // we stop the exploration immediately
+        decision.put("action", "fly"); // we stop the exploration immediately
         logger.info("** Decision: {}",decision.toString());
         return decision.toString();
     }
@@ -46,6 +46,17 @@ public class Explorer implements IExplorerRaid {
     @Override
     public String deliverFinalReport() {
         return "no creek found";
+    } 
+
+    // write code to keep count of iterations and battery level
+
+
+    public static void main(String[] args) {
+        Explorer e = new Explorer();
+        e.initialize("{\"budget\":1000,\"heading\":\"N\"}");
+        e.takeDecision();
+        e.acknowledgeResults("{\"cost\":1,\"status\":\"success\",\"extras\":{\"range\":1}}");
+        e.deliverFinalReport();
     }
 
 }
