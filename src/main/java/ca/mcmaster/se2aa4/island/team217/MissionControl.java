@@ -1,4 +1,4 @@
-package main.java.ca.mcmaster.se2aa4.island.team217; 
+package ca.mcmaster.se2aa4.island.team217; 
 
 public class MissionControl {
     Drone drone;

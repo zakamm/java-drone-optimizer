@@ -1,6 +1,6 @@
 
-package main.java.ca.mcmaster.se2aa4.island.team217;
-import main.java.ca.mcmaster.se2aa4.island.team217.PointOfInterest;
+package ca.mcmaster.se2aa4.island.team217;
+import ca.mcmaster.se2aa4.island.team217.PointOfInterest;
 
 import java.util.ArrayList;
 

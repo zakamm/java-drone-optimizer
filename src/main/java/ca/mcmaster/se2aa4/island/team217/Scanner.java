@@ -1,5 +1,6 @@
 package main.java.ca.mcmaster.se2aa4.island.team217; 
 
+
 // this is a subclass of Drone, Drone containes a Scanner
 public class Scanner {
     Drone drone;
