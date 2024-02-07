@@ -76,7 +76,7 @@ public class Explorer implements IExplorerRaid {
             parameters.put("direction", "S");
             decision.put("action", "echo");
             decision.put("parameters", parameters);
-            flyCheck = false;
+            flyCheck = false;// cechl
         }
 
         if (foundLand && distToGround != 0) {
