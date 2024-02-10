@@ -1,19 +1,19 @@
 package ca.mcmaster.se2aa4.island.team217;
+import main.java.ca.mcmaster.se2aa4.island.team217.Point;
 
 import java.util.ArrayList;
 
-public class PointOfInterest {
+public class PointOfInterest extends Point{
 
     // this is based off what we see in the pois.json file, it has a iD, type and
     // location
     private String identifier;
     private String type;
-    private double[] location; // x and y coordinates of the point of interest
-
-    public PointOfInterest(String identifier, String type, double[] location) {
+    
+    public PointOfInterest(int x, int y, String identifier, String type) {
+        super(x,y); // Explicitly invoke the constructor of the superclass Point
         this.identifier = identifier;
         this.type = type;
-        this.location = location;
     }
 
     public String getIdentifier() {

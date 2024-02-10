@@ -1,21 +1,24 @@
 package ca.mcmaster.se2aa4.island.team217;
+import main.java.ca.mcmaster.se2aa4.island.team217.Point;
 
 public class Drone {
     Integer batteryLevel;
-    PointOfInterest currentLocation; // may need to change this to Point instead of POI
-    Heading currentHeading = Heading.EAST;
+    Point currentLocation; // may need to change this to Point instead of POI
+    Heading currentHeading;
+    Boolean status; 
 
     // Scanner will be a subclass of Drone
     public enum Heading {
-        NORTH, EAST, SOUTH, WEST
+        N, E, S, W
     }
 
-    Drone(Integer batteryLevel, PointOfInterest currentLocation) {
+    Drone(Integer batteryLevel, String currentHeading) {
         this.batteryLevel = batteryLevel;
-        this.currentLocation = currentLocation;
+        this.currentHeading = Heading.valueOf(currentHeading);
+        System.out.println("Drone is created");
     }
 
-    public void fly(PointOfInterest poi) {
+    public void fly(Point poi) {
         // move forward
     }
 
