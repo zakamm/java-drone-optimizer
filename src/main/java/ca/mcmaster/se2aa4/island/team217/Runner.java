@@ -12,14 +12,14 @@ public class Runner {
             run(Explorer.class)
                     .exploring(new File(filename))
                     .withSeed(42L)
-                    .startingAt(1, 1, "EAST")
+                    .startingAt(5, 100, "NORTH")
                     .backBefore(7000)
                     .withCrew(5)
                     .collecting(1000, "WOOD")
                     .storingInto("./outputs")
                     .withName("Island")
                     .fire();
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace(System.err);
             System.exit(1);
