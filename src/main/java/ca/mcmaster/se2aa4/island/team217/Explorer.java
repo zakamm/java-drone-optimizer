@@ -33,8 +33,14 @@ public class Explorer implements IExplorerRaid {
     private Boolean end = false;
     private Boolean boilerPlateMission = true;
 
+    // checking the intial directions to determine if we can fly in a certain way
+    private Boolean checkedInitial = false;
+    private Boolean checkedLeft = false;
+    private Boolean checkedRight = false;
+    private Boolean checkedBack = false;
+
     Drone drone;
-    MapRepresenter map;
+    MapRepresenter map = new MapRepresenter();
     MissionControl missionControl = new MissionControl(drone, map);
 
     @Override
@@ -45,7 +51,6 @@ public class Explorer implements IExplorerRaid {
         String direction = info.getString("heading");
         Integer batteryLevel = info.getInt("budget");
         drone = new Drone(batteryLevel, direction);
-        map = new MapRepresenter();
         logger.info("The drone is facing {}", direction);
         logger.info("Battery level is {}", batteryLevel);
     }
@@ -54,15 +59,30 @@ public class Explorer implements IExplorerRaid {
 
     @Override
     public String takeDecision() {
+        String x = missionControl.nextDecision(action, checker);
         JSONObject decision = new JSONObject();
         JSONObject parameters = new JSONObject();
 
         if (boilerPlate) {
-            parameters.put("direction", "S");
+            if (checkedInitial == true) {
+                if (checker.getJSONObject("check").getString("found").equals("OUT_OF_RANGE")) {
+                    // if the initial echo was out of range, then we need to check the left, right and back
+                    // directions
+                parameters.put("direction", "W");
+                decision.put("action", "echo");
+                action = "echo";
+                decision.put("parameters", parameters);
+                    checkedLeft = true;
+                    boilerPlate = false;
+                    logger.info("** Decision: {}", decision.toString());
+                    return decision.toString();
+                }
+            }
+            parameters.put("direction", drone.currentHeading.toString());
             decision.put("action", "echo");
             action = "echo";
             decision.put("parameters", parameters);
-            boilerPlate = false;
+            checkedInitial = true;
             logger.info("** Decision: {}", decision.toString());
             return decision.toString();
         }
@@ -150,10 +170,11 @@ public class Explorer implements IExplorerRaid {
             logger.info("Mission has started");
             boilerPlateMission = false;
         }
-        missionControl.startMission(action, response);
+        missionControl.storeResponse(action, response);
 
         logger.info("** Response received:\n" + response.toString(2));
         Integer cost = response.getInt("cost");
+        drone.batteryLevel -= cost;
         logger.info("The cost of the action was {}", cost);
         String status = response.getString("status");
         logger.info("The status of the drone is {}", status);

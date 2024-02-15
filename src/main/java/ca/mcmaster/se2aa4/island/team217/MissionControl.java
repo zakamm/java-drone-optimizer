@@ -1,5 +1,7 @@
 package ca.mcmaster.se2aa4.island.team217;
 
+import ca.mcmaster.se2aa4.island.team217.MapRepresenter;
+import ca.mcmaster.se2aa4.island.team217.Drone.Heading;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
@@ -15,31 +17,53 @@ public class MissionControl {
     private final Logger logger = LogManager.getLogger();
     Drone drone;
     MapRepresenter map;
-    HashMap<String, List<String>> responseStorage = new HashMap<String, List<String>>();
+    JSONObject decision = new JSONObject();
+    Boolean initialGroundEchoed = false;
+    Boolean initialGroundScanned = false;
+    Boolean searchedCoast = false;
     
     MissionControl(Drone drone, MapRepresenter map){
         this.drone = drone;
         this.map = map;
     }
-    // i dont know what exactly these methods will do, but somebody put them in the google doc
-    public void startMission(String action, JSONObject previousResponse){
+
+    public String nextDecision(String action, JSONObject previousResponse){
+        decision.clear();
+        HashMap<String, List<String>> response = storeResponse(action, previousResponse);
+        if (map.initialized == false){
+            map.initialized = true;
+            initializeMission(drone.initialHeading);
+        }
+        return decision.toString();
+    
+    }
+    
+    // this method echos all 4 directions to determine where in the map the drone is located and where the nearest ground is
+    public void initializeMission(Heading initialHeading){
+        decisionTaken("echo", String.valueOf(initialHeading));
+
+    }
+
+
+    public HashMap<String, List<String>> storeResponse(String action, JSONObject previousResponse){
+        HashMap<String, List<String>> responseStorage = new HashMap<String, List<String>>();
         List<String> temp = new ArrayList<String>();
         Integer cost = previousResponse.getInt("cost");
         temp.add(Integer.toString(previousResponse.getInt("cost")));
-        this.responseStorage.put("cost", temp);
+        responseStorage.put("cost", temp);
 
         temp = new ArrayList<String>();
         temp.add(String.valueOf(previousResponse.getString("status")));
-        this.responseStorage.put("status", temp);
+        responseStorage.put("status", temp);
 
         if (action.equals("echo")){
             temp = new ArrayList<String>();
             temp.add(String.valueOf(previousResponse.getJSONObject("extras").getInt("range")));
-            this.responseStorage.put("range", temp);
+            responseStorage.put("range", temp);
 
             temp = new ArrayList<String>();
             temp.add(previousResponse.getJSONObject("extras").getString("found"));
-            this.responseStorage.put("found", temp);
+            responseStorage.put("found", temp);
 
         }
         else if (action.equals("scan")){
@@ -48,7 +72,7 @@ public class MissionControl {
             for (int i = 0; i < creeksArray.length(); i++) {
                 temp.add(creeksArray.getString(i));
             }
-            this.responseStorage.put("creeks", temp);
+            responseStorage.put("creeks", temp);
 
 
             temp = new ArrayList<String>();
@@ -56,14 +80,14 @@ public class MissionControl {
             for (int i = 0; i < biomesArray.length(); i++) {
                 temp.add(biomesArray.getString(i));
             }
-            this.responseStorage.put("biomes", temp);
+            responseStorage.put("biomes", temp);
 
             temp = new ArrayList<String>();
             JSONArray sitesArray = previousResponse.getJSONObject("extras").getJSONArray("sites");
             for (int i = 0; i < sitesArray.length(); i++) {
                 temp.add(sitesArray.getString(i));
             }
-            this.responseStorage.put("sites", temp);
+            responseStorage.put("sites", temp);
         }
 
         for (Map.Entry<String, List<String>> entry : responseStorage.entrySet()) {
@@ -74,8 +98,49 @@ public class MissionControl {
                 logger.info("Value: " + value);
             }
         }
+        return responseStorage;   
+    }
 
-        
+    // based off the given command, this method will return the appropriate commands and parameters to takeDecision as a jsonObject
+    public void decisionTaken(String command){
+        String nextDecision;
+        if (command.equals("fly")){
+            decision.put("action", "echo");
+        }
+        else if (command.equals("scan")){
+            decision.put("action", "scan");
+        }
+        else if (command.equals("stop")){
+            decision.put("action", "stop");
+        }
+        else{
+            logger.info("Invalid command");
+            System.exit(0);
+        }
+        nextDecision = "{action: " + command + "}";
+    }
+
+    public void decisionTaken(String command, String direction){
+        JSONObject parameters = new JSONObject();
+
+        if (command.equals("echo")){
+            parameters.put("direction", direction);
+            decision.put("action", "echo");
+            decision.put("parameters", parameters);
+        }
+        else if (command.equals("heading")){
+            parameters.put("direction", direction);
+            decision.put("action", "heading");
+            decision.put("parameters", parameters);
+        }
+        else{
+            logger.info("Invalid command");
+            System.exit(0);
+        }
+    }
+
+    public JSONObject getDecision(){
+        return decision;
     }
 
     public void process_poi_data(PointOfInterest pointOfInterest){
