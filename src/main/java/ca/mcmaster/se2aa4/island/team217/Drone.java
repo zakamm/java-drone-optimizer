@@ -1,47 +1,58 @@
 package ca.mcmaster.se2aa4.island.team217;
-import main.java.ca.mcmaster.se2aa4.island.team217.Point;
+import ca.mcmaster.se2aa4.island.team217.Point;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Drone {
+
+    private final Logger logger = LogManager.getLogger(); 
+
     Integer batteryLevel;
-    Point currentLocation; // may need to change this to Point instead of POI
+    Point currentLocation; 
     Heading currentHeading;
     Heading initialHeading;
-    //Boolean status; 
 
-    // Scanner will be a subclass of Drone
+    //parameters of the next decision
+    String action;
+    String direction;
+
     public enum Heading {
         N, E, S, W;
-        public Heading turnLeft() {
-            switch (this) {
-                case N:
-                    return W;
-                case E:
-                    return N;
-                case S:
-                    return E;
-                case W:
-                    return S;
-                default:
-                    return null;
-            }
-        }
-        public Heading turnRight() {
-            switch (this) {
-                case N:
-                    return E;
-                case E:
-                    return S;
-                case S:
-                    return W;
-                case W:
-                    return N;
-                default:
-                    return null;
-            }
-        }
 
-        public Heading turnBack() {
-            switch (this) {
+        // methods to quickly find direction on left, right and back sides
+        public Heading leftSide(Heading currentHeading) {
+            switch (currentHeading) {
+                case N:
+                    return W;
+                case E:
+                    return N;
+                case S:
+                    return E;
+                case W:
+                    return S;
+                default:
+                    throw new IllegalArgumentException("Invalid heading: " + currentHeading);
+            }
+        }
+    
+        public Heading rightSide(Heading currentHeading) {
+            switch (currentHeading) {
+                case N:
+                    return E;
+                case E:
+                    return S;
+                case S:
+                    return W;
+                case W:
+                    return N;
+                default:
+                    throw new IllegalArgumentException("Invalid heading: " + currentHeading);
+            }
+        }
+    
+        public Heading backSide(Heading currentHeading) {
+            switch (currentHeading) {
                 case N:
                     return S;
                 case E:
@@ -51,7 +62,7 @@ public class Drone {
                 case W:
                     return E;
                 default:
-                    return null;
+                    throw new IllegalArgumentException("Invalid heading: " + currentHeading);
             }
         }
     }
@@ -60,7 +71,155 @@ public class Drone {
         this.batteryLevel = batteryLevel;
         this.currentHeading = Heading.valueOf(initialHeading);
         this.initialHeading = Heading.valueOf(initialHeading);
+        this.currentLocation = new Point(0, 0);
         System.out.println("Drone is created");
     }
+
+    // these methods are based on the actions that the drone can take
+    public String turnLeft() {
+        currentHeading = currentHeading.leftSide(currentHeading);
+        return decisionTaken("heading", currentHeading.toString());
+    }
+    
+    public String turnRight() {
+        currentHeading = currentHeading.rightSide(currentHeading);
+        return decisionTaken("heading", currentHeading.toString());
+    }
+
+    // need to fix this method
+    // public String turnAround(){
+    //     Heading left = this.currentHeading.leftSide();
+    //     switch (this.currentHeading) {
+    //         case N:
+    //             return decisionTaken("heading", left.toString());
+    //         case E:
+    //             return decisionTaken("heading", left.toString());
+    //         case S:
+    //             return decisionTaken("heading", left.toString());
+    //         case W:
+    //             return decisionTaken("heading", left.toString());
+    //         default:
+    //             return null;
+    //     }
+    // }
+    
+
+    // this method also updates the current location of the drone
+    public String fly(){
+        switch (currentHeading){
+            case N:
+                currentLocation = new Point(currentLocation.getX(), currentLocation.getY() + 1);
+                break;
+            case E:
+                currentLocation = new Point(currentLocation.getX() + 1, currentLocation.getY());
+                break;
+            case S:
+                currentLocation = new Point(currentLocation.getX(), currentLocation.getX() - 1);
+                break;
+            case W:
+                currentLocation = new Point(currentLocation.getX() - 1, currentLocation.getY());
+                break;
+            default:
+                break;
+        }
+
+        return decisionTaken("fly");
+    }
+
+    // this method also updates current location based on current heading and next heading
+    public String heading(Heading heading){
+        if (heading == currentHeading.leftSide(currentHeading)){
+            switch (currentHeading){
+                case N:
+                    currentLocation = new Point(currentLocation.getX() - 1, currentLocation.getY() + 1);
+                    break;
+                case E:
+                    currentLocation = new Point(currentLocation.getX() + 1, currentLocation.getY() + 1);
+                    break;
+                case S:
+                    currentLocation = new Point(currentLocation.getX() + 1, currentLocation.getY() - 1);
+                    break;
+                case W:
+                    currentLocation = new Point(currentLocation.getX() - 1, currentLocation.getY() - 1);
+                    break;
+                default:
+                    return null;
+            }
+        }
+
+        if (heading == currentHeading.rightSide(currentHeading)){
+            switch (currentHeading){
+                case N:
+                    currentLocation = new Point(currentLocation.getX() + 1, currentLocation.getY() + 1);
+                    break;
+                case E:
+                    currentLocation = new Point(currentLocation.getX() + 1, currentLocation.getY() - 1);
+                    break;
+                case S:
+                    currentLocation = new Point(currentLocation.getX() - 1, currentLocation.getY() - 1);
+                    break;
+                case W:
+                    currentLocation = new Point(currentLocation.getX() - 1, currentLocation.getY() + 1);
+                    break;
+                default:
+                    return null;
+            }
+        }
+        return decisionTaken("heading", heading.toString());
+    }
+
+    public String echo(Heading heading){
+        return decisionTaken("echo", heading.toString());
+    }
+
+    public String scan(){
+        return decisionTaken("scan");
+    }
+
+    public String stop(){
+        return decisionTaken("stop");
+    }
+
+
+    // these helper methods store the parameters of the next decision in the variables action and direction and provide a string that will be returned to takeDecision
+    private String decisionTaken(String command){
+
+        //ensures the commands are valid
+        if (!command.equals("fly") && !command.equals("scan") && !command.equals("stop")){
+            logger.info("Invalid command");
+            System.exit(0);
+        }
+        action = command;
+        String nextDecision = "{\"action\": \""+ command +"\"}";
+        return nextDecision;
+    }
+
+    private String decisionTaken(String command, String direction){
+
+        // need to make sure that the commands are valid
+        if (!command.equals("echo") && !command.equals("heading")){
+            logger.info("Invalid command");
+            System.exit(0);
+        }
+        //ensures the direction is valid
+        if (!direction.equals("N") && !direction.equals("E") && !direction.equals("S") && !direction.equals("W")){
+            logger.info(direction);
+            logger.info("Invalid direction");
+            System.exit(0);
+        }
+
+        // if the command is heading, then the currentDirection is the new heading
+        if (command.equals("heading")){
+            this.currentHeading = Heading.valueOf(direction);
+        }
+
+        //store the parameters of the next decision
+        action = command;
+        this.direction = direction; 
+
+        String nextDecision = "{\"action\": \""+ command +"\", \"parameters\": { \"direction\": \"" + direction +"\"}}";
+        return nextDecision;
+    }
+    
 
 }
