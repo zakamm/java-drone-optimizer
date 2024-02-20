@@ -1,5 +1,5 @@
 package ca.mcmaster.se2aa4.island.team217;
-import main.java.ca.mcmaster.se2aa4.island.team217.Point;
+import ca.mcmaster.se2aa4.island.team217.Point;
 
 import java.util.ArrayList;
 
