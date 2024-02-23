@@ -1,7 +1,7 @@
 package ca.mcmaster.se2aa4.island.team217; 
 
 public class Point {
-    // default: 0, 0 should be top left corner
+
     private int x;
     private int y; 
     boolean isGround = false;
@@ -18,5 +18,17 @@ public class Point {
 
     public int getY(){
         return y;
+    }
+
+    public void setGround(){
+        isGround = true;
+    }
+
+    public Boolean getGround(){
+        return isGround;
+    }
+
+    public boolean getPOI(){
+        return isPOI;
     }
 }

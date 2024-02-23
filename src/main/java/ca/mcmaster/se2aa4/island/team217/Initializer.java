@@ -32,7 +32,7 @@ public class Initializer {
 
     Boolean initialGroundScanned = false;
 
-    Initializer(Drone drone, MapRepresenter map){
+    public Initializer(Drone drone, MapRepresenter map){
         this.drone = drone;
         this.map = map;
     }
@@ -47,6 +47,9 @@ public class Initializer {
         // first we echo in 3 directions to determine where the drone is located
         if (!(responseStorage.get("found").get(0).equals("GROUND")) && initialThreeCheck == false){
             if (counter == 0){
+                if (responseStorage.get("range").get(0).equals("0")){
+                    return drone.stop();
+                }
                 initializeLocation(drone.initialHeading, responseStorage.get("range").get(0));
                 counter++;
                 return drone.echo(drone.initialHeading.rightSide(drone.initialHeading));
@@ -137,64 +140,49 @@ public class Initializer {
     // determines the direction we have to echo based off drone location and heading
     // we want the drone to move in the initial direction and echo in the direction that is furthest to the edge of the map
     public String directionToEcho(Heading initialHeading){
-        logger.info("Initial heading is {}", initialHeading);
         String directionToEcho = "";
         switch (initialHeading){
             case N:
-                if (rightX != 0 && leftX == 0){
-                    directionToEcho = "E";
-                }
-                else if (rightX == 0 && leftX != 0){
-                    directionToEcho = "W";
-                }
-                else if (rightX > leftX){
+                if (rightX > leftX){
                     directionToEcho = "E";
                 }
                 else if (leftX > rightX){
                     directionToEcho = "W";
+                }
+                else if (leftX == rightX){
+                    directionToEcho = "E";
                 }
                 break;
             case S:
-                if (leftX != 0 && rightX == 0){
-                    directionToEcho = "W";
-                }
-                else if (leftX == 0 && rightX != 0){
-                    directionToEcho = "E";
-                }
-                else if (leftX > rightX){
+                if (leftX > rightX){
                     directionToEcho = "W";
                 }
                 else if (rightX > leftX){
+                    directionToEcho = "E";
+                }
+                else if (leftX == rightX){
                     directionToEcho = "E";
                 }
                 break;
             case W:
-                if (topY != 0 && bottomY == 0){
-                    directionToEcho = "N";
-                }
-                else if (topY == 0 && bottomY != 0){
-                    directionToEcho = "S";
-                }
-                else if (topY > bottomY){
+                if (topY > bottomY){
                     directionToEcho = "N";
                 }
                 else if (bottomY > topY){
                     directionToEcho = "S";
+                }
+                else if (bottomY == topY){
+                    directionToEcho = "N";
                 }
                 break;
             case E: 
-                logger.info("Bottom Y is {}", bottomY);
-                logger.info("Top Y is {}", topY);
-                if (bottomY != 0 && topY == 0){
-                    directionToEcho = "S";
-                }
-                else if (bottomY == 0 && topY != 0){
-                    directionToEcho = "N";
-                }
-                else if (bottomY > topY){
+                if (bottomY > topY){
                     directionToEcho = "S";
                 }
                 else if (topY > bottomY){
+                    directionToEcho = "N";
+                }
+                else if (bottomY == topY){
                     directionToEcho = "N";
                 }
                 break;
