@@ -14,7 +14,7 @@ import org.json.JSONArray;
 public class Explorer implements IExplorerRaid {
 
     private final Logger logger = LogManager.getLogger();
-
+  
     private JSONObject checker = new JSONObject(); // used by explorer system
 
     Drone drone;
@@ -28,8 +28,7 @@ public class Explorer implements IExplorerRaid {
         logger.info("** Initialization info:\n {}", info.toString(2));
         String direction = info.getString("heading");
         Integer batteryLevel = info.getInt("budget");
-
-        // intialize the objects to be used
+        
         drone = new Drone(batteryLevel, direction);
         map = new MapRepresenter();
         missionControl = new MissionControl(drone, map);
@@ -37,8 +36,6 @@ public class Explorer implements IExplorerRaid {
         logger.info("The drone is facing {}", direction);
         logger.info("Battery level is {}", batteryLevel);
     }
-
-    
 
     @Override
     public String takeDecision() {
