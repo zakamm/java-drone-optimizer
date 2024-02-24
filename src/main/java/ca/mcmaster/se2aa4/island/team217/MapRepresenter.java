@@ -18,7 +18,7 @@ public class MapRepresenter {
     List<List<Point>> map = new ArrayList<>();
     public Boolean initialized = false;
 
-    MapRepresenter(){ // what goes in the constructor needs to be determined
+    public MapRepresenter(){ // what goes in the constructor needs to be determined
 
     }
 
