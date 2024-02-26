@@ -21,6 +21,7 @@ public class Initializer {
     Boolean initialThreeCheck = false;
     Boolean flyCheck = false;
     Boolean foundLand = false;
+    boolean facingGround = false;
     String directionToEcho;
     int distanceToGround;
 
@@ -73,6 +74,11 @@ public class Initializer {
             initialThreeCheck = true;
             distanceToGround = Integer.parseInt(responseStorage.get("range").get(0));
             foundLand = true;
+        }
+        boolean facingGround = false;
+        if (initialThreeCheck == true && foundLand == true && !facingGround){
+            facingGround = true;
+            return drone.heading(Heading.valueOf(directionToEcho));
         }
 
         // this statement is entered if initialThreeCheck is true, meaning we did not find ground in our intial three direction check
