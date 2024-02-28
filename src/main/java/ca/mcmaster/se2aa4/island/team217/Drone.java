@@ -1,4 +1,5 @@
 package ca.mcmaster.se2aa4.island.team217;
+
 import ca.mcmaster.se2aa4.island.team217.Point;
 
 import org.apache.logging.log4j.LogManager;
@@ -6,14 +7,14 @@ import org.apache.logging.log4j.Logger;
 
 public class Drone {
 
-    private final Logger logger = LogManager.getLogger(); 
+    private final Logger logger = LogManager.getLogger();
 
     private Integer batteryLevel;
-    Point currentLocation; 
+    Point currentLocation;
     public Heading currentHeading;
     public Heading initialHeading;
 
-    //parameters of the next decision
+    // parameters of the next decision
     private String action;
     private String direction;
 
@@ -35,7 +36,7 @@ public class Drone {
                     throw new IllegalArgumentException("Invalid heading: " + currentHeading);
             }
         }
-    
+
         public Heading rightSide(Heading currentHeading) {
             switch (currentHeading) {
                 case N:
@@ -50,7 +51,7 @@ public class Drone {
                     throw new IllegalArgumentException("Invalid heading: " + currentHeading);
             }
         }
-    
+
         public Heading backSide(Heading currentHeading) {
             switch (currentHeading) {
                 case N:
@@ -79,7 +80,7 @@ public class Drone {
         currentHeading = currentHeading.leftSide(currentHeading);
         return decisionTaken("heading", currentHeading.toString());
     }
-    
+
     public String turnRight() {
         currentHeading = currentHeading.rightSide(currentHeading);
         return decisionTaken("heading", currentHeading.toString());
@@ -87,25 +88,24 @@ public class Drone {
 
     // need to fix this method
     // public String turnAround(){
-    //     Heading left = this.currentHeading.leftSide();
-    //     switch (this.currentHeading) {
-    //         case N:
-    //             return decisionTaken("heading", left.toString());
-    //         case E:
-    //             return decisionTaken("heading", left.toString());
-    //         case S:
-    //             return decisionTaken("heading", left.toString());
-    //         case W:
-    //             return decisionTaken("heading", left.toString());
-    //         default:
-    //             return null;
-    //     }
+    // Heading left = this.currentHeading.leftSide();
+    // switch (this.currentHeading) {
+    // case N:
+    // return decisionTaken("heading", left.toString());
+    // case E:
+    // return decisionTaken("heading", left.toString());
+    // case S:
+    // return decisionTaken("heading", left.toString());
+    // case W:
+    // return decisionTaken("heading", left.toString());
+    // default:
+    // return null;
     // }
-    
+    // }
 
     // this method also updates the current location of the drone
-    public String fly(){
-        switch (currentHeading){
+    public String fly() {
+        switch (currentHeading) {
             case N:
                 currentLocation = new Point(currentLocation.getX(), currentLocation.getY() + 1);
                 break;
@@ -125,13 +125,19 @@ public class Drone {
         return decisionTaken("fly");
     }
 
-    // this method also updates current location based on current heading and next heading
-    public String heading(Heading heading){
-        if (heading == currentHeading || heading == currentHeading.backSide(currentHeading)){
+    // this method also updates current location based on current heading and next
+    // heading
+    public String heading(Heading heading) {
+        logger.info("WE IN THE DRONE");
+        logger.info("Current Heading, {}", currentHeading);
+        logger.info("Change Heading, {}", heading);
+
+        if (heading == currentHeading || heading == currentHeading.backSide(currentHeading)) {
             throw new IllegalArgumentException("Invalid heading");
         }
-        if (heading == currentHeading.leftSide(currentHeading)){
-            switch (currentHeading){
+
+        if (heading == currentHeading.leftSide(currentHeading)) {
+            switch (currentHeading) {
                 case N:
                     currentLocation = new Point(currentLocation.getX() - 1, currentLocation.getY() + 1);
                     break;
@@ -149,8 +155,8 @@ public class Drone {
             }
         }
 
-        if (heading == currentHeading.rightSide(currentHeading)){
-            switch (currentHeading){
+        if (heading == currentHeading.rightSide(currentHeading)) {
+            switch (currentHeading) {
                 case N:
                     currentLocation = new Point(currentLocation.getX() + 1, currentLocation.getY() + 1);
                     break;
@@ -167,18 +173,19 @@ public class Drone {
                     return null;
             }
         }
+        logger.info("WE ABOUT TO RETURN FROM THE DRONE");
         return decisionTaken("heading", heading.toString());
     }
 
-    public String echo(Heading heading){
+    public String echo(Heading heading) {
         return decisionTaken("echo", heading.toString());
     }
 
-    public String scan(){
+    public String scan() {
         return decisionTaken("scan");
     }
 
-    public String stop(){
+    public String stop() {
         return decisionTaken("stop");
     }
 
@@ -194,48 +201,50 @@ public class Drone {
         return direction;
     }
 
-    public void updateBatteryLevel(Integer cost){
-        if (cost < 0){
+    public void updateBatteryLevel(Integer cost) {
+        if (cost < 0) {
             throw new IllegalArgumentException("Cost cannot be negative");
         }
         batteryLevel -= cost;
     }
 
-    // these helper methods store the parameters of the next decision in the variables action and direction and provide a string that will be returned to takeDecision
-    String decisionTaken(String command){
+    // these helper methods store the parameters of the next decision in the
+    // variables action and direction and provide a string that will be returned to
+    // takeDecision
+    String decisionTaken(String command) {
 
-        //ensures the commands are valid
-        if (!command.equals("fly") && !command.equals("scan") && !command.equals("stop")){
+        // ensures the commands are valid
+        if (!command.equals("fly") && !command.equals("scan") && !command.equals("stop")) {
             throw new IllegalArgumentException("Invalid command");
         }
         action = command;
-        String nextDecision = "{\"action\": \""+ command +"\"}";
+        String nextDecision = "{\"action\": \"" + command + "\"}";
         return nextDecision;
     }
 
-    String decisionTaken(String command, String direction){
+    String decisionTaken(String command, String direction) {
 
         // need to make sure that the commands are valid
-        if (!command.equals("echo") && !command.equals("heading")){
+        if (!command.equals("echo") && !command.equals("heading")) {
             throw new IllegalArgumentException("Invalid command");
         }
-        //ensures the direction is valid
-        if (!direction.equals("N") && !direction.equals("E") && !direction.equals("S") && !direction.equals("W")){
+        // ensures the direction is valid
+        if (!direction.equals("N") && !direction.equals("E") && !direction.equals("S") && !direction.equals("W")) {
             throw new IllegalArgumentException("Invalid direction");
         }
 
         // if the command is heading, then the currentDirection is the new heading
-        if (command.equals("heading")){
+        if (command.equals("heading")) {
             this.currentHeading = Heading.valueOf(direction);
         }
 
-        //store the parameters of the next decision
+        // store the parameters of the next decision
         action = command;
-        this.direction = direction; 
+        this.direction = direction;
 
-        String nextDecision = "{\"action\": \""+ command +"\", \"parameters\": { \"direction\": \"" + direction +"\"}}";
+        String nextDecision = "{\"action\": \"" + command + "\", \"parameters\": { \"direction\": \"" + direction
+                + "\"}}";
         return nextDecision;
     }
-    
 
 }
