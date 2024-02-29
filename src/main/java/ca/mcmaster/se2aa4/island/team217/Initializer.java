@@ -60,7 +60,12 @@ public class Initializer {
         }
 
         if (!foundMissingCoordinate){
-            return findMissingCoordinate(responseStorage);
+            if (rowsOrColumns.equals("none")){
+                return findMissingCoordinate(responseStorage);
+            }
+            else if (rowsOrColumns.equals("rows") || rowsOrColumns.equals("columns")){
+                return findMissingCoordinate(responseStorage);
+            }
         }
 
         if (nextDimensionDetermined == true && rowsOrColumns.equals("both")){
@@ -145,7 +150,7 @@ public class Initializer {
             return drone.echo(drone.initialHeading.backSide(drone.initialHeading));
         }
         else if (counter == 1){
-            initializeMapDimensions(Heading.valueOf(drone.getDirection()), String.valueOf(Integer.parseInt(responseStorage.get("range").get(0)) - 1));
+            initializeMapDimensions(drone.getDirection(), responseStorage.get("range").get(0));
             rowsOrColumns = rowsOrColumns();
             logger.info("rows or columns: " + rowsOrColumns);
             if (rowsOrColumns.equals("both")){
@@ -167,7 +172,7 @@ public class Initializer {
                 return drone.stop();
             }
             if (responseStorage.get("found").get(0).equals("OUT_OF_RANGE")){
-                initializeMapDimensions(Heading.valueOf(drone.getDirection()), responseStorage.get("range").get(0));
+                initializeMapDimensions(drone.getDirection(), responseStorage.get("range").get(0));
             }
             else{
                 distanceToGround = Integer.parseInt(responseStorage.get("range").get(0));
@@ -182,7 +187,7 @@ public class Initializer {
 
         else if (counter == 1){
             if (responseStorage.get("found").get(0).equals("OUT_OF_RANGE")){
-                initializeMapDimensions(Heading.valueOf(drone.getDirection()), responseStorage.get("range").get(0));
+                initializeMapDimensions(drone.getDirection(), responseStorage.get("range").get(0));
             }
             else{
                 distanceToGround = Integer.parseInt(responseStorage.get("range").get(0));
@@ -193,7 +198,7 @@ public class Initializer {
         }
         else if (counter == 2){
             if (responseStorage.get("found").get(0).equals("OUT_OF_RANGE")){
-                initializeMapDimensions(Heading.valueOf(drone.getDirection()), responseStorage.get("range").get(0));
+                initializeMapDimensions(drone.getDirection(), responseStorage.get("range").get(0));
             }
             else{
                 distanceToGround = Integer.parseInt(responseStorage.get("range").get(0));
@@ -309,6 +314,87 @@ public class Initializer {
             }
         }
         return directionToEcho;
+    }
+
+    public String turnToGround(Heading groundDirection) {
+        switch (drone.currentHeading) {
+            case N:
+                if (groundDirection.equals(Heading.W)) {
+                    return turnToGroundHelperCaseOne();
+                } else {
+                    return turnToGroundHelperCaseTwo();
+                }
+            case E:
+                if (groundDirection.equals(Heading.N)) {
+                    return turnToGroundHelperCaseOne();
+                } else {
+                    return turnToGroundHelperCaseTwo();
+                }
+            case S:
+                if (groundDirection.equals(Heading.E)) {
+                    return turnToGroundHelperCaseOne();
+                } else {
+                    return turnToGroundHelperCaseTwo();
+                }
+            case W:
+                if (groundDirection.equals(Heading.S)) {
+                    return turnToGroundHelperCaseOne();
+                } else {
+                    return turnToGroundHelperCaseTwo();
+                }
+            default:
+                return null;
+        }
+
+    }
+
+    private String turnToGroundHelperCaseOne() {
+        if (counter == 0) {
+            counter++;
+            return drone.fly();
+        } else if (counter == 1) {
+            counter++;
+            distanceToGround -= 1;
+            return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
+        } else if (counter == 2) {
+            counter++;
+            distanceToGround -= 1;
+            return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
+        } else if (counter == 3) {
+            counter = 0;
+            return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
+        } else {
+            return null;
+        }
+    }
+
+    private String turnToGroundHelperCaseTwo() {
+        logger.info("WE ARE IN CASE 2");
+
+        if (counter == 0) {
+            logger.info("Counter {}", counter);
+            counter++;
+            logger.info(drone.currentHeading);
+            return drone.fly();
+        } else if (counter == 1) {
+            logger.info("Counter {}", counter);
+            logger.info(drone.currentHeading);
+
+            counter++;
+            distanceToGround -= 1;
+            return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
+        } else if (counter == 2) {
+            logger.info("Counter {}", counter);
+            logger.info(drone.currentHeading);
+            counter++;
+            distanceToGround -= 1;
+            return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
+        } else if (counter == 3) {
+            counter = 0;
+            return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
+        } else {
+            return null;
+        }
     }
 
 }

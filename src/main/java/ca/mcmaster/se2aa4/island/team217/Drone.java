@@ -15,7 +15,7 @@ public class Drone {
 
     //parameters of the next decision
     private String action;
-    private String direction;
+    private Heading direction;
 
     public enum Heading {
         N, E, S, W;
@@ -198,7 +198,7 @@ public class Drone {
         return action;
     }
 
-    public String getDirection() {
+    public Heading getDirection() {
         return direction;
     }
 
@@ -239,7 +239,7 @@ public class Drone {
 
         //store the parameters of the next decision
         action = command;
-        this.direction = direction; 
+        this.direction = Heading.valueOf(direction); 
 
         String nextDecision = "{\"action\": \""+ command +"\", \"parameters\": { \"direction\": \"" + direction +"\"}}";
         return nextDecision;

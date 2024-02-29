@@ -42,9 +42,10 @@ public class DroneTest {
         assertEquals("Invalid command", exception.getMessage());
 
         result = d.decisionTaken("heading", "N");
+        Heading heading = Heading.N;
         assertEquals("{\"action\": \"heading\", \"parameters\": { \"direction\": \"N\"}}", result);
         assertEquals("heading", d.getAction());
-        assertEquals("N", d.getDirection());
+        assertEquals(heading, d.getDirection());
 
         IllegalArgumentException exception2 = assertThrows(IllegalArgumentException.class, () -> {
             d.decisionTaken("stop", "E"); 
