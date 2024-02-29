@@ -14,12 +14,15 @@ import java.util.List;
 public class MapRepresenter {
 
     private final Logger logger = LogManager.getLogger();
+
+    int columns = 0;
+    int rows = 0;
     public List<PointOfInterest> pois = new ArrayList<>();
     List<List<Point>> map = new ArrayList<>();
     public Boolean initialized = false;
 
     public MapRepresenter(){ // what goes in the constructor needs to be determined
-
+        
     }
 
     public void storeScanResults(HashMap<String, List<String>> scanResults, Point currentLocation){
@@ -40,7 +43,19 @@ public class MapRepresenter {
             }
         }
 
-    }   
+    }  
+    
+    public void initializeMap(){
+        // initialize the map with the given dimensions
+        for (int i = 0; i < columns; i++){
+            List<Point> row = new ArrayList<>();
+            for (int j = 0; j < rows; j++){
+                Point point = new Point(i, j);
+                row.add(point);
+            }
+            map.add(row);
+        }
+    }
 
     // random things that dont do much for now
     // public PointOfInterest getPOI(int x, int y){

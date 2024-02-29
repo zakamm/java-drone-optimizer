@@ -18,17 +18,23 @@ public class Initializer {
     MapRepresenter map;
 
     int counter = 0;
+    int flyCounter = 0;
     Boolean initialThreeCheck = false;
     Boolean flyCheck = false;
     Boolean foundLand = false;
-    String directionToEcho;
+    Boolean facingGround = false;
+    Boolean nextDimensionDetermined = false;
+    Boolean initialTurn = false;
+    Boolean foundMissingCoordinate = false;
+    String rowsOrColumns;
+    Heading directionToEcho;
     int distanceToGround;
 
     // used for intialization purposes
-    public int topY;
-    public int bottomY;
-    public int leftX;
-    public int rightX;
+    public Integer topY;
+    public Integer bottomY;
+    public Integer leftX;
+    public Integer rightX;
 
     Boolean initialGroundScanned = false;
 
@@ -45,80 +51,178 @@ public class Initializer {
     public String initializeMission(Heading initialHeading, HashMap<String, List<String>> responseStorage){
 
         // first we echo in 3 directions to determine where the drone is located
-        if (!(responseStorage.get("found").get(0).equals("GROUND")) && initialThreeCheck == false){
-            if (counter == 0){
-                if (responseStorage.get("range").get(0).equals("0")){
-                    return drone.stop();
-                }
-                initializeLocation(drone.initialHeading, responseStorage.get("range").get(0));
-                counter++;
-                return drone.echo(drone.initialHeading.rightSide(drone.initialHeading));
-            }
-            else if (counter == 1){
-                initializeLocation(drone.initialHeading.rightSide(drone.initialHeading), responseStorage.get("range").get(0));
-                counter++;
-                return drone.echo(drone.initialHeading.leftSide(drone.initialHeading));
-            }
-            else if (counter == 2){
-                initializeLocation(drone.initialHeading.leftSide(drone.initialHeading), responseStorage.get("range").get(0));
-                counter++;    
-            }
-            directionToEcho = directionToEcho(drone.initialHeading);
-            // only get here if all directions don't echo ground
-            logger.info("directionToEcho: " + directionToEcho);
-            initialThreeCheck = true;
-        }
-        // this statement is entered if we echoed ground in one of the three directions above
-        if (initialThreeCheck == false && responseStorage.get("found").get(0).equals("GROUND")){
-            initialThreeCheck = true;
-            distanceToGround = Integer.parseInt(responseStorage.get("range").get(0));
-            foundLand = true;
+        if (initialThreeCheck == false){
+            return initialThreeCheck(responseStorage);
         }
 
-        // this statement is entered if initialThreeCheck is true, meaning we did not find ground in our intial three direction check
-        // we fly in the initial direction while echoing directiontoecho until we find ground
-        if (!flyCheck && !foundLand) {
-            if (responseStorage.get("found").get(0).equals("OUT_OF_RANGE")){
-                flyCheck = true;
+        if (initialTurn == true && !facingGround && !nextDimensionDetermined){
+            return determineNextDimension(responseStorage);
+        }
+
+        if (!foundMissingCoordinate){
+            return findMissingCoordinate(responseStorage);
+        }
+
+        if (nextDimensionDetermined == true && rowsOrColumns.equals("both")){
+            logger.info("rows or columns: " + rowsOrColumns);
+            // run a solid fly check here
+            if (!flyCheck && !foundLand) {
+                if (responseStorage.get("found").get(0).equals("OUT_OF_RANGE")){
+                    flyCheck = true;
+                    return drone.fly();
+                }
+                else if (responseStorage.get("found").get(0).equals("GROUND")){
+                    distanceToGround = Integer.parseInt(responseStorage.get("range").get(0));
+                    foundLand = true;
+                    return drone.heading(directionToEcho);
+                }
+            } else if (flyCheck) {
+                //echo in the direction again so we can see if there is ground in that direction, only do this if the previous echo was out of range (flyCheck = true)
+                flyCheck = false;
+                return drone.echo(directionToEcho);
+            }
+    
+            // once land is found, fly there
+            if (foundLand && distanceToGround != 0) {
+                distanceToGround--;
                 return drone.fly();
             }
-            else if (responseStorage.get("found").get(0).equals("GROUND")){
-                distanceToGround = Integer.parseInt(responseStorage.get("range").get(0));
-                foundLand = true;
-                return drone.heading(Heading.valueOf(directionToEcho));
+            if (distanceToGround == 0 && foundLand && !initialGroundScanned) {
+                // once we found the ground, we need to scan it so that is shows up on the svg map
+                initialGroundScanned = true;
+                map.initialized = true;
+                return drone.scan();
             }
-        } else if (flyCheck) {
-            //echo in the direction again so we can see if there is ground in that direction, only do this if the previous echo was out of range (flyCheck = true)
-            flyCheck = false;
-            return drone.echo(Heading.valueOf(directionToEcho));
         }
-
-        // once land is found, fly there
-        if (foundLand && distanceToGround != 0) {
-            distanceToGround--;
-            return drone.fly();
-        }
-        if (distanceToGround == 0 && foundLand && !initialGroundScanned) {
-            // once we found the ground, we need to scan it so that is shows up on the svg map
-            initialGroundScanned = true;
-            map.initialized = true;
-            return drone.scan();
-        }
-
-        // this is here for now, but will be removed when we work out the final nextDecision logic
-        // if (initialGroundScanned == true){
-        //     map.initialized = true;
-        //     return drone.stop();
-        // }
 
         logger.info("stop");
         return drone.stop();
-        
+    }
+
+    private String initialTurn(String rowsOrColumns){
+        if (rowsOrColumns.equals("none")){
+            if (drone.initialHeading == Heading.N || drone.initialHeading == Heading.S){
+                if (leftX == 0){
+                    return drone.heading(Heading.E);
+                }
+                else{
+                    return drone.heading(Heading.W);
+                }
+            }
+            else if (drone.initialHeading == Heading.E || drone.initialHeading == Heading.W){
+                if (topY == 0){
+                    return drone.heading(Heading.S);
+                }
+                else{
+                    return drone.heading(Heading.N);
+                }
+            }
+        }else{
+            if (drone.initialHeading == Heading.N || drone.initialHeading == Heading.S){
+                if (leftX > rightX){
+                    return drone.heading(Heading.W);
+                }
+                else{
+                    return drone.heading(Heading.E);
+                }
+            }
+            else if (drone.initialHeading == Heading.E || drone.initialHeading == Heading.W){
+                if (topY > bottomY){
+                    return drone.heading(Heading.N);
+                }
+                else{
+                    return drone.heading(Heading.S);
+                }
+            }
+        }
+        return null;
+            
+    }
+
+    private String determineNextDimension(HashMap<String, List<String>> responseStorage){
+        if (counter == 0){
+            counter++;
+            return drone.echo(drone.initialHeading.backSide(drone.initialHeading));
+        }
+        else if (counter == 1){
+            initializeMapDimensions(Heading.valueOf(drone.getDirection()), String.valueOf(Integer.parseInt(responseStorage.get("range").get(0)) - 1));
+            rowsOrColumns = rowsOrColumns();
+            logger.info("rows or columns: " + rowsOrColumns);
+            if (rowsOrColumns.equals("both")){
+                directionToEcho = directionToEcho(drone.currentHeading);
+                map.initializeMap();
+                drone.initializeCurrentLocation(leftX, topY);
+                foundMissingCoordinate = true;
+            }
+            nextDimensionDetermined = true;
+            counter = 0;
+            return drone.echo(drone.currentHeading);
+        }
+        return null; 
+    }
+
+    public String initialThreeCheck(HashMap<String, List<String>> responseStorage){
+        if (counter == 0){
+            if (responseStorage.get("range").get(0).equals("0")){
+                return drone.stop();
+            }
+            if (responseStorage.get("found").get(0).equals("OUT_OF_RANGE")){
+                initializeMapDimensions(Heading.valueOf(drone.getDirection()), responseStorage.get("range").get(0));
+            }
+            else{
+                distanceToGround = Integer.parseInt(responseStorage.get("range").get(0));
+                foundLand = true;
+                // also indicate that intitial direction found ground
+                facingGround = true;
+                logger.info("facing ground");
+            }
+            counter++;
+            return drone.echo(drone.initialHeading.rightSide(drone.initialHeading));
+        }
+
+        else if (counter == 1){
+            if (responseStorage.get("found").get(0).equals("OUT_OF_RANGE")){
+                initializeMapDimensions(Heading.valueOf(drone.getDirection()), responseStorage.get("range").get(0));
+            }
+            else{
+                distanceToGround = Integer.parseInt(responseStorage.get("range").get(0));
+                foundLand = true;
+            }
+            counter++;
+            return drone.echo(drone.initialHeading.leftSide(drone.initialHeading));
+        }
+        else if (counter == 2){
+            if (responseStorage.get("found").get(0).equals("OUT_OF_RANGE")){
+                initializeMapDimensions(Heading.valueOf(drone.getDirection()), responseStorage.get("range").get(0));
+            }
+            else{
+                distanceToGround = Integer.parseInt(responseStorage.get("range").get(0));
+                foundLand = true;
+            }
+            counter = 0;    
+        }
+        initialThreeCheck = true;
+        rowsOrColumns = rowsOrColumns();
+        if (rowsOrColumns.equals("none")){
+            initialTurn = true;
+            return initialTurn(rowsOrColumns);
+        }
+        else {
+            if (facingGround){
+                initialTurn = true;
+                distanceToGround--;
+                return drone.fly();
+            }
+            else {
+                initialTurn = true;
+                return initialTurn(rowsOrColumns);
+            }
+        }
 
     }
 
-    // this method initializes the location of the drone based on 3 echoes, may get skipped if all three echoes dont happen
-    public void initializeLocation(Heading heading, String range){
+    // this method initializes the location of the drone based on 3 echoes, if they dont echo ground
+    public void initializeMapDimensions(Heading heading, String range){
         switch (heading) {
             case N:
                 topY = Integer.parseInt(range);
@@ -136,58 +240,73 @@ public class Initializer {
                 break;
         }
     }
+
+    public String rowsOrColumns(){
+        if (topY != null && bottomY != null && leftX != null && rightX != null){
+            map.rows = topY + bottomY + 1;
+            map.columns = leftX + rightX + 1;
+            return "both";
+        }
+        if (topY != null && bottomY != null){
+            map.rows = topY + bottomY + 1;
+            return "rows";
+        }
+        else if (leftX != null && rightX != null){
+            map.columns = leftX + rightX + 1;
+            return "columns";
+        }
+        else{
+            return "none";
+        }
+    }
+    
+    public String findMissingCoordinate(HashMap<String, List<String>> responseStorage){
+        if (!responseStorage.get("found").get(0).equals("OUT_OF_RANGE")){
+            if (counter == 0){
+                counter++;
+                flyCounter++;
+                return drone.fly();
+            }
+            else{
+                counter = 0;
+                return drone.echo(drone.currentHeading);
+            }
+        }
+        else{
+            initializeMapDimensions(drone.currentHeading, responseStorage.get("range").get(0));
+            initializeMapDimensions(drone.currentHeading.backSide(drone.currentHeading), String.valueOf(flyCounter));
+            rowsOrColumns = rowsOrColumns();
+            drone.initializeCurrentLocation(leftX, topY);
+            foundMissingCoordinate = true;
+            map.initializeMap();
+            return drone.scan();
+        }
+    }
     
     // determines the direction we have to echo based off drone location and heading
     // we want the drone to move in the initial direction and echo in the direction that is furthest to the edge of the map
-    public String directionToEcho(Heading initialHeading){
-        String directionToEcho = "";
-        switch (initialHeading){
-            case N:
-                if (rightX > leftX){
-                    directionToEcho = "E";
-                }
-                else if (leftX > rightX){
-                    directionToEcho = "W";
-                }
-                else if (leftX == rightX){
-                    directionToEcho = "E";
-                }
-                break;
-            case S:
-                if (leftX > rightX){
-                    directionToEcho = "W";
-                }
-                else if (rightX > leftX){
-                    directionToEcho = "E";
-                }
-                else if (leftX == rightX){
-                    directionToEcho = "E";
-                }
-                break;
-            case W:
-                if (topY > bottomY){
-                    directionToEcho = "N";
-                }
-                else if (bottomY > topY){
-                    directionToEcho = "S";
-                }
-                else if (bottomY == topY){
-                    directionToEcho = "N";
-                }
-                break;
-            case E: 
-                if (bottomY > topY){
-                    directionToEcho = "S";
-                }
-                else if (topY > bottomY){
-                    directionToEcho = "N";
-                }
-                else if (bottomY == topY){
-                    directionToEcho = "N";
-                }
-                break;
-            default:
-                break;
+    public Heading directionToEcho(Heading initialHeading){
+        if (initialHeading == Heading.N || initialHeading == Heading.S){
+            if (leftX > rightX){
+                directionToEcho = Heading.W;
+            }
+            else if (rightX > leftX){
+                directionToEcho = Heading.E;
+            }
+            else if (leftX == rightX){
+                directionToEcho = Heading.E;
+            }
+        }
+        else if (initialHeading == Heading.E || initialHeading == Heading.W){
+            if (topY > bottomY){
+                directionToEcho = Heading.N;
+            }
+            else if (bottomY > topY){
+                directionToEcho = Heading.S;
+            }
+            else if (bottomY == topY){
+                directionToEcho = Heading.N;
+            }
         }
         return directionToEcho;
     }

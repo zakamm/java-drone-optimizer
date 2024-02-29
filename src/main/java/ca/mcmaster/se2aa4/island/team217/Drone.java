@@ -11,7 +11,7 @@ public class Drone {
     private Integer batteryLevel;
     Point currentLocation; 
     public Heading currentHeading;
-    public Heading initialHeading;
+    public final Heading initialHeading;
 
     //parameters of the next decision
     private String action;
@@ -32,7 +32,7 @@ public class Drone {
                 case W:
                     return S;
                 default:
-                    throw new IllegalArgumentException("Invalid heading: " + currentHeading);
+                    throw new NullPointerException("Invalid heading: " + currentHeading);
             }
         }
     
@@ -47,7 +47,7 @@ public class Drone {
                 case W:
                     return N;
                 default:
-                    throw new IllegalArgumentException("Invalid heading: " + currentHeading);
+                    throw new NullPointerException("Invalid heading: " + currentHeading);
             }
         }
     
@@ -62,7 +62,7 @@ public class Drone {
                 case W:
                     return E;
                 default:
-                    throw new IllegalArgumentException("Invalid heading: " + currentHeading);
+                    throw new NullPointerException("Invalid heading: " + currentHeading);
             }
         }
     }
@@ -123,6 +123,14 @@ public class Drone {
         }
 
         return decisionTaken("fly");
+    }
+
+    public void initializeCurrentLocation(Integer leftX, Integer topY){
+        int x = leftX;
+        int y = topY;
+        logger.info(x);
+        logger.info(y);
+        currentLocation = new Point(x, y);
     }
 
     // this method also updates current location based on current heading and next heading
