@@ -82,23 +82,6 @@ public class Initializer {
             logger.info("directionToEcho: " + directionToEcho);
             initialThreeCheck = true;
         }
-        // this statement is entered if we echoed ground in one of the three directions
-        // above
-        // if (initialThreeCheck == false &&
-        // responseStorage.get("found").get(0).equals("GROUND")){
-        // initialThreeCheck = true;
-        // distanceToGround = Integer.parseInt(responseStorage.get("range").get(0));
-        // foundLand = true;
-        // }
-
-        // if (drone.currentHeading.equals(drone.getDirection())) {
-        // facingGround = true;
-        // }
-
-        // if (initialThreeCheck == true && foundLand == true && !facingGround){
-        // facingGround = true;
-        // return drone.heading(Heading.valueOf(directionToEcho));
-        // }
 
         // this statement is entered if initialThreeCheck is true, meaning we did not
         // find ground in our intial three direction check
@@ -146,43 +129,42 @@ public class Initializer {
             return drone.scan();
         }
 
-        // this is here for now, but will be removed when we work out the final
-        // nextDecision logic
-        // if (initialGroundScanned == true){
-        // map.initialized = true;
-        // return drone.stop();
-        // }
-
         logger.info("stop");
         return drone.stop();
 
     }
 
+    /*
+     * Once ground is found, this method will turn the drone direction towards
+     * ground
+     */
     public String turnToGround(Heading groundDirection) {
+        // Switch accounts for cases where the drone is on opposite sides of the island,
+        // so scan happens in opposite direciton
         switch (drone.currentHeading) {
             case N:
                 if (groundDirection.equals(Heading.W)) {
-                    return turnToGroundHelperCaseOne();
+                    return turnToGroundHelperCaseOne(); // for turning up
                 } else {
-                    return turnToGroundHelperCaseTwo();
+                    return turnToGroundHelperCaseTwo(); // for turning down
                 }
             case E:
                 if (groundDirection.equals(Heading.N)) {
-                    return turnToGroundHelperCaseOne();
+                    return turnToGroundHelperCaseOne(); // for turning up
                 } else {
-                    return turnToGroundHelperCaseTwo();
+                    return turnToGroundHelperCaseTwo(); // for turning down
                 }
             case S:
                 if (groundDirection.equals(Heading.E)) {
-                    return turnToGroundHelperCaseOne();
+                    return turnToGroundHelperCaseOne(); // for turning up
                 } else {
-                    return turnToGroundHelperCaseTwo();
+                    return turnToGroundHelperCaseTwo(); // for turning down
                 }
             case W:
                 if (groundDirection.equals(Heading.S)) {
-                    return turnToGroundHelperCaseOne();
+                    return turnToGroundHelperCaseOne(); // for turning up
                 } else {
-                    return turnToGroundHelperCaseTwo();
+                    return turnToGroundHelperCaseTwo(); // for turning down
                 }
             default:
                 return null;
@@ -190,6 +172,10 @@ public class Initializer {
 
     }
 
+    /*
+     * The drone turns upwards with respect to the heading changes and ensures its
+     * perpendicular to original position
+     */
     private String turnToGroundHelperCaseOne() {
         if (counter2 == 0) {
             counter2++;
@@ -210,6 +196,10 @@ public class Initializer {
         }
     }
 
+    /*
+     * The drone turns downwards with respect to the heading changes and ensures its
+     * perpendicular to original position
+     */
     private String turnToGroundHelperCaseTwo() {
         logger.info("WE ARE IN CASE 2");
 
