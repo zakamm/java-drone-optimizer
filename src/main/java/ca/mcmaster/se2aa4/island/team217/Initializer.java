@@ -25,8 +25,11 @@ public class Initializer {
     Boolean flyCheck = false;
     Boolean flyCheck1 = false;
     Boolean foundLand = false;
-    boolean facingGround = false;
+    Boolean facingGround = false;
+    Boolean echoed = false;
+    Boolean atEdge = false;
     String directionToEcho;
+    String gridSearchDirection = "Down";
     int distanceToGround;
 
     // used for intialization purposes
@@ -126,11 +129,12 @@ public class Initializer {
             // map
             initialGroundScanned = true;
             map.initialized = true;
+            flyCheck = false;
             return drone.scan();
         }
 
-        logger.info("stop");
-        return drone.stop();
+        // logger.info("stop");
+        // return drone.stop();
 
     }
 
@@ -228,30 +232,6 @@ public class Initializer {
             return null;
         }
     }
-
-    // // testing minimized grid search algo
-    // public String gridSearch(HashMap responseStorage) {
-    // flyCheck = false;
-    // if (responseStorage.get("found").get(0).equals("OUT_OF_RANGE") &&
-    // responseStorage.get("range").get(0) <= 2) {
-    // // implement turning around method
-    // if (counter3 == 0) {
-
-    // }
-
-    // } else if (!flyCheck) {
-    // flyCheck = true;
-    // return drone.scan();
-    // } else if (flyCheck) {
-    // flyCheck = false;
-    // return drone.fly();
-    // }
-
-    // }
-
-    // private String turnAroundGridSearch() {
-
-    // }
 
     // this method initializes the location of the drone based on 3 echoes, may get
     // skipped if all three echoes dont happen
