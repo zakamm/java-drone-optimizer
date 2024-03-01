@@ -15,18 +15,28 @@ public class MapRepresenter {
 
     private final Logger logger = LogManager.getLogger();
 
+    // used for map initialization
     int columns = 0;
     int rows = 0;
+
+
     public List<PointOfInterest> pois = new ArrayList<>();
     List<List<Point>> map = new ArrayList<>();
     public Boolean initialized = false;
 
-    public MapRepresenter(){ // what goes in the constructor needs to be determined
-        
-    }
+    public MapRepresenter(){
+        // initialize with these dimensions for now, will refactor this later
+        for (int i = 0; i < 200; i++){
+            List<Point> row = new ArrayList<>();
+            for (int j = 0; j < 200; j++){
+                Point point = new Point(i, j);
+                row.add(point);
+            }
+            map.add(row);
+        }
+    }       
 
     public void storeScanResults(HashMap<String, List<String>> scanResults, Point currentLocation){
-        // store the scan results in the map
 
         if (!(scanResults.get("creeks").get(0).equals("null"))){
             // if there are creeks, add them to the POI list
@@ -35,6 +45,7 @@ public class MapRepresenter {
                 pois.add(poi);
             }
         }
+
         if (!(scanResults.get("sites").get(0).equals("null"))){
             // if there are sites, add them to the POI list
             for (String siteIdentifier : scanResults.get("sites")){
@@ -42,13 +53,16 @@ public class MapRepresenter {
                 pois.add(poi);
             }
         }
-
         currentLocation.addBiomes(scanResults.get("biomes"), currentLocation);
 
     }  
     
     public void initializeMap(){
+        // clear the map that we used for intialization purposes
+        map.clear();
+
         // initialize the map with the given dimensions
+        logger.info("Initializing map with dimensions: " + columns + "x" + rows);
         for (int i = 0; i < columns; i++){
             List<Point> row = new ArrayList<>();
             for (int j = 0; j < rows; j++){

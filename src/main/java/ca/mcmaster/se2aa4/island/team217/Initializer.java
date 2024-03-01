@@ -24,12 +24,18 @@ public class Initializer {
     Boolean foundLand = false;
     Boolean facingGround = false;
     Boolean nextDimensionDetermined = false;
+
+    // we want to make an initial turn to check backward direction, only if not spawned facing ground
     Boolean initialTurn = false;
     Boolean foundMissingCoordinate = false;
+
+    // used to determine how many dimensions we found from our initial echo and turn
     String rowsOrColumns;
+
     Heading directionToEcho;
     int distanceToGround;
     Heading headingAfterFirstTurn;
+    Boolean spawnedFacingGround = false;
 
     // used for intialization purposes
     public Integer topY;
@@ -106,58 +112,41 @@ public class Initializer {
     }
 
     private String initialTurn(String rowsOrColumns){
-        if (rowsOrColumns.equals("none")){
-            if (drone.initialHeading == Heading.N || drone.initialHeading == Heading.S){
-                if (leftX == 0){
-                    return drone.heading(Heading.E);
-                }
-                else{
-                    return drone.heading(Heading.W);
-                }
+        if (drone.initialHeading == Heading.N || drone.initialHeading == Heading.S){
+            if (leftX > rightX){
+                return drone.heading(Heading.W);
             }
-            else if (drone.initialHeading == Heading.E || drone.initialHeading == Heading.W){
-                if (topY == 0){
-                    return drone.heading(Heading.S);
-                }
-                else{
-                    return drone.heading(Heading.N);
-                }
+            else{
+                return drone.heading(Heading.E);
             }
-        }else{
-            if (drone.initialHeading == Heading.N || drone.initialHeading == Heading.S){
-                if (leftX > rightX){
-                    return drone.heading(Heading.W);
-                }
-                else{
-                    return drone.heading(Heading.E);
-                }
+        }
+        else if (drone.initialHeading == Heading.E || drone.initialHeading == Heading.W){
+            if (topY > bottomY){
+                return drone.heading(Heading.N);
             }
-            else if (drone.initialHeading == Heading.E || drone.initialHeading == Heading.W){
-                if (topY > bottomY){
-                    return drone.heading(Heading.N);
-                }
-                else{
-                    return drone.heading(Heading.S);
-                }
+            else{
+                return drone.heading(Heading.S);
             }
         }
         return null;
             
     }
 
+    // if we spawned not facing ground, we echo backwards to determine that dimension
     private String determineNextDimension(HashMap<String, List<String>> responseStorage){
         if (counter == 0){
             counter++;
             return drone.echo(drone.initialHeading.backSide(drone.initialHeading));
         }
         else if (counter == 1){
-            initializeMapDimensions(drone.getDirection(), responseStorage.get("range").get(0));
+            initializeMapDimensions(drone.getDirection(), String.valueOf(Integer.parseInt(responseStorage.get("range").get(0)) - 1));
             rowsOrColumns = rowsOrColumns();
             logger.info("rows or columns: " + rowsOrColumns);
             if (rowsOrColumns.equals("both")){
+                logger.info(topY + " " + bottomY + " " + leftX + " " + rightX);
                 directionToEcho = directionToEcho(drone.currentHeading);
                 map.initializeMap();
-                drone.initializeCurrentLocation(leftX, topY);
+                drone.initializeCurrentLocation(leftX, topY, spawnedFacingGround);
                 foundMissingCoordinate = true;
             }
             nextDimensionDetermined = true;
@@ -167,6 +156,8 @@ public class Initializer {
         return null; 
     }
 
+
+    // echoe three times and then run initialturn based on the results
     public String initialThreeCheck(HashMap<String, List<String>> responseStorage){
         if (counter == 0){
             if (responseStorage.get("range").get(0).equals("0")){
@@ -178,8 +169,11 @@ public class Initializer {
             else{
                 distanceToGround = Integer.parseInt(responseStorage.get("range").get(0));
                 foundLand = true;
+                // do not need to turn anymore since ground is in front of us
+                initialTurn = true;
                 // also indicate that intitial direction found ground
                 facingGround = true;
+                spawnedFacingGround = true;
                 logger.info("facing ground");
             }
             counter++;
@@ -209,22 +203,13 @@ public class Initializer {
         }
         initialThreeCheck = true;
         rowsOrColumns = rowsOrColumns();
-        if (rowsOrColumns.equals("none")){
+        if (!facingGround){
             initialTurn = true;
             return initialTurn(rowsOrColumns);
         }
-        else {
-            if (facingGround){
-                initialTurn = true;
-                distanceToGround--;
-                return drone.fly();
-            }
-            else {
-                initialTurn = true;
-                return initialTurn(rowsOrColumns);
-            }
+        else{
+            return drone.echo(drone.currentHeading);
         }
-
     }
 
     // this method initializes the location of the drone based on 3 echoes, if they dont echo ground
@@ -249,16 +234,16 @@ public class Initializer {
 
     public String rowsOrColumns(){
         if (topY != null && bottomY != null && leftX != null && rightX != null){
-            map.rows = topY + bottomY + 1;
-            map.columns = leftX + rightX + 1;
+            map.rows = topY + bottomY;
+            map.columns = leftX + rightX;
             return "both";
         }
         if (topY != null && bottomY != null){
-            map.rows = topY + bottomY + 1;
+            map.rows = topY + bottomY;
             return "rows";
         }
         else if (leftX != null && rightX != null){
-            map.columns = leftX + rightX + 1;
+            map.columns = leftX + rightX;
             return "columns";
         }
         else{
@@ -266,6 +251,7 @@ public class Initializer {
         }
     }
     
+    // if we spawned facing ground, we want to find the missing coordinate by flying until we echo the edge of the map, this helps us determine the missing coordinate
     public String findMissingCoordinate(HashMap<String, List<String>> responseStorage){
         if (!responseStorage.get("found").get(0).equals("OUT_OF_RANGE")){
             if (counter == 0){
@@ -281,10 +267,13 @@ public class Initializer {
         else{
             initializeMapDimensions(drone.currentHeading, responseStorage.get("range").get(0));
             initializeMapDimensions(drone.currentHeading.backSide(drone.currentHeading), String.valueOf(flyCounter));
+            logger.info(flyCounter);
+            logger.info("topY: " + topY + " bottomY: " + bottomY + " leftX: " + leftX + " rightX: " + rightX);
             rowsOrColumns = rowsOrColumns();
-            drone.initializeCurrentLocation(leftX, topY);
-            foundMissingCoordinate = true;
             map.initializeMap();
+            drone.initializeCurrentLocation(leftX, topY, spawnedFacingGround);
+            foundMissingCoordinate = true;
+            map.initialized = true;
             return drone.scan();
         }
     }
@@ -317,6 +306,7 @@ public class Initializer {
         return directionToEcho;
     }
 
+    // the methods below are used to turn perpendicularly
     public String turnToGround(Heading groundDirection) {
         switch (headingAfterFirstTurn) {
             case N:

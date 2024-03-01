@@ -63,7 +63,14 @@ public class MissionControl {
         if (map.initialized == false){
             return initializer.initializeMission(this.drone.initialHeading, responseStorage);
         }
-        map.storeScanResults(responseStorage, drone.currentLocation); 
+
+        // just testing out the point and biome stuff
+        // logger.info(drone.currentLocation.getX());
+        // logger.info(drone.currentLocation.getY());
+        // logger.info(drone.currentLocation.getGround());
+        // logger.info(drone.currentLocation.biomes.get(0));
+
+        
         logger.info("MAP INITIALIZED");
         return drone.stop(); 
 
