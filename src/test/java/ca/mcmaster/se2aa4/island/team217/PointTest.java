@@ -35,13 +35,15 @@ public class PointTest {
         assertEquals(-1, p.getX());
     }
 
-    public void testSetGround() {
-        Point p = new Point(1, 2);
-        assertFalse(p.getGround());
-        p.setGround();
-        assertTrue(p.getGround());
-    }
+    // @Test
+    // public void testSetGround() {
+    //     Point p = new Point(1, 2);
+    //     assertFalse(p.getGround());
+    //     p.setGround();
+    //     assertTrue(p.getGround());
+    // }
 
+    @Test
     public void testSetPOI() {
         Point p = new Point(1, 2);
         assertFalse(p.getPOI());

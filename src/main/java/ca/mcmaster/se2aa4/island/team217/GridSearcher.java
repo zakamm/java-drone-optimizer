@@ -17,30 +17,108 @@ import org.json.JSONArray;
 import java.util.ArrayList;
 
 public class GridSearcher {
-    private final Logger logger = LogManager.getLogger();
-    Drone drone;
-    MapRepresenter map;
+    // private final Logger logger = LogManager.getLogger();
 
-    Boolean initializeDirection = false;
+    // Drone drone;
+    // MapRepresenter map;
 
-    public GridSearcher(Drone drone, MapRepresenter map){
-        this.drone = drone;
-        this.map = map;
-    }
+    // int counter = 0;
+    // Boolean echoed = false;
+    // Boolean flyCheck = false;
+    // Boolean atEdge = false;
+    // Heading gridSearchDirection;
 
-    public String searchGrid(Heading currentHeading, HashMap<String, List<String>> responseStorage){
-        // initialize direction so its north or south
-        if (initializeDirection == false){
-            return initializeDirection(currentHeading);
-        }
+    // public GridSearch(Drone drone, MapRepresenter map) {
+    //     this.drone = drone;
+    //     this.map = map;
+    // }
 
-        return null;
-        
-    }
+    // public String gridSearch(HashMap<String, List<String>> responseStorage) {
+    //     if (echoed) {
+    //         if (counter == 0 && responseStorage.get("found").get(0).equals("OUT_OF_RANGE")) {
+    //             atEdge = true;
+    //         }
+    //         // implement turning around method
+    //         if (atEdge) {
+    //             if (counter == 6) {
+    //                 counter = 0;
+    //                 gridSearchDirection = drone.currentHeading;
+    //                 if (gridSearchDirection.equals("Down")) {
+    //                     gridSearchDirection = "Up";
+    //                 } else {
+    //                     gridSearchDirection = "Down";
+    //                 }
+    //                 flyCheck = false;
+    //                 atEdge = false;
+    //                 // return drone.scan();
+    //                 return drone.stop(); // testing this
+    //             } else {
+    //                 return turnAroundGridSearch();
+    //             }
+    //         }
+    //         return drone.scan();
+    //     }
+    //     if (!drone.currentLocation.getGround()) {
+    //         echoed = true ? echoed == false : false;
+    //         return drone.echo(drone.currentHeading);
+    //     } else if (!flyCheck) {
+    //         flyCheck = true;
+    //         echoed = false;
+    //         return drone.scan();
+    //     } else if (flyCheck) {
+    //         flyCheck = false;
+    //         echoed = false;
+    //         return drone.fly();
+    //     }
 
-    public String initializeDirection(Heading currentHeading){
-        // if we are facing east or west want to face north or south for a vertical grid search
-        // but we need to ensure that when we change heading we are still on ground
-        return null;
-    }
+    // }
+
+
+    // private String turnAroundGridSearch(Heading headingToTurn) {
+    //     switch (gridSearchDirection) {
+    //         case "Down":
+    //             if (counter == 0) {
+    //                 counter++;
+    //                 return drone.fly();
+    //             } else if (counter == 1) {
+    //                 counter++;
+    //                 return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
+    //             } else if (counter == 2) {
+    //                 counter++;
+    //                 return drone.fly();
+    //             } else if (counter == 3) {
+    //                 counter++;
+    //                 return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
+    //             } else if (counter == 4) {
+    //                 counter++;
+    //                 return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
+    //             } else if (counter3 == 5) {
+    //                 counter++;
+    //                 return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
+    //             }
+    //         case "Up":
+    //             if (counter == 0) {
+    //                 counter++;
+    //                 return drone.fly();
+    //             } else if (counter == 1) {
+    //                 counter++;
+    //                 return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
+    //             } else if (counter == 2) {
+    //                 counter++;
+    //                 return drone.fly();
+    //             } else if (counter == 3) {
+    //                 counter++;
+    //                 return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
+    //             } else if (counter == 4) {
+    //                 counter++;
+    //                 return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
+    //             } else if (counter == 4) {
+    //                 counter++;
+    //                 return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
+    //             }
+    //         default:
+    //             return null;
+    //     }
+
+    // }
 }

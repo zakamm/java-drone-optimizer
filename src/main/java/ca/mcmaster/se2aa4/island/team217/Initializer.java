@@ -29,6 +29,7 @@ public class Initializer {
     String rowsOrColumns;
     Heading directionToEcho;
     int distanceToGround;
+    Heading headingAfterFirstTurn;
 
     // used for intialization purposes
     public Integer topY;
@@ -60,12 +61,7 @@ public class Initializer {
         }
 
         if (!foundMissingCoordinate){
-            if (rowsOrColumns.equals("none")){
-                return findMissingCoordinate(responseStorage);
-            }
-            else if (rowsOrColumns.equals("rows") || rowsOrColumns.equals("columns")){
-                return findMissingCoordinate(responseStorage);
-            }
+            return findMissingCoordinate(responseStorage);
         }
 
         if (nextDimensionDetermined == true && rowsOrColumns.equals("both")){
@@ -79,12 +75,17 @@ public class Initializer {
                 else if (responseStorage.get("found").get(0).equals("GROUND")){
                     distanceToGround = Integer.parseInt(responseStorage.get("range").get(0));
                     foundLand = true;
-                    return drone.heading(directionToEcho);
+                    headingAfterFirstTurn = drone.currentHeading;
                 }
             } else if (flyCheck) {
                 //echo in the direction again so we can see if there is ground in that direction, only do this if the previous echo was out of range (flyCheck = true)
                 flyCheck = false;
                 return drone.echo(directionToEcho);
+            }
+
+            if (facingGround == false){
+                logger.info(directionToEcho);
+                return turnToGround(directionToEcho);
             }
     
             // once land is found, fly there
@@ -317,7 +318,7 @@ public class Initializer {
     }
 
     public String turnToGround(Heading groundDirection) {
-        switch (drone.currentHeading) {
+        switch (headingAfterFirstTurn) {
             case N:
                 if (groundDirection.equals(Heading.W)) {
                     return turnToGroundHelperCaseOne();
@@ -334,6 +335,7 @@ public class Initializer {
                 if (groundDirection.equals(Heading.E)) {
                     return turnToGroundHelperCaseOne();
                 } else {
+                    logger.info("WE ARE IN CASE 2");
                     return turnToGroundHelperCaseTwo();
                 }
             case W:
@@ -362,6 +364,7 @@ public class Initializer {
             return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
         } else if (counter == 3) {
             counter = 0;
+            facingGround = true;
             return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
         } else {
             return null;
@@ -391,6 +394,7 @@ public class Initializer {
             return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
         } else if (counter == 3) {
             counter = 0;
+            facingGround = true;
             return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
         } else {
             return null;

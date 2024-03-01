@@ -43,6 +43,8 @@ public class MapRepresenter {
             }
         }
 
+        currentLocation.addBiomes(scanResults.get("biomes"), currentLocation);
+
     }  
     
     public void initializeMap(){

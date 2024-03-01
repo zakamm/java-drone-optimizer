@@ -35,7 +35,7 @@ public class MissionControl {
         this.drone = drone;
         this.map = map;
         this.initializer = new Initializer(drone, map);
-        this.gridSearcher = new GridSearcher(drone, map);
+        //this.gridSearcher = new GridSearcher(drone, map);
     }
 
 
@@ -47,11 +47,18 @@ public class MissionControl {
     */
     public String nextDecision(){
 
+
         // first echo to determine where the drone is located
         if (initialEchoed == false){
             initialEchoed = true;
             return drone.echo(this.drone.initialHeading);
         }
+
+
+        if (drone.getAction().equals("scan")){
+            map.storeScanResults(responseStorage, drone.currentLocation);
+        }
+
         // initializatoin and finding ground
         if (map.initialized == false){
             return initializer.initializeMission(this.drone.initialHeading, responseStorage);
