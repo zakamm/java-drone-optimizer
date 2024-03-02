@@ -23,16 +23,19 @@ public class MissionControl {
     MapRepresenter map;
 
     Boolean initialEchoed = false;
+    Boolean gridSearch = false;
     Boolean searchedCoast = false;
     Boolean stop = false;
     List<String> nextDecision = new ArrayList<String>();
     HashMap<String, List<String>> responseStorage = new HashMap<String, List<String>>();
     Initializer initializer;
+    GridSearcher gridSearcher;
     
-    MissionControl(Drone drone, MapRepresenter map){
+    public MissionControl(Drone drone, MapRepresenter map){
         this.drone = drone;
         this.map = map;
         this.initializer = new Initializer(drone, map);
+        //this.gridSearcher = new GridSearcher(drone, map);
     }
 
 
@@ -44,19 +47,38 @@ public class MissionControl {
     */
     public String nextDecision(){
 
+
         // first echo to determine where the drone is located
         if (initialEchoed == false){
             initialEchoed = true;
             return drone.echo(this.drone.initialHeading);
         }
+
+
+        if (drone.getAction().equals("scan")){
+            map.storeScanResults(responseStorage, drone.currentLocation);
+        }
+
         // initializatoin and finding ground
         if (map.initialized == false){
-
             return initializer.initializeMission(this.drone.initialHeading, responseStorage);
         }
-        map.storeScanResults(responseStorage, drone.currentLocation);
+
+        // just testing out the point and biome stuff
+        // logger.info(drone.currentLocation.getX());
+        // logger.info(drone.currentLocation.getY());
+        // logger.info(drone.currentLocation.getGround());
+        // logger.info(drone.currentLocation.biomes.get(0));
+
+        
         logger.info("MAP INITIALIZED");
         return drone.stop(); 
+
+
+
+        // if (map.initialized == true && gridSearch == false){
+        //     return gridSearcher.searchGrid(this.drone.initialHeading, responseStorage);
+        // } 
     }
 
     public void storeResponse(String action, JSONObject previousResponse){
