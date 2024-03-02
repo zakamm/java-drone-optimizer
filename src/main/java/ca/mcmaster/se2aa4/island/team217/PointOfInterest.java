@@ -1,5 +1,5 @@
 package ca.mcmaster.se2aa4.island.team217;
-import main.java.ca.mcmaster.se2aa4.island.team217.Point;
+import ca.mcmaster.se2aa4.island.team217.Point;
 
 import java.util.ArrayList;
 
@@ -14,23 +14,18 @@ public class PointOfInterest extends Point{
         super(x,y); // Explicitly invoke the constructor of the superclass Point
         this.identifier = identifier;
         this.type = type;
+        super.isPOI = true;
+        super.isGround = true;
     }
 
     public String getIdentifier() {
-        return null;
+        return identifier;
     }
 
     public String getType() {
-        return null;
+        return type;
     }
 
-    public double[] getLocation() {
-        return null;
-    }
-
-    public void setIdentifier(String identifier) {
-
-    }
 
     // could just get all the info at once if needed
 

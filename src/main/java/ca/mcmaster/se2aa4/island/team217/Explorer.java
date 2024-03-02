@@ -15,11 +15,15 @@ public class Explorer implements IExplorerRaid {
 
     private final Logger logger = LogManager.getLogger();
 
+  
+
     private JSONObject checker = new JSONObject(); // used by explorer system
 
     Drone drone;
     MapRepresenter map;
-    MissionControl missionControl;
+
+    MissionControl missionControl; 
+
 
     @Override
     public void initialize(String s) {
@@ -29,9 +33,10 @@ public class Explorer implements IExplorerRaid {
         String direction = info.getString("heading");
         Integer batteryLevel = info.getInt("budget");
 
-        drone = new Drone(batteryLevel, direction);
         map = new MapRepresenter();
+        drone = new Drone(batteryLevel, direction, map);
         missionControl = new MissionControl(drone, map);
+        
 
         logger.info("The drone is facing {}", direction);
         logger.info("Battery level is {}", batteryLevel);
