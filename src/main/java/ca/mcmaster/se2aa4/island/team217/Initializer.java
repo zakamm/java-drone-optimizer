@@ -22,6 +22,7 @@ public class Initializer {
     Boolean initialThreeCheck = false;
     Boolean flyCheck = false;
     Boolean foundLand = false;
+
     Boolean facingGround = false;
     Boolean nextDimensionDetermined = false;
 
@@ -33,6 +34,7 @@ public class Initializer {
     String rowsOrColumns;
 
     Heading directionToEcho;
+
     int distanceToGround;
     Heading headingAfterFirstTurn;
     Boolean spawnedFacingGround = false;
@@ -131,6 +133,7 @@ public class Initializer {
         return null;
             
     }
+
 
     // if we spawned not facing ground, we echo backwards to determine that dimension
     private String determineNextDimension(HashMap<String, List<String>> responseStorage){
