@@ -35,7 +35,7 @@ public class MissionControl {
         this.drone = drone;
         this.map = map;
         this.initializer = new Initializer(drone, map);
-        //this.gridSearcher = new GridSearcher(drone, map);
+        this.gridSearcher = new GridSearcher(drone, map);
     }
 
 
@@ -72,13 +72,11 @@ public class MissionControl {
 
         
         logger.info("MAP INITIALIZED");
+
+        if (map.initialized == true && gridSearch == false){
+            return gridSearcher.searchGrid(responseStorage);
+        } 
         return drone.stop(); 
-
-
-
-        // if (map.initialized == true && gridSearch == false){
-        //     return gridSearcher.searchGrid(this.drone.initialHeading, responseStorage);
-        // } 
     }
 
     public void storeResponse(String action, JSONObject previousResponse){

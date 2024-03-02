@@ -137,13 +137,13 @@ public class Drone {
 
         // we didnt change heading and so leftX and topY are the same as the current location
         if (spawnedFacingGround){
-            x = leftX;
-            y = topY;
+            x = topY;
+            y = leftX;
         }
         // since we changed heading, leftX and topY are off by a bit, the 100 we intialized currentLocation at (100, 100)
         else{
-            x = leftX + currentLocation.getY() - 100;
-            y = topY + currentLocation.getX() - 100;
+            x = topY + currentLocation.getY() - 100;
+            y = leftX + currentLocation.getX() - 100;
         }
         logger.info(x);
         logger.info(y);
