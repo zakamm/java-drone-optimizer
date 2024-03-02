@@ -1,20 +1,25 @@
-package ca.mcmaster.se2aa4.island.team217;
+
+package main.java.ca.mcmaster.se2aa4.island.team217;
 
 import java.util.List;
 import java.util.ArrayList;
 
+
 public class Point {
 
     private int x;
+
     private int y; 
     boolean isGround = false;
     boolean isPOI = false;
     List<String> biomes = new ArrayList<>();
 
+
     public Point(int x, int y) {
         this.x = x;
         this.y = y;
     }
+
 
     public int getX(){
         return x;
@@ -48,3 +53,4 @@ public class Point {
         }
     }
 }
+

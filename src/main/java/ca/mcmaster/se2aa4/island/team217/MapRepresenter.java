@@ -1,7 +1,9 @@
-
 package ca.mcmaster.se2aa4.island.team217;
+
 import ca.mcmaster.se2aa4.island.team217.PointOfInterest;
-import ca.mcmaster.se2aa4.island.team217.Point;
+
+import main.java.ca.mcmaster.se2aa4.island.team217.Point;
+
 import ca.mcmaster.se2aa4.island.team217.Drone.Heading;
 
 import org.apache.logging.log4j.LogManager;
@@ -15,14 +17,17 @@ public class MapRepresenter {
 
     private final Logger logger = LogManager.getLogger();
 
+
     // used for map initialization
     int columns = 0;
     int rows = 0;
 
 
+
     public List<PointOfInterest> pois = new ArrayList<>();
     List<List<Point>> map = new ArrayList<>();
     public Boolean initialized = false;
+
 
     public MapRepresenter(){
         // initialize with these dimensions for now, will refactor this later
@@ -71,15 +76,21 @@ public class MapRepresenter {
             }
             map.add(row);
         }
+
     }
 
     // random things that dont do much for now
     // public PointOfInterest getPOI(int x, int y){
+
     //     return null;
+
+
     // }
 
     // // add poi method
     // public void addPOI(PointOfInterest poi){
+
     //     pois.add(poi);
     // }
 }
+

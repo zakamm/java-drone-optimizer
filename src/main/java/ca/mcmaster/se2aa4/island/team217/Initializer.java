@@ -1,4 +1,6 @@
-package ca.mcmaster.se2aa4.island.team217; 
+
+package ca.mcmaster.se2aa4.island.team217;
+
 
 import ca.mcmaster.se2aa4.island.team217.Drone.Heading;
 import ca.mcmaster.se2aa4.island.team217.MapRepresenter;
@@ -12,12 +14,15 @@ import java.util.List;
 // an object of this class is responsible for initializing the drone location and finding ground 
 public class Initializer {
 
+
     private final Logger logger = LogManager.getLogger(); 
+
 
     Drone drone;
     MapRepresenter map;
 
     int counter = 0;
+
     int flyCounter = 0;
     Boolean initialThreeCheck = false;
     Boolean flyCheck = false;
@@ -48,9 +53,11 @@ public class Initializer {
     Boolean initialGroundScanned = false;
 
     public Initializer(Drone drone, MapRepresenter map){
+
         this.drone = drone;
         this.map = map;
     }
+
 
     /* this method finds ground, flies there and scans it
     This method works on the assumption that when the drone enters the map, it is going to be on edges of the map (since entrypoint is closest location to base)
@@ -336,12 +343,14 @@ public class Initializer {
                     return turnToGroundHelperCaseOne();
                 } else {
                     return turnToGroundHelperCaseTwo();
+
                 }
             default:
                 return null;
         }
 
     }
+
 
     private String turnToGroundHelperCaseOne() {
         if (counter == 0) {
@@ -358,11 +367,13 @@ public class Initializer {
         } else if (counter == 3) {
             counter = 0;
             facingGround = true;
+
             return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
         } else {
             return null;
         }
     }
+
 
     private String turnToGroundHelperCaseTwo() {
         logger.info("WE ARE IN CASE 2");
@@ -388,10 +399,13 @@ public class Initializer {
         } else if (counter == 3) {
             counter = 0;
             facingGround = true;
+
             return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
         } else {
             return null;
         }
     }
+
+
 
 }

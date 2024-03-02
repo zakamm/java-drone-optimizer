@@ -1,5 +1,9 @@
 package ca.mcmaster.se2aa4.island.team217;
-import ca.mcmaster.se2aa4.island.team217.Point;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import main.java.ca.mcmaster.se2aa4.island.team217.Point;
+
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,6 +23,7 @@ public class Drone {
     private String action;
     private Heading direction;
 
+
     public enum Heading {
         N, E, S, W;
 
@@ -34,10 +39,12 @@ public class Drone {
                 case W:
                     return S;
                 default:
+
                     throw new NullPointerException("Invalid heading: " + currentHeading);
             }
         }
     
+
         public Heading rightSide(Heading currentHeading) {
             switch (currentHeading) {
                 case N:
@@ -49,10 +56,12 @@ public class Drone {
                 case W:
                     return N;
                 default:
+
                     throw new NullPointerException("Invalid heading: " + currentHeading);
             }
         }
     
+
         public Heading backSide(Heading currentHeading) {
             switch (currentHeading) {
                 case N:
@@ -64,6 +73,7 @@ public class Drone {
                 case W:
                     return E;
                 default:
+
                     throw new NullPointerException("Invalid heading: " + currentHeading);
             }
         }
@@ -222,10 +232,12 @@ public class Drone {
 
     public void updateBatteryLevel(Integer cost){
         if (cost < 0){
+
             throw new IllegalArgumentException("Cost cannot be negative");
         }
         batteryLevel -= cost;
     }
+
 
     // these helper methods store the parameters of the next decision in the variables action and direction and provide a string that will be returned to takeDecision
     String decisionTaken(String command){
@@ -247,10 +259,12 @@ public class Drone {
         }
         //ensures the direction is valid
         if (!direction.equals("N") && !direction.equals("E") && !direction.equals("S") && !direction.equals("W")){
+
             throw new IllegalArgumentException("Invalid direction");
         }
 
         // if the command is heading, then the currentDirection is the new heading
+
         if (command.equals("heading")){
             this.currentHeading = Heading.valueOf(direction);
         }
@@ -265,3 +279,4 @@ public class Drone {
     
 
 }
+

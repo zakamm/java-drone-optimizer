@@ -23,12 +23,15 @@ public class MissionControl {
     MapRepresenter map;
 
     Boolean initialEchoed = false;
+
     Boolean gridSearch = false;
+
     Boolean searchedCoast = false;
     Boolean stop = false;
     List<String> nextDecision = new ArrayList<String>();
     HashMap<String, List<String>> responseStorage = new HashMap<String, List<String>>();
     Initializer initializer;
+
     GridSearcher gridSearcher;
     
     public MissionControl(Drone drone, MapRepresenter map){
@@ -86,6 +89,7 @@ public class MissionControl {
         responseStorage.clear();
 
 
+
         // all actions will have cost and status
         List<String> temp = new ArrayList<String>();
         temp.add(Integer.toString(previousResponse.getInt("cost")));
@@ -95,6 +99,7 @@ public class MissionControl {
         temp.add(String.valueOf(previousResponse.getString("status")));
         responseStorage.put("status", temp);
 
+
         // ensure these are null if they are not part of response
         temp = new ArrayList<String>();
         temp.add("null");
@@ -103,7 +108,16 @@ public class MissionControl {
         temp.add("null");
         responseStorage.put("range", temp);
 
-        if (action.equals("echo")){
+
+        // ensure these are null if they are not part of response
+        temp = new ArrayList<String>();
+        temp.add("null");
+        responseStorage.put("found", temp);
+        temp = new ArrayList<String>();
+        temp.add("null");
+        responseStorage.put("range", temp);
+
+        if (action.equals("echo")) {
             temp = new ArrayList<String>();
             temp.add(String.valueOf(previousResponse.getJSONObject("extras").getInt("range")));
             responseStorage.put("range", temp);
@@ -115,6 +129,7 @@ public class MissionControl {
         }
 
         // store as lists with first item being null if empty
+
         else if (action.equals("scan")){
             temp = new ArrayList<String>();
             JSONArray creeksArray = previousResponse.getJSONObject("extras").getJSONArray("creeks");
@@ -122,11 +137,13 @@ public class MissionControl {
                 temp.add("null");
             }
             else{
+
                 for (int i = 0; i < creeksArray.length(); i++) {
                     temp.add(creeksArray.getString(i));
                 }
             }
             responseStorage.put("creeks", temp);
+
 
 
             temp = new ArrayList<String>();
@@ -149,6 +166,7 @@ public class MissionControl {
                 temp.add("null");
             }
             else{
+
                 for (int i = 0; i < sitesArray.length(); i++) {
                     temp.add(sitesArray.getString(i));
                 }
@@ -158,18 +176,20 @@ public class MissionControl {
 
         // for printing out the previous response for debugging
         // for (Map.Entry<String, List<String>> entry : responseStorage.entrySet()) {
+
         //     logger.info("Key: " + entry.getKey());
         //     for (String value : entry.getValue()) {
         //         logger.info("Value: " + value);
         //     }
         // }  
-    }
-
-    public void process_poi_data(PointOfInterest pointOfInterest){
 
     }
 
-    public void rescue_mission(){
+    public void process_poi_data(PointOfInterest pointOfInterest) {
+
+    }
+
+    public void rescue_mission() {
 
     }
 
