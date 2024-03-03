@@ -205,6 +205,9 @@ public class Initializer {
         }
         initialThreeCheck = true;
         rowsOrColumns = rowsOrColumns();
+        if (rowsOrColumns.equals("none")) {
+            return drone.stop();
+        }
         if (!facingGround) {
             initialTurn = true;
             return initialTurn(rowsOrColumns);
@@ -236,15 +239,15 @@ public class Initializer {
 
     public String rowsOrColumns() {
         if (topY != null && bottomY != null && leftX != null && rightX != null) {
-            map.rows = topY + bottomY;
-            map.columns = leftX + rightX;
+            map.rows = topY + bottomY + 1;
+            map.columns = leftX + rightX + 1;
             return "both";
         }
         if (topY != null && bottomY != null) {
-            map.rows = topY + bottomY;
+            map.rows = topY + bottomY + 1;
             return "rows";
         } else if (leftX != null && rightX != null) {
-            map.columns = leftX + rightX;
+            map.columns = leftX + rightX + 1;
             return "columns";
         } else {
             return "none";

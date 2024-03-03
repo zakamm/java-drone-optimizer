@@ -74,10 +74,17 @@ public class GridSearcher {
             // the island, the drone will reset itself by doing a scan and fly and then
             // continue
 
+            if (echoed && !atEdge && counter == 1) {
+                if (responseStorage.get("found").get(0).equals("OUT_OF_RANGE")) {
+                    logger.info("DONE");
+                    return drone.stop();
+                }
+            }
+
             if (echoed && !atEdge && counter == 0) {
                 logger.info("DOING A QUICK FLY");
                 counter++;
-                return drone.scan();
+                return drone.echo(drone.currentHeading);
             } else {
                 logger.info("DOING A QUICK SCAN");
                 echoed = false;
@@ -103,6 +110,7 @@ public class GridSearcher {
             echoed = false;
             return drone.fly();
         } else {
+            // a pretty useless stop
             return drone.stop();
         }
 
