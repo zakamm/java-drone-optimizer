@@ -81,6 +81,10 @@ public class MissionControl {
         }
 
         logger.info("MAP INITIALIZED");
+
+        if (map.initialized == true && gridSearch == false) {
+            return gridSearcher.searchGrid(responseStorage);
+        }
         return drone.stop();
     }
 

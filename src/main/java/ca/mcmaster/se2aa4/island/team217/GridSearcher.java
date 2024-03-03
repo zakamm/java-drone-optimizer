@@ -23,6 +23,7 @@ public class GridSearcher {
     MapRepresenter map;
 
     int counter = 0;
+    Boolean enoughSpaceToTurn = true;
     Boolean echoed = false;
     Boolean flyCheck = false;
     Boolean atEdge = false;
@@ -33,11 +34,21 @@ public class GridSearcher {
         this.map = map;
     }
 
+    /*
+     * scans through the whole island and will store all important POI's in the map
+     * instanstiation
+     */
     public String searchGrid(HashMap<String, List<String>> responseStorage) {
+        logger.info("BATTERY {}", drone.getBatteryLevel());
+
+        // This is a state in which the drone is above only water as a biome, but we
+        // dont know if we are in the middle of the island or past it so, it checks that
         if (echoed) {
             logger.info("WE IN THE ECHOEED");
             logger.info("THIS IS THE STORAGE {} ", responseStorage.get("found").get(0));
-            // return drone.stop();
+            // The drone will have echoed and so now it will check to see if the echo is out
+            // of range or if it needs to keep searching, this is done through activating
+            // this next state of "atEdge"
             if (counter == 0 &&
                     responseStorage.get("found").get(0).equals("OUT_OF_RANGE")) {
                 logger.info("WE SETTING atEdge!!!");
@@ -45,39 +56,41 @@ public class GridSearcher {
             }
             // implement turning around method
             if (atEdge) {
-                if (counter == 6) {
+                // The drone will continue to call the turnAroundGridSearch method until it has
+                // completed its rotation and then will reset all elements for the next turn in
+                // the future
+                if (counter == 7) {
                     counter = 0;
                     gridSearchDirection = drone.currentHeading;
-                    // if (gridSearchDirection.equals(Heading.S)) {
-                    // gridSearchDirection = Heading.N;
-                    // } else {
-                    // gridSearchDirection = Heading.S;
-                    // }
-                    flyCheck = false;
                     atEdge = false;
                     return drone.scan();
-                    // return drone.stop();
                 } else {
                     logger.info("COUNTERRRR {} , ", counter);
 
-                    return turnAroundGridSearch();
+                    return turnAroundGridSearch(responseStorage);
                 }
             }
+            // if the turn is now complete or we detected water but it was not the edge of
+            // the island, the drone will reset itself by doing a scan and fly and then
+            // continue
             if (echoed && !atEdge && counter == 0) {
                 logger.info("DOING A QUICK FLY");
                 counter++;
-                return drone.fly();
+                return drone.scan();
             } else {
                 logger.info("DOING A QUICK SCAN");
                 echoed = false;
                 counter = 0;
-                return drone.scan();
+                flyCheck = false;
+                return drone.fly();
             }
+
         }
+        // If we are only on OCEAN as a biome, the drone will echo and set echoed to be
+        // true, otherwise it will cycle between scanning and then flying forward
         if (!drone.currentLocation.getGround()) {
             echoed = true ? echoed == false : false;
             logger.info("WE BOUTTA ECHOOOOOOOOOOOOOOOOOOOOOO");
-            // return drone.stop();
             logger.info("CURRENT HEADING {}", drone.currentHeading);
             return drone.echo(drone.currentHeading);
         } else if (!flyCheck) {
@@ -94,99 +107,63 @@ public class GridSearcher {
 
     }
 
-    private String turnAroundGridSearch() {
+    private String turnAroundGridSearch(HashMap<String, List<String>> responseStorage) {
         logger.info("WE TURNING AROUNDDD");
         logger.info(gridSearchDirection);
+        // Is the method to turn around using a counter with respect to the heading
+        // changes
         if (gridSearchDirection.equals(Heading.S) || gridSearchDirection.equals(Heading.W)) {
             if (counter == 0) {
                 counter++;
-                return drone.fly();
+                return drone.echo(drone.currentHeading);
             } else if (counter == 1) {
+                logger.info("SPACE TO TURN: {}", responseStorage.get("range").get(0));
+                counter++;
+                return drone.fly();
+            } else if (counter == 2) {
                 counter++;
                 logger.info("COUNTER IS A 1 WE TURNIGN LEFTT");
                 logger.info(drone.currentHeading.leftSide(drone.currentHeading));
                 return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
-            } else if (counter == 2) {
-                counter++;
-                return drone.fly();
             } else if (counter == 3) {
                 counter++;
-                return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
+                return drone.fly();
             } else if (counter == 4) {
                 counter++;
                 return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
             } else if (counter == 5) {
+                counter++;
+                return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
+            } else if (counter == 6) {
                 counter++;
                 return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
             }
         } else if (gridSearchDirection.equals(Heading.N) || gridSearchDirection.equals(Heading.E)) {
             if (counter == 0) {
                 counter++;
-                return drone.fly();
+                return drone.echo(drone.currentHeading);
             } else if (counter == 1) {
                 counter++;
-                return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
+                logger.info("SPACE TO TURN: {}", responseStorage.get("range").get(0));
+                return drone.fly();
             } else if (counter == 2) {
                 counter++;
-                return drone.fly();
+                return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
             } else if (counter == 3) {
                 counter++;
-                return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
+                return drone.fly();
             } else if (counter == 4) {
                 counter++;
                 return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
             } else if (counter == 5) {
                 counter++;
+                return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
+            } else if (counter == 6) {
+                counter++;
                 return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
             }
         }
         return null;
-        // switch (gridSearchDirection) {
-        // case S:
-        // if (counter == 0) {
-        // counter++;
-        // return drone.fly();
-        // } else if (counter == 1) {
-        // counter++;
-        // logger.info("COUNTER IS A 1 WE TURNIGN LEFTT");
-        // logger.info(drone.currentHeading.leftSide(drone.currentHeading));
-        // return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
-        // } else if (counter == 2) {
-        // counter++;
-        // return drone.fly();
-        // } else if (counter == 3) {
-        // counter++;
-        // return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
-        // } else if (counter == 4) {
-        // counter++;
-        // return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
-        // } else if (counter == 5) {
-        // counter++;
-        // return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
-        // }
-        // case N:
-        // if (counter == 0) {
-        // counter++;
-        // return drone.fly();
-        // } else if (counter == 1) {
-        // counter++;
-        // return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
-        // } else if (counter == 2) {
-        // counter++;
-        // return drone.fly();
-        // } else if (counter == 3) {
-        // counter++;
-        // return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
-        // } else if (counter == 4) {
-        // counter++;
-        // return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
-        // } else if (counter == 5) {
-        // counter++;
-        // return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
-        // }
-        // default:
-        // return null;
-        // }
 
     }
 }

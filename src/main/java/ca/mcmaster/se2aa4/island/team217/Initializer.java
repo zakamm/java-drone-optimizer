@@ -1,4 +1,3 @@
-
 package ca.mcmaster.se2aa4.island.team217;
 
 import ca.mcmaster.se2aa4.island.team217.Drone.Heading;
@@ -19,7 +18,6 @@ public class Initializer {
     MapRepresenter map;
 
     int counter = 0;
-
     int flyCounter = 0;
     Boolean initialThreeCheck = false;
     Boolean flyCheck = false;
@@ -51,7 +49,6 @@ public class Initializer {
     Boolean initialGroundScanned = false;
 
     public Initializer(Drone drone, MapRepresenter map) {
-
         this.drone = drone;
         this.map = map;
     }
@@ -332,7 +329,6 @@ public class Initializer {
                     return turnToGroundHelperCaseOne();
                 } else {
                     return turnToGroundHelperCaseTwo();
-
                 }
             default:
                 return null;
@@ -355,7 +351,6 @@ public class Initializer {
         } else if (counter == 3) {
             counter = 0;
             facingGround = true;
-
             return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
         } else {
             return null;
@@ -386,7 +381,6 @@ public class Initializer {
         } else if (counter == 3) {
             counter = 0;
             facingGround = true;
-
             return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
         } else {
             return null;
