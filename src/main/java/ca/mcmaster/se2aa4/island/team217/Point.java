@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class Point {
 
     private int x;
-    private int y; 
+    private int y;
     boolean isGround = false;
     boolean isPOI = false;
     List<String> biomes = new ArrayList<>();
@@ -16,34 +16,33 @@ public class Point {
         this.y = y;
     }
 
-    public int getX(){
+    public int getX() {
         return x;
     }
 
-    public int getY(){
+    public int getY() {
         return y;
     }
 
-    public void initializeGround(){
-        if (biomes.size() == 1 && biomes.get(0).equals("OCEAN")){
+    public void initializeGround() {
+        if (biomes.size() == 1 && biomes.get(0).equals("OCEAN")) {
             isGround = false;
-        }
-        else {
+        } else {
             isGround = true;
         }
     }
 
-    public Boolean getGround(){
+    public Boolean getGround() {
         initializeGround();
         return isGround;
     }
 
-    public boolean getPOI(){
+    public boolean getPOI() {
         return isPOI;
     }
 
-    public void addBiomes(List<String> biome, Point currentLocation){
-        for (String b : biome){
+    public void addBiomes(List<String> biome, Point currentLocation) {
+        for (String b : biome) {
             this.biomes.add(b);
         }
     }
