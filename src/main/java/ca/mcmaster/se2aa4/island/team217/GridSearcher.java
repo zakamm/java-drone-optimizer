@@ -59,7 +59,7 @@ public class GridSearcher {
                 // The drone will continue to call the turnAroundGridSearch method until it has
                 // completed its rotation and then will reset all elements for the next turn in
                 // the future
-                if (counter == 7) {
+                if (counter == 9) {
                     counter = 0;
                     gridSearchDirection = drone.currentHeading;
                     atEdge = false;
@@ -73,6 +73,7 @@ public class GridSearcher {
             // if the turn is now complete or we detected water but it was not the edge of
             // the island, the drone will reset itself by doing a scan and fly and then
             // continue
+
             if (echoed && !atEdge && counter == 0) {
                 logger.info("DOING A QUICK FLY");
                 counter++;
@@ -111,20 +112,20 @@ public class GridSearcher {
         logger.info("WE TURNING AROUNDDD");
         logger.info(gridSearchDirection);
         // Is the method to turn around using a counter with respect to the heading
-        // changes
+        // changes.
+        // fix it such that based on the previous echo, if there is enough room it
+        // chooses the more cost effective turning method
         if (gridSearchDirection.equals(Heading.S) || gridSearchDirection.equals(Heading.W)) {
+            // Only needs one spot above it turn
             if (counter == 0) {
                 counter++;
-                return drone.echo(drone.currentHeading);
+                return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
             } else if (counter == 1) {
-                logger.info("SPACE TO TURN: {}", responseStorage.get("range").get(0));
                 counter++;
                 return drone.fly();
             } else if (counter == 2) {
                 counter++;
-                logger.info("COUNTER IS A 1 WE TURNIGN LEFTT");
-                logger.info(drone.currentHeading.leftSide(drone.currentHeading));
-                return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
+                return drone.fly();
             } else if (counter == 3) {
                 counter++;
                 return drone.fly();
@@ -136,19 +137,51 @@ public class GridSearcher {
                 return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
             } else if (counter == 6) {
                 counter++;
+                return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
+            } else if (counter == 7) {
+                counter++;
+                return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
+            } else if (counter == 8) {
+                counter++;
                 return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
             }
+
+            // needs 3 spaces above it to turn
+            // if (counter == 0) {
+            // counter++;
+            // return drone.fly();
+            // } else if (counter == 1) {
+            // counter++;
+            // return drone.fly();
+            // } else if (counter == 2) {
+            // counter++;
+            // logger.info("COUNTER IS A 1 WE TURNIGN LEFTT");
+            // logger.info(drone.currentHeading.leftSide(drone.currentHeading));
+            // return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
+            // } else if (counter == 3) {
+            // counter++;
+            // return drone.fly();
+            // } else if (counter == 4) {
+            // counter++;
+            // return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
+            // } else if (counter == 5) {
+            // counter++;
+            // return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
+            // } else if (counter == 6) {
+            // counter++;
+            // return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
+            // }
         } else if (gridSearchDirection.equals(Heading.N) || gridSearchDirection.equals(Heading.E)) {
+            // needs one spot above it to turn
             if (counter == 0) {
                 counter++;
-                return drone.echo(drone.currentHeading);
+                return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
             } else if (counter == 1) {
                 counter++;
-                logger.info("SPACE TO TURN: {}", responseStorage.get("range").get(0));
                 return drone.fly();
             } else if (counter == 2) {
                 counter++;
-                return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
+                return drone.fly();
             } else if (counter == 3) {
                 counter++;
                 return drone.fly();
@@ -160,8 +193,38 @@ public class GridSearcher {
                 return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
             } else if (counter == 6) {
                 counter++;
+                return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
+            } else if (counter == 7) {
+                counter++;
+                return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
+            } else if (counter == 8) {
+                counter++;
                 return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
             }
+
+            // needs 3 spaces above it to turn
+            // if (counter == 0) {
+            // counter++;
+            // return drone.fly();
+            // } else if (counter == 1) {
+            // counter++;
+            // return drone.fly();
+            // } else if (counter == 2) {
+            // counter++;
+            // return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
+            // } else if (counter == 3) {
+            // counter++;
+            // return drone.fly();
+            // } else if (counter == 4) {
+            // counter++;
+            // return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
+            // } else if (counter == 5) {
+            // counter++;
+            // return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
+            // } else if (counter == 6) {
+            // counter++;
+            // return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
+            // }
         }
         return null;
 
