@@ -10,6 +10,7 @@ import eu.ace_design.island.bot.IExplorerRaid;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.json.JSONArray;
+import java.util.List;
 
 public class Explorer implements IExplorerRaid {
 
@@ -67,7 +68,22 @@ public class Explorer implements IExplorerRaid {
 
     @Override
     public String deliverFinalReport() {
-        return "no creek found";
+        List<PointOfInterest> creeks = map.creeks;
+        
+        PointOfInterest site = map.site;
+        double distance = map.computeDistance();
+        if (map.closestCreek == null) {
+            map.closestCreek = creeks.get(0);
+        }
+        String report = map.closestCreek.getIdentifier();
+        // logger.info("The location of the emergency site is {}", site.getX() + ", " + site.getY());
+        // logger.info("** The distance between emergency site and closest creek is {}", distance);
+        // logger.info("** The identifier of the closest creek is {}", map.closestCreek.getIdentifier());
+        // logger.info("** The location of the closest creek is {}", map.closestCreek.getX() + ", " + map.closestCreek.getY());
+        // logger.info("** Delivering the final report");
+        // logger.info("** The drone has stopped");
+        
+        return report;
     }
 
     // write code to keep count of iterations and battery level

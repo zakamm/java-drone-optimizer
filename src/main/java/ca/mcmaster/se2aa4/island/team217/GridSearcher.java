@@ -24,6 +24,7 @@ public class GridSearcher {
 
     int counter = 0;
     int turnCounter = 0;
+    int distanceOutOfBounds = 0;
 
     Boolean echoed = false;
     Boolean flyCheck = false;
@@ -36,6 +37,7 @@ public class GridSearcher {
     String sideToTranslate = "";
     String sideToTurn = "";
     Boolean needToTranslate = false;
+    Boolean needToFly = false;
 
     Heading generalDirection;
     Heading gridSearchDirection;
@@ -60,6 +62,7 @@ public class GridSearcher {
             middle = drone.spawnedFacingGround;
             initializeGeneralDirection();
         }
+
         logger.info("BATTERY {}", drone.getBatteryLevel());
 
         // This is a state in which the drone is above only water as a biome, but we
@@ -100,7 +103,7 @@ public class GridSearcher {
 
 
             // Once we have turned around, and echoed, if we are out of range, we determine if we are done or not
-            if (echoed && !atEdge && counter == 1) {
+            if (echoed && !atEdge && counter == 1 && !needToTranslate) {
                 if (responseStorage.get("found").get(0).equals("OUT_OF_RANGE")) {
                     needToTranslate = true;
                     outOfRangeCounter++;
@@ -126,6 +129,17 @@ public class GridSearcher {
             // this moves the drone horizontally to the left or right by one so that we can grid search again in the opposite general direction
             if (needToTranslate) {
                 if (turnCounter == 5) {
+                    if(responseStorage.get("found").get(0).equals(null) && !needToFly) {
+                        return drone.echo(drone.currentHeading);
+                    }
+                    else if (responseStorage.get("found").get(0).equals("OUT_OF_RANGE")) {
+                        needToFly = true;
+                    }
+                    if (needToFly && distanceOutOfBounds >= 3) {
+                        distanceOutOfBounds--;
+                        return drone.fly();
+                    }
+                    needToFly = false;
                     needToTranslate = false;
                     turnCounter = 0;
                     gridSearchDirection = drone.currentHeading;

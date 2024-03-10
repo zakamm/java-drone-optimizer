@@ -22,6 +22,7 @@ public class MapRepresenter {
     int rows = 0;
 
     public List<PointOfInterest> creeks = new ArrayList<>();
+    PointOfInterest closestCreek;
     public PointOfInterest site;
     List<List<Point>> map = new ArrayList<>();
     public Boolean initialized = false;
@@ -91,10 +92,15 @@ public class MapRepresenter {
     // }
 
     public double computeDistance(){
+        if (site == null){
+            return 0;
+        }
+        closestCreek = creeks.get(0);
         double minDistance = 1000000;
         for (PointOfInterest creek : creeks){
             double distance = Math.sqrt(Math.pow((creek.getX() - site.getX()), 2) + Math.pow((creek.getY() - site.getY()), 2));
             if (distance < minDistance){
+                closestCreek = creek;
                 minDistance = distance;
             }
         }
