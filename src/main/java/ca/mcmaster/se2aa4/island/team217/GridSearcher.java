@@ -27,11 +27,18 @@ public class GridSearcher {
     Boolean echoed = false;
     Boolean flyCheck = false;
     Boolean atEdge = false;
-    Heading gridSearchDirection = Heading.S;
+    Boolean initializeGridSearch = false;
+    Boolean middle;
+    Point initialLocation;
+    Heading initialHeading; 
+
+    // this is questionable
+    Heading gridSearchDirection;
 
     public GridSearcher(Drone drone, MapRepresenter map) {
         this.drone = drone;
         this.map = map;
+        gridSearchDirection = this.drone.initialHeading;
     }
 
     /*
@@ -39,6 +46,13 @@ public class GridSearcher {
      * instanstiation
      */
     public String searchGrid(HashMap<String, List<String>> responseStorage) {
+
+        if (initializeGridSearch == false) {
+            initializeGridSearch = true;
+            initialLocation = drone.currentLocation;
+            initialHeading = drone.currentHeading;
+            middle = drone.spawnedFacingGround;
+        }
         logger.info("BATTERY {}", drone.getBatteryLevel());
 
         // This is a state in which the drone is above only water as a biome, but we
@@ -50,7 +64,8 @@ public class GridSearcher {
             // of range or if it needs to keep searching, this is done through activating
             // this next state of "atEdge"
             if (counter == 0 &&
-                    responseStorage.get("found").get(0).equals("OUT_OF_RANGE")) {
+                responseStorage.get("found").get(0).equals("OUT_OF_RANGE")) 
+            {
                 logger.info("WE SETTING atEdge!!!");
                 atEdge = true;
             }
@@ -66,8 +81,7 @@ public class GridSearcher {
                     return drone.scan();
                 } else {
                     logger.info("COUNTERRRR {} , ", counter);
-
-                    return turnAroundGridSearch(responseStorage);
+                    //return turnAroundGridSearch();
                 }
             }
             // if the turn is now complete or we detected water but it was not the edge of
@@ -82,7 +96,7 @@ public class GridSearcher {
             }
 
             if (echoed && !atEdge && counter == 0) {
-                logger.info("DOING A QUICK FLY");
+                logger.info("ECHO AFTER THE TURN TO DETERMINE IF WE ARE DONE");
                 counter++;
                 return drone.echo(drone.currentHeading);
             } else {
@@ -97,7 +111,7 @@ public class GridSearcher {
         // If we are only on OCEAN as a biome, the drone will echo and set echoed to be
         // true, otherwise it will cycle between scanning and then flying forward
         if (!drone.currentLocation.getGround()) {
-            echoed = true ? echoed == false : false;
+            echoed = !echoed;
             logger.info("WE BOUTTA ECHOOOOOOOOOOOOOOOOOOOOOO");
             logger.info("CURRENT HEADING {}", drone.currentHeading);
             return drone.echo(drone.currentHeading);
@@ -116,7 +130,18 @@ public class GridSearcher {
 
     }
 
-    private String turnAroundGridSearch(HashMap<String, List<String>> responseStorage) {
+    private String normalTurnAroundGridSearch(){
+        if (counter == 0){
+            counter++;
+            return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
+        }
+        else if (counter == 1){
+            counter++;
+            return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
+        }
+        return null;
+    }
+    private String turnAroundGridSearch() {
         logger.info("WE TURNING AROUNDDD");
         logger.info(gridSearchDirection);
         // Is the method to turn around using a counter with respect to the heading

@@ -11,8 +11,10 @@ public class Drone {
 
     private Integer batteryLevel;
     Point currentLocation;
+    Boolean spawnedFacingGround;
     public Heading currentHeading;
     public final Heading initialHeading;
+    int counter = 0;
 
     public MapRepresenter mapRepresenter;
 
@@ -131,9 +133,30 @@ public class Drone {
         return decisionTaken("fly");
     }
 
+    public String turnAroundLeft() {
+        if (counter == 0) {
+            counter++;
+            return heading(currentHeading.leftSide(currentHeading));
+        } else {
+            counter = 0;
+            return heading(currentHeading.leftSide(currentHeading));
+        }
+    }
+
+    public String turnAroundRight() {
+        if (counter == 0) {
+            counter++;
+            return heading(currentHeading.rightSide(currentHeading));
+        } else {
+            counter = 0;
+            return heading(currentHeading.rightSide(currentHeading));
+        }
+    }
+
     public void initializeCurrentLocation(Integer leftX, Integer topY, Boolean spawnedFacingGround) {
         int x;
         int y;
+        this.spawnedFacingGround = spawnedFacingGround;
 
         // we didnt change heading and so leftX and topY are the same as the current
         // location
