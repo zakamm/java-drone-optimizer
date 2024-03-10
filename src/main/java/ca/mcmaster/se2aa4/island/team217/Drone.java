@@ -133,26 +133,6 @@ public class Drone {
         return decisionTaken("fly");
     }
 
-    public String turnAroundLeft() {
-        if (counter == 0) {
-            counter++;
-            return heading(currentHeading.leftSide(currentHeading));
-        } else {
-            counter = 0;
-            return heading(currentHeading.leftSide(currentHeading));
-        }
-    }
-
-    public String turnAroundRight() {
-        if (counter == 0) {
-            counter++;
-            return heading(currentHeading.rightSide(currentHeading));
-        } else {
-            counter = 0;
-            return heading(currentHeading.rightSide(currentHeading));
-        }
-    }
-
     public void initializeCurrentLocation(Integer leftX, Integer topY, Boolean spawnedFacingGround) {
         int x;
         int y;
