@@ -21,7 +21,9 @@ public class MapRepresenter {
     int columns = 0;
     int rows = 0;
 
-    public List<PointOfInterest> pois = new ArrayList<>();
+    public List<PointOfInterest> creeks = new ArrayList<>();
+    PointOfInterest closestCreek;
+    public PointOfInterest site;
     List<List<Point>> map = new ArrayList<>();
     public Boolean initialized = false;
 
@@ -44,16 +46,15 @@ public class MapRepresenter {
             for (String creekIdentifier : scanResults.get("creeks")) {
                 PointOfInterest poi = new PointOfInterest(currentLocation.getX(), currentLocation.getY(),
                         creekIdentifier, "creek");
-                pois.add(poi);
+                creeks.add(poi);
             }
         }
 
         if (!(scanResults.get("sites").get(0).equals("null"))) {
             // if there are sites, add them to the POI list
             for (String siteIdentifier : scanResults.get("sites")) {
-                PointOfInterest poi = new PointOfInterest(currentLocation.getX(), currentLocation.getY(),
-                        siteIdentifier, "creek");
-                pois.add(poi);
+                site = new PointOfInterest(currentLocation.getX(), currentLocation.getY(),
+                        siteIdentifier, "site");
             }
         }
         currentLocation.addBiomes(scanResults.get("biomes"), currentLocation);
@@ -89,4 +90,21 @@ public class MapRepresenter {
 
     // pois.add(poi);
     // }
+
+    public double computeDistance(){
+        if (site == null){
+            return 0;
+        }
+        closestCreek = creeks.get(0);
+        double minDistance = 1000000;
+        for (PointOfInterest creek : creeks){
+            double distance = Math.sqrt(Math.pow((creek.getX() - site.getX()), 2) + Math.pow((creek.getY() - site.getY()), 2));
+            if (distance < minDistance){
+                closestCreek = creek;
+                minDistance = distance;
+            }
+        }
+        return minDistance;
+    }
+    
 }

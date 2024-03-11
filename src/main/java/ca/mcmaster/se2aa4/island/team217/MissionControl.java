@@ -52,6 +52,10 @@ public class MissionControl {
      */
     public String nextDecision() {
 
+        if (drone.getBatteryLevel() < 50){
+            return drone.stop();
+        }
+
         // first echo to determine where the drone is located
         if (initialEchoed == false) {
             initialEchoed = true;
@@ -76,9 +80,9 @@ public class MissionControl {
         // logger.info("MAP INITIALIZED");
         // return drone.stop();
 
-        // if (map.initialized == true && gridSearch == false) {
-        //     return gridSearcher.searchGrid(responseStorage);
-        // }
+        if (map.initialized == true && gridSearch == false) {
+            return gridSearcher.searchGrid(responseStorage);
+        }
 
         logger.info("MAP INITIALIZED");
         return drone.stop();

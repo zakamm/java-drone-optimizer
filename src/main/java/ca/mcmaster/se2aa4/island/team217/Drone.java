@@ -11,8 +11,10 @@ public class Drone {
 
     private Integer batteryLevel;
     Point currentLocation;
+    Boolean spawnedFacingGround;
     public Heading currentHeading;
     public final Heading initialHeading;
+    int counter = 0;
 
     public MapRepresenter mapRepresenter;
 
@@ -109,21 +111,26 @@ public class Drone {
 
     // this method also updates the current location of the drone
     public String fly() {
-        switch (currentHeading) {
-            case N:
-                currentLocation = mapRepresenter.map.get(currentLocation.getX() - 1).get(currentLocation.getY());
-                break;
-            case E:
-                currentLocation = mapRepresenter.map.get(currentLocation.getX()).get(currentLocation.getY() + 1);
-                break;
-            case S:
-                currentLocation = mapRepresenter.map.get(currentLocation.getX() + 1).get(currentLocation.getY());
-                break;
-            case W:
-                currentLocation = mapRepresenter.map.get(currentLocation.getX()).get(currentLocation.getY() - 1);
-                break;
-            default:
-                break;
+        try{
+            switch (currentHeading) {
+                case N:
+                    currentLocation = mapRepresenter.map.get(currentLocation.getX() - 1).get(currentLocation.getY());
+                    break;
+                case E:
+                    currentLocation = mapRepresenter.map.get(currentLocation.getX()).get(currentLocation.getY() + 1);
+                    break;
+                case S:
+                    currentLocation = mapRepresenter.map.get(currentLocation.getX() + 1).get(currentLocation.getY());
+                    break;
+                case W:
+                    currentLocation = mapRepresenter.map.get(currentLocation.getX()).get(currentLocation.getY() - 1);
+                    break;
+                default:
+                    break;
+            }
+        } catch (IndexOutOfBoundsException e) {
+            logger.info("Out of bounds");
+            return decisionTaken("stop");
         }
 
         logger.info(currentLocation.getX() + " " + currentLocation.getY());
@@ -134,6 +141,7 @@ public class Drone {
     public void initializeCurrentLocation(Integer leftX, Integer topY, Boolean spawnedFacingGround) {
         int x;
         int y;
+        this.spawnedFacingGround = spawnedFacingGround;
 
         // we didnt change heading and so leftX and topY are the same as the current
         // location
@@ -158,50 +166,55 @@ public class Drone {
         if (heading == currentHeading || heading == currentHeading.backSide(currentHeading)) {
             throw new IllegalArgumentException("Invalid heading");
         }
-        if (heading == currentHeading.leftSide(currentHeading)) {
-            switch (currentHeading) {
-                case N:
-                    currentLocation = mapRepresenter.map.get(currentLocation.getX() - 1)
-                            .get(currentLocation.getY() - 1);
-                    break;
-                case E:
-                    currentLocation = mapRepresenter.map.get(currentLocation.getX() - 1)
-                            .get(currentLocation.getY() + 1);
-                    break;
-                case S:
-                    currentLocation = mapRepresenter.map.get(currentLocation.getX() + 1)
-                            .get(currentLocation.getY() + 1);
-                    break;
-                case W:
-                    currentLocation = mapRepresenter.map.get(currentLocation.getX() + 1)
-                            .get(currentLocation.getY() - 1);
-                    break;
-                default:
-                    return null;
+        try {
+            if (heading == currentHeading.leftSide(currentHeading)) {
+                switch (currentHeading) {
+                    case N:
+                        currentLocation = mapRepresenter.map.get(currentLocation.getX() - 1)
+                                .get(currentLocation.getY() - 1);
+                        break;
+                    case E:
+                        currentLocation = mapRepresenter.map.get(currentLocation.getX() - 1)
+                                .get(currentLocation.getY() + 1);
+                        break;
+                    case S:
+                        currentLocation = mapRepresenter.map.get(currentLocation.getX() + 1)
+                                .get(currentLocation.getY() + 1);
+                        break;
+                    case W:
+                        currentLocation = mapRepresenter.map.get(currentLocation.getX() + 1)
+                                .get(currentLocation.getY() - 1);
+                        break;
+                    default:
+                        return null;
+                }
             }
-        }
-
-        if (heading == currentHeading.rightSide(currentHeading)) {
-            switch (currentHeading) {
-                case N:
-                    currentLocation = mapRepresenter.map.get(currentLocation.getX() - 1)
-                            .get(currentLocation.getY() + 1);
-                    break;
-                case E:
-                    currentLocation = mapRepresenter.map.get(currentLocation.getX() + 1)
-                            .get(currentLocation.getY() + 1);
-                    break;
-                case S:
-                    currentLocation = mapRepresenter.map.get(currentLocation.getX() + 1)
-                            .get(currentLocation.getY() - 1);
-                    break;
-                case W:
-                    currentLocation = mapRepresenter.map.get(currentLocation.getX() - 1)
-                            .get(currentLocation.getY() - 1);
-                    break;
-                default:
-                    return null;
+    
+            if (heading == currentHeading.rightSide(currentHeading)) {
+                switch (currentHeading) {
+                    case N:
+                        currentLocation = mapRepresenter.map.get(currentLocation.getX() - 1)
+                                .get(currentLocation.getY() + 1);
+                        break;
+                    case E:
+                        currentLocation = mapRepresenter.map.get(currentLocation.getX() + 1)
+                                .get(currentLocation.getY() + 1);
+                        break;
+                    case S:
+                        currentLocation = mapRepresenter.map.get(currentLocation.getX() + 1)
+                                .get(currentLocation.getY() - 1);
+                        break;
+                    case W:
+                        currentLocation = mapRepresenter.map.get(currentLocation.getX() - 1)
+                                .get(currentLocation.getY() - 1);
+                        break;
+                    default:
+                        return null;
+                }
             }
+        } catch (IndexOutOfBoundsException e) {
+            logger.info("Out of bounds");
+            return decisionTaken("stop");
         }
         logger.info(currentLocation.getX() + " " + currentLocation.getY());
         return decisionTaken("heading", heading.toString());
