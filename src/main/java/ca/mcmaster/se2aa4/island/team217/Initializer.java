@@ -62,7 +62,7 @@ public class Initializer {
      * entering top left should not be facing north, etc.)
      * We also assume the island is more or less centered in the map
      */
-    public String initializeMission(Heading initialHeading, HashMap<String, List<String>> responseStorage) {
+    public String initializeMission(Heading initialHeading, ResponseStorage responseStorage) {
 
         // first we echo in 3 directions to determine where the drone is located
         if (initialThreeCheck == false) {
@@ -81,11 +81,11 @@ public class Initializer {
             logger.info("rows or columns: " + rowsOrColumns);
             // run a solid fly check here
             if (!flyCheck && !foundLand) {
-                if (responseStorage.get("found").get(0).equals("OUT_OF_RANGE")) {
+                if (responseStorage.getFound().equals("OUT_OF_RANGE")) {
                     flyCheck = true;
                     return drone.fly();
-                } else if (responseStorage.get("found").get(0).equals("GROUND")) {
-                    distanceToGround = Integer.parseInt(responseStorage.get("range").get(0));
+                } else if (responseStorage.getFound().equals("GROUND")) {
+                    distanceToGround = responseStorage.getRange();
                     foundLand = true;
                     headingAfterFirstTurn = drone.currentHeading;
                 }
@@ -140,13 +140,13 @@ public class Initializer {
 
     // if we spawned not facing ground, we echo backwards to determine that
     // dimension
-    private String determineNextDimension(HashMap<String, List<String>> responseStorage) {
+    private String determineNextDimension(ResponseStorage responseStorage) {
         if (counter == 0) {
             counter++;
             return drone.echo(drone.initialHeading.backSide(drone.initialHeading));
         } else if (counter == 1) {
             initializeMapDimensions(drone.getDirection(),
-                    String.valueOf(Integer.parseInt(responseStorage.get("range").get(0)) - 1));
+                    responseStorage.getRange() - 1); 
             rowsOrColumns = rowsOrColumns();
             logger.info("rows or columns: " + rowsOrColumns);
             if (rowsOrColumns.equals("both")) {
@@ -164,15 +164,15 @@ public class Initializer {
     }
 
     // echoe three times and then run initialturn based on the results
-    public String initialThreeCheck(HashMap<String, List<String>> responseStorage) {
+    public String initialThreeCheck(ResponseStorage responseStorage) {
         if (counter == 0) {
-            if (responseStorage.get("range").get(0).equals("0")) {
+            if (responseStorage.getRange() == 0) {
                 return drone.stop();
             }
-            if (responseStorage.get("found").get(0).equals("OUT_OF_RANGE")) {
-                initializeMapDimensions(drone.getDirection(), responseStorage.get("range").get(0));
+            if (responseStorage.getFound().equals("OUT_OF_RANGE")) {
+                initializeMapDimensions(drone.getDirection(), responseStorage.getRange());
             } else {
-                distanceToGround = Integer.parseInt(responseStorage.get("range").get(0));
+                distanceToGround = responseStorage.getRange();
                 foundLand = true;
                 // do not need to turn anymore since ground is in front of us
                 initialTurn = true;
@@ -186,19 +186,19 @@ public class Initializer {
         }
 
         else if (counter == 1) {
-            if (responseStorage.get("found").get(0).equals("OUT_OF_RANGE")) {
-                initializeMapDimensions(drone.getDirection(), responseStorage.get("range").get(0));
+            if (responseStorage.getFound().equals("OUT_OF_RANGE")) {
+                initializeMapDimensions(drone.getDirection(), responseStorage.getRange());
             } else {
-                distanceToGround = Integer.parseInt(responseStorage.get("range").get(0));
+                distanceToGround = responseStorage.getRange();
                 foundLand = true;
             }
             counter++;
             return drone.echo(drone.initialHeading.leftSide(drone.initialHeading));
         } else if (counter == 2) {
-            if (responseStorage.get("found").get(0).equals("OUT_OF_RANGE")) {
-                initializeMapDimensions(drone.getDirection(), responseStorage.get("range").get(0));
+            if (responseStorage.getFound().equals("OUT_OF_RANGE")) {
+                initializeMapDimensions(drone.getDirection(), responseStorage.getRange());
             } else {
-                distanceToGround = Integer.parseInt(responseStorage.get("range").get(0));
+                distanceToGround = responseStorage.getRange();
                 foundLand = true;
             }
             counter = 0;
@@ -218,19 +218,19 @@ public class Initializer {
 
     // this method initializes the location of the drone based on 3 echoes, if they
     // dont echo ground
-    public void initializeMapDimensions(Heading heading, String range) {
+    public void initializeMapDimensions(Heading heading, Integer range) {
         switch (heading) {
             case N:
-                topY = Integer.parseInt(range);
+                topY = range;
                 break;
             case E:
-                rightX = Integer.parseInt(range);
+                rightX = range;
                 break;
             case S:
-                bottomY = Integer.parseInt(range);
+                bottomY = range;
                 break;
             case W:
-                leftX = Integer.parseInt(range);
+                leftX = range;
                 break;
             default:
                 break;
@@ -257,8 +257,8 @@ public class Initializer {
     // if we spawned facing ground, we want to find the missing coordinate by flying
     // until we echo the edge of the map, this helps us determine the missing
     // coordinate
-    public String findMissingCoordinate(HashMap<String, List<String>> responseStorage) {
-        if (!responseStorage.get("found").get(0).equals("OUT_OF_RANGE")) {
+    public String findMissingCoordinate(ResponseStorage responseStorage) {
+        if (!responseStorage.getFound().equals("OUT_OF_RANGE")) {
             if (counter == 0) {
                 counter++;
                 flyCounter++;
@@ -268,8 +268,8 @@ public class Initializer {
                 return drone.echo(drone.currentHeading);
             }
         } else {
-            initializeMapDimensions(drone.currentHeading, responseStorage.get("range").get(0));
-            initializeMapDimensions(drone.currentHeading.backSide(drone.currentHeading), String.valueOf(flyCounter));
+            initializeMapDimensions(drone.currentHeading, responseStorage.getRange());
+            initializeMapDimensions(drone.currentHeading.backSide(drone.currentHeading), flyCounter);
             logger.info(flyCounter);
             logger.info("topY: " + topY + " bottomY: " + bottomY + " leftX: " + leftX + " rightX: " + rightX);
             rowsOrColumns = rowsOrColumns();

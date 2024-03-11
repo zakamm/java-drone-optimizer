@@ -39,25 +39,23 @@ public class MapRepresenter {
         }
     }
 
-    public void storeScanResults(HashMap<String, List<String>> scanResults, Point currentLocation) {
+    public void storeScanResults(ResponseStorage scanResults, Point currentLocation) {
 
-        if (!(scanResults.get("creeks").get(0).equals("null"))) {
+        if (!(scanResults.getCreeks().get(0).equals("null"))) {
             // if there are creeks, add them to the POI list
-            for (String creekIdentifier : scanResults.get("creeks")) {
+            for (String creekIdentifier : scanResults.getCreeks()) {
                 PointOfInterest poi = new PointOfInterest(currentLocation.getX(), currentLocation.getY(),
                         creekIdentifier, "creek");
                 creeks.add(poi);
             }
         }
 
-        if (!(scanResults.get("sites").get(0).equals("null"))) {
+        if (!(scanResults.getSite().equals("null"))) {
             // if there are sites, add them to the POI list
-            for (String siteIdentifier : scanResults.get("sites")) {
-                site = new PointOfInterest(currentLocation.getX(), currentLocation.getY(),
-                        siteIdentifier, "site");
-            }
+            site = new PointOfInterest(currentLocation.getX(), currentLocation.getY(),
+                        scanResults.getSite(), "site");
         }
-        currentLocation.addBiomes(scanResults.get("biomes"), currentLocation);
+        currentLocation.addBiomes(scanResults.getBiomes());
 
     }
 

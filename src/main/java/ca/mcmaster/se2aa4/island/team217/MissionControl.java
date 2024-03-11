@@ -28,8 +28,9 @@ public class MissionControl {
 
     Boolean searchedCoast = false;
     Boolean stop = false;
-    List<String> nextDecision = new ArrayList<String>();
-    HashMap<String, List<String>> responseStorage = new HashMap<String, List<String>>();
+    //List<String> nextDecision = new ArrayList<String>();
+    ResponseStorage responseStorage = new ResponseStorage();
+    //HashMap<String, List<String>> responseStorage = new HashMap<String, List<String>>();
     Initializer initializer;
 
     GridSearcher gridSearcher;
@@ -89,59 +90,30 @@ public class MissionControl {
     }
 
     public void storeResponse(String action, JSONObject previousResponse) {
-        // want to clear at the start of each iteration
+        // want to clear at the start of each iteration, sets all values to null
         responseStorage.clear();
 
-        // all actions will have cost and status
+        // all actions will have cost
         List<String> temp = new ArrayList<String>();
-        temp.add(Integer.toString(previousResponse.getInt("cost")));
-        responseStorage.put("cost", temp);
-
-        temp = new ArrayList<String>();
-        temp.add(String.valueOf(previousResponse.getString("status")));
-        responseStorage.put("status", temp);
-
-        // ensure these are null if they are not part of response
-        temp = new ArrayList<String>();
-        temp.add("null");
-        responseStorage.put("found", temp);
-        temp = new ArrayList<String>();
-        temp.add("null");
-        responseStorage.put("range", temp);
-
-        // ensure these are null if they are not part of response
-        temp = new ArrayList<String>();
-        temp.add("null");
-        responseStorage.put("found", temp);
-        temp = new ArrayList<String>();
-        temp.add("null");
-        responseStorage.put("range", temp);
+        responseStorage.setCost(previousResponse.getInt("cost"));
 
         if (action.equals("echo")) {
-            temp = new ArrayList<String>();
-            temp.add(String.valueOf(previousResponse.getJSONObject("extras").getInt("range")));
-            responseStorage.put("range", temp);
-
-            temp = new ArrayList<String>();
-            temp.add(previousResponse.getJSONObject("extras").getString("found"));
-            responseStorage.put("found", temp);
-
+            responseStorage.setRange(previousResponse.getJSONObject("extras").getInt("range"));
+            responseStorage.setFound(previousResponse.getJSONObject("extras").getString("found"));
         }
 
         // store as lists with first item being null if empty
-
         else if (action.equals("scan")) {
             temp = new ArrayList<String>();
             JSONArray creeksArray = previousResponse.getJSONObject("extras").getJSONArray("creeks");
             if (creeksArray.length() == 0) {
                 temp.add("null");
             } else {
-
                 for (int i = 0; i < creeksArray.length(); i++) {
                     temp.add(creeksArray.getString(i));
                 }
             }
-            responseStorage.put("creeks", temp);
+            responseStorage.setCreeks(temp);
 
             temp = new ArrayList<String>();
             JSONArray biomesArray = previousResponse.getJSONObject("extras").getJSONArray("biomes");
@@ -152,38 +124,17 @@ public class MissionControl {
                     temp.add(biomesArray.getString(i));
                 }
             }
-            responseStorage.put("biomes", temp);
+            responseStorage.setBiomes(temp);
 
+            // assuming there is only one site, we only store the first value
             temp = new ArrayList<String>();
             JSONArray sitesArray = previousResponse.getJSONObject("extras").getJSONArray("sites");
             if (sitesArray.length() == 0) {
                 temp.add("null");
             } else {
-
-                for (int i = 0; i < sitesArray.length(); i++) {
-                    temp.add(sitesArray.getString(i));
-                }
+                temp.add(sitesArray.getString(0));
             }
-            responseStorage.put("sites", temp);
+            responseStorage.setSite(temp.get(0));
         }
-
-        // for printing out the previous response for debugging
-        // for (Map.Entry<String, List<String>> entry : responseStorage.entrySet()) {
-
-        // logger.info("Key: " + entry.getKey());
-        // for (String value : entry.getValue()) {
-        // logger.info("Value: " + value);
-        // }
-        // }
-
     }
-
-    public void process_poi_data(PointOfInterest pointOfInterest) {
-
-    }
-
-    public void rescue_mission() {
-
-    }
-
 }
