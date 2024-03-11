@@ -41,7 +41,7 @@ public class Point {
         return isPOI;
     }
 
-    public void addBiomes(List<String> biome, Point currentLocation) {
+    public void addBiomes(List<String> biome) {
         for (String b : biome) {
             this.biomes.add(b);
         }

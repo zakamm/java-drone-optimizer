@@ -52,7 +52,7 @@ public class GridSearcher {
      * scans through the whole island and will store all important POI's in the map
      * instanstiation
      */
-    public String searchGrid(HashMap<String, List<String>> responseStorage) {
+    public String searchGrid(ResponseStorage responseStorage) {
 
         // initialize the grid search
         if (initializeGridSearch == false) {
@@ -69,12 +69,12 @@ public class GridSearcher {
         // dont know if we are in the middle of the island or past it so, it checks that
         if (echoed) {
             logger.info("WE IN THE ECHOEED");
-            logger.info("THIS IS THE STORAGE {} ", responseStorage.get("found").get(0));
+            logger.info("THIS IS THE STORAGE {} ", responseStorage.getFound());
             // The drone will have echoed and so now it will check to see if the echo is out
             // of range or if it needs to keep searching, this is done through activating
             // this next state of "atEdge"
             if (counter == 0 &&
-                responseStorage.get("found").get(0).equals("OUT_OF_RANGE")) 
+                responseStorage.getFound().equals("OUT_OF_RANGE")) 
             {
                 logger.info("WE SETTING atEdge!!!");
                 atEdge = true;
@@ -104,7 +104,7 @@ public class GridSearcher {
 
             // Once we have turned around, and echoed, if we are out of range, we determine if we are done or not
             if (echoed && !atEdge && counter == 1 && !needToTranslate) {
-                if (responseStorage.get("found").get(0).equals("OUT_OF_RANGE")) {
+                if (responseStorage.getFound().equals("OUT_OF_RANGE")) {
                     needToTranslate = true;
                     outOfRangeCounter++;
                     logger.info("OUT OF RANGE COUNTER {}", outOfRangeCounter);
@@ -129,10 +129,11 @@ public class GridSearcher {
             // this moves the drone horizontally to the left or right by one so that we can grid search again in the opposite general direction
             if (needToTranslate) {
                 if (turnCounter == 5) {
-                    if(responseStorage.get("found").get(0).equals(null) && !needToFly) {
+                    if(responseStorage.getFound().equals(null) && !needToFly) {
                         return drone.echo(drone.currentHeading);
                     }
-                    else if (responseStorage.get("found").get(0).equals("OUT_OF_RANGE")) {
+                    else if (responseStorage.getFound().equals("OUT_OF_RANGE")) {
+                        distanceOutOfBounds = responseStorage.getRange();
                         needToFly = true;
                     }
                     if (needToFly && distanceOutOfBounds >= 3) {
