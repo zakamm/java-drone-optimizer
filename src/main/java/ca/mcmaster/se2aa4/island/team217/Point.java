@@ -1,34 +1,49 @@
-package ca.mcmaster.se2aa4.island.team217; 
+package ca.mcmaster.se2aa4.island.team217;
+
+import java.util.List;
+import java.util.ArrayList;
 
 public class Point {
 
     private int x;
-    private int y; 
+    private int y;
     boolean isGround = false;
     boolean isPOI = false;
+    List<String> biomes = new ArrayList<>();
 
     public Point(int x, int y) {
         this.x = x;
         this.y = y;
     }
 
-    public int getX(){
+    public int getX() {
         return x;
     }
 
-    public int getY(){
+    public int getY() {
         return y;
     }
 
-    public void setGround(){
-        isGround = true;
+    public void initializeGround() {
+        if (biomes.size() == 1 && biomes.get(0).equals("OCEAN")) {
+            isGround = false;
+        } else {
+            isGround = true;
+        }
     }
 
-    public Boolean getGround(){
+    public Boolean getGround() {
+        initializeGround();
         return isGround;
     }
 
-    public boolean getPOI(){
+    public boolean getPOI() {
         return isPOI;
+    }
+
+    public void addBiomes(List<String> biome) {
+        for (String b : biome) {
+            this.biomes.add(b);
+        }
     }
 }

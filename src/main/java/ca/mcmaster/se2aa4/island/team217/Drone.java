@@ -11,12 +11,16 @@ public class Drone {
 
     private Integer batteryLevel;
     Point currentLocation;
+    Boolean spawnedFacingGround;
     public Heading currentHeading;
-    public Heading initialHeading;
+    public final Heading initialHeading;
+    int counter = 0;
+
+    public MapRepresenter mapRepresenter;
 
     // parameters of the next decision
     private String action;
-    private String direction;
+    private Heading direction;
 
     public enum Heading {
         N, E, S, W;
@@ -33,7 +37,7 @@ public class Drone {
                 case W:
                     return S;
                 default:
-                    throw new IllegalArgumentException("Invalid heading: " + currentHeading);
+                    throw new NullPointerException("Invalid heading: " + currentHeading);
             }
         }
 
@@ -48,7 +52,7 @@ public class Drone {
                 case W:
                     return N;
                 default:
-                    throw new IllegalArgumentException("Invalid heading: " + currentHeading);
+                    throw new NullPointerException("Invalid heading: " + currentHeading);
             }
         }
 
@@ -63,28 +67,30 @@ public class Drone {
                 case W:
                     return E;
                 default:
-                    throw new IllegalArgumentException("Invalid heading: " + currentHeading);
+                    throw new NullPointerException("Invalid heading: " + currentHeading);
             }
         }
     }
 
-    public Drone(Integer batteryLevel, String initialHeading) {
+    public Drone(Integer batteryLevel, String initialHeading, MapRepresenter map) {
         this.batteryLevel = batteryLevel;
         this.currentHeading = Heading.valueOf(initialHeading);
         this.initialHeading = Heading.valueOf(initialHeading);
-        this.currentLocation = new Point(0, 0);
+        // initialize it at (100, 100) for now
+        this.currentLocation = new Point(100, 100);
+        this.mapRepresenter = map;
     }
 
-    // these methods are based on the actions that the drone can take
-    public String turnLeft() {
-        currentHeading = currentHeading.leftSide(currentHeading);
-        return decisionTaken("heading", currentHeading.toString());
-    }
+    // // these methods are based on the actions that the drone can take
+    // public String turnLeft() {
+    // currentHeading = currentHeading.leftSide(currentHeading);
+    // return decisionTaken("heading", currentHeading.toString());
+    // }
 
-    public String turnRight() {
-        currentHeading = currentHeading.rightSide(currentHeading);
-        return decisionTaken("heading", currentHeading.toString());
-    }
+    // public String turnRight() {
+    // currentHeading = currentHeading.rightSide(currentHeading);
+    // return decisionTaken("heading", currentHeading.toString());
+    // }
 
     // need to fix this method
     // public String turnAround(){
@@ -105,75 +111,112 @@ public class Drone {
 
     // this method also updates the current location of the drone
     public String fly() {
-        switch (currentHeading) {
-            case N:
-                currentLocation = new Point(currentLocation.getX(), currentLocation.getY() + 1);
-                break;
-            case E:
-                currentLocation = new Point(currentLocation.getX() + 1, currentLocation.getY());
-                break;
-            case S:
-                currentLocation = new Point(currentLocation.getX(), currentLocation.getX() - 1);
-                break;
-            case W:
-                currentLocation = new Point(currentLocation.getX() - 1, currentLocation.getY());
-                break;
-            default:
-                break;
+        try {
+            switch (currentHeading) {
+                case N:
+                    currentLocation = mapRepresenter.map.get(currentLocation.getX() - 1).get(currentLocation.getY());
+                    break;
+                case E:
+                    currentLocation = mapRepresenter.map.get(currentLocation.getX()).get(currentLocation.getY() + 1);
+                    break;
+                case S:
+                    currentLocation = mapRepresenter.map.get(currentLocation.getX() + 1).get(currentLocation.getY());
+                    break;
+                case W:
+                    currentLocation = mapRepresenter.map.get(currentLocation.getX()).get(currentLocation.getY() - 1);
+                    break;
+                default:
+                    break;
+            }
+        } catch (IndexOutOfBoundsException e) {
+            logger.info("Out of bounds");
+            return decisionTaken("stop");
         }
 
+        logger.info(currentLocation.getX() + " " + currentLocation.getY());
+
         return decisionTaken("fly");
+    }
+
+    public void initializeCurrentLocation(Integer leftX, Integer topY, Boolean spawnedFacingGround) {
+        int x;
+        int y;
+        this.spawnedFacingGround = spawnedFacingGround;
+
+        // we didnt change heading and so leftX and topY are the same as the current
+        // location
+        if (spawnedFacingGround) {
+            x = topY;
+            y = leftX;
+        }
+        // since we changed heading, leftX and topY are off by a bit, the 100 we
+        // intialized currentLocation at (100, 100)
+        else {
+            x = topY + currentLocation.getY() - 100;
+            y = leftX + currentLocation.getX() - 100;
+        }
+        logger.info(x);
+        logger.info(y);
+        currentLocation = mapRepresenter.map.get(x).get(y);
     }
 
     // this method also updates current location based on current heading and next
     // heading
     public String heading(Heading heading) {
-        logger.info("WE IN THE DRONE");
-        logger.info("Current Heading, {}", currentHeading);
-        logger.info("Change Heading, {}", heading);
-
         if (heading == currentHeading || heading == currentHeading.backSide(currentHeading)) {
             throw new IllegalArgumentException("Invalid heading");
         }
-
-        if (heading == currentHeading.leftSide(currentHeading)) {
-            switch (currentHeading) {
-                case N:
-                    currentLocation = new Point(currentLocation.getX() - 1, currentLocation.getY() + 1);
-                    break;
-                case E:
-                    currentLocation = new Point(currentLocation.getX() + 1, currentLocation.getY() + 1);
-                    break;
-                case S:
-                    currentLocation = new Point(currentLocation.getX() + 1, currentLocation.getY() - 1);
-                    break;
-                case W:
-                    currentLocation = new Point(currentLocation.getX() - 1, currentLocation.getY() - 1);
-                    break;
-                default:
-                    return null;
+        try {
+            if (heading == currentHeading.leftSide(currentHeading)) {
+                switch (currentHeading) {
+                    case N:
+                        currentLocation = mapRepresenter.map.get(currentLocation.getX() - 1)
+                                .get(currentLocation.getY() - 1);
+                        break;
+                    case E:
+                        currentLocation = mapRepresenter.map.get(currentLocation.getX() - 1)
+                                .get(currentLocation.getY() + 1);
+                        break;
+                    case S:
+                        currentLocation = mapRepresenter.map.get(currentLocation.getX() + 1)
+                                .get(currentLocation.getY() + 1);
+                        break;
+                    case W:
+                        currentLocation = mapRepresenter.map.get(currentLocation.getX() + 1)
+                                .get(currentLocation.getY() - 1);
+                        break;
+                    default:
+                        return null;
+                }
             }
-        }
 
-        if (heading == currentHeading.rightSide(currentHeading)) {
-            switch (currentHeading) {
-                case N:
-                    currentLocation = new Point(currentLocation.getX() + 1, currentLocation.getY() + 1);
-                    break;
-                case E:
-                    currentLocation = new Point(currentLocation.getX() + 1, currentLocation.getY() - 1);
-                    break;
-                case S:
-                    currentLocation = new Point(currentLocation.getX() - 1, currentLocation.getY() - 1);
-                    break;
-                case W:
-                    currentLocation = new Point(currentLocation.getX() - 1, currentLocation.getY() + 1);
-                    break;
-                default:
-                    return null;
+            if (heading == currentHeading.rightSide(currentHeading)) {
+                switch (currentHeading) {
+                    case N:
+                        currentLocation = mapRepresenter.map.get(currentLocation.getX() - 1)
+                                .get(currentLocation.getY() + 1);
+                        break;
+                    case E:
+                        currentLocation = mapRepresenter.map.get(currentLocation.getX() + 1)
+                                .get(currentLocation.getY() + 1);
+                        break;
+                    case S:
+                        currentLocation = mapRepresenter.map.get(currentLocation.getX() + 1)
+                                .get(currentLocation.getY() - 1);
+                        break;
+                    case W:
+                        currentLocation = mapRepresenter.map.get(currentLocation.getX() - 1)
+                                .get(currentLocation.getY() - 1);
+                        break;
+                    default:
+                        return null;
+                }
             }
+        } catch (IndexOutOfBoundsException e) {
+            logger.info("Out of bounds");
+            return decisionTaken("stop");
         }
-        logger.info("WE ABOUT TO RETURN FROM THE DRONE");
+        logger.info(currentLocation.getX() + " " + currentLocation.getY());
         return decisionTaken("heading", heading.toString());
     }
 
@@ -197,7 +240,7 @@ public class Drone {
         return action;
     }
 
-    public String getDirection() {
+    public Heading getDirection() {
         return direction;
     }
 
@@ -240,7 +283,7 @@ public class Drone {
 
         // store the parameters of the next decision
         action = command;
-        this.direction = direction;
+        this.direction = Heading.valueOf(direction);
 
         String nextDecision = "{\"action\": \"" + command + "\", \"parameters\": { \"direction\": \"" + direction
                 + "\"}}";
