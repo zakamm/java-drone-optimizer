@@ -1,15 +1,15 @@
 package ca.mcmaster.se2aa4.island.team217;
 
-public class TurnToGround {
+public class TurnToGround implements Phase {
     public Boolean reachedEnd() {
         return true;
     }
 
-    public String nextDecision() {
+    public String nextDecision(Drone drone, ResponseStorage responseStorage, MapRepresenter map) {
         return null;
     }
 
-    public Phase getPhase() {
+    public Phase getNextPhase() {
         return null;
     }
 
