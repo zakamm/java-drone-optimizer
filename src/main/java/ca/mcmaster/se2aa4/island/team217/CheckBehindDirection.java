@@ -42,6 +42,7 @@ public class CheckBehindDirection implements Phase{
         else{
             logger.info("Reached end of CheckBehindDirection");
             reachedEnd = true;
+            mapInitializer.directionToEcho(drone.currentHeading);
             return null;
         }
     }

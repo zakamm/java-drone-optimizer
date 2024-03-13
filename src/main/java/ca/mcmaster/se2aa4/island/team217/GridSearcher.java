@@ -59,6 +59,8 @@ public class GridSearcher {
             initializeGridSearch = true;
             initialLocation = drone.currentLocation;
             initialHeading = drone.currentHeading;
+
+            //  need to refactor this in the future
             middle = drone.spawnedFacingGround;
             initializeGeneralDirection();
         }

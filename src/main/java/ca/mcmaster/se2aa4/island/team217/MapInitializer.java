@@ -66,5 +66,28 @@ public class MapInitializer {
         }
     }
 
+    // determines the direction we have to echo based off drone location and heading
+    // we want the drone to move in the initial direction and echo in the direction
+    // that is furthest to the edge of the map
+    public void directionToEcho(Heading currentHeading) {
+        if (currentHeading == Heading.N || currentHeading == Heading.S) {
+            if (leftX > rightX) {
+                directionToEcho = Heading.W;
+            } else if (rightX > leftX) {
+                directionToEcho = Heading.E;
+            } else if (leftX == rightX) {
+                directionToEcho = Heading.E;
+            }
+        } else if (currentHeading == Heading.E || currentHeading == Heading.W) {
+            if (topY > bottomY) {
+                directionToEcho = Heading.N;
+            } else if (bottomY > topY) {
+                directionToEcho = Heading.S;
+            } else if (bottomY == topY) {
+                directionToEcho = Heading.N;
+            }
+        }
+    }
+
 
 }

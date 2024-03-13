@@ -1,7 +1,5 @@
 package ca.mcmaster.se2aa4.island.team217;
 
-import java.util.Map;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,7 +25,7 @@ public class EchoThreeSides implements Phase{
         // if we have found land, we want to go to the FindMissingDimension phase
         // else we go to the checkbehinddirection phase
         if (mapInitializer.spawnedFacingGround){
-            return new FindMissingDimension(mapInitializer.distanceToGround, mapInitializer);
+            return new FindMissingDimension( mapInitializer);
         }
         else{
             return new CheckBehindDirection(mapInitializer);
