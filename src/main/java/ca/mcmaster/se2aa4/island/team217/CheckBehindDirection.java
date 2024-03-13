@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import ca.mcmaster.se2aa4.island.team217.Drone.Heading;
 
-public class CheckBehindDirection implements Phase{
+public class CheckBehindDirection implements Phase {
 
     private final Logger logger = LogManager.getLogger();
 
@@ -14,7 +14,7 @@ public class CheckBehindDirection implements Phase{
 
     boolean reachedEnd = false;
 
-    public CheckBehindDirection(MapInitializer mapInitializer){
+    public CheckBehindDirection(MapInitializer mapInitializer) {
         this.mapInitializer = mapInitializer;
     }
 
@@ -29,39 +29,37 @@ public class CheckBehindDirection implements Phase{
     public Boolean isFinal() {
         return false;
     }
-    
+
     public String nextDecision(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
-        if (counter == 0){
+        if (counter == 0) {
             counter++;
             return initialTurn(drone);
-        }
-        else if (counter == 1){
+        } else if (counter == 1) {
             counter++;
             return drone.echo(drone.initialHeading.backSide(drone.initialHeading));
-        }
-        else{
+        } else {
             logger.info("Reached end of CheckBehindDirection");
             reachedEnd = true;
             return null;
         }
     }
 
-    public void processResponse(ResponseStorage responseStorage, Drone drone, MapRepresenter map){
-        if (drone.getAction().equals("echo")){
-            
-        
-            mapInitializer.initializeMapDimensions(drone.getDirection(),responseStorage.getRange() - 1); 
+    public void processResponse(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
+        if (drone.getAction().equals("echo")) {
+
+            mapInitializer.initializeMapDimensions(drone.getDirection(), responseStorage.getRange() - 1);
             String rowsOrColumns = mapInitializer.rowsOrColumns();
             logger.info("rows or columns: " + rowsOrColumns);
             if (rowsOrColumns.equals("both")) {
-                    //directionToEcho = directionToEcho(drone.currentHeading);
-                    map.initializeMap();
-                    drone.initializeCurrentLocation(mapInitializer.leftX, mapInitializer.topY, mapInitializer.spawnedFacingGround);
-                }
+                // directionToEcho = directionToEcho(drone.currentHeading);
+                map.initializeMap();
+                drone.initializeCurrentLocation(mapInitializer.leftX, mapInitializer.topY,
+                        mapInitializer.spawnedFacingGround);
+            }
         }
     }
 
-    private String initialTurn(Drone drone){
+    private String initialTurn(Drone drone) {
         if (drone.initialHeading == Heading.N || drone.initialHeading == Heading.S) {
             if (mapInitializer.leftX > mapInitializer.rightX) {
                 return drone.heading(Heading.W);

@@ -1,17 +1,16 @@
 package ca.mcmaster.se2aa4.island.team217;
 
-import ca.mcmaster.se2aa4.island.team217.Drone.Heading;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class FindMissingDimension implements Phase {
 
     private final Logger logger = LogManager.getLogger();
-    int counter = 0;
-    int flyCounter = 0;
 
-    Boolean reachEnd = false;
+    int counter;
+    int flyCounter;
+    boolean reachedEnd = false;
+    boolean foundDimension = false;
 
     MapInitializer mapInitializer;
 
@@ -20,7 +19,7 @@ public class FindMissingDimension implements Phase {
     }
 
     public Boolean reachedEnd() {
-        return false;
+        return reachedEnd;
     }
 
     public Phase getNextPhase() {
@@ -32,7 +31,7 @@ public class FindMissingDimension implements Phase {
     }
 
     public String nextDecision(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
-        if (!responseStorage.getFound().equals("OUT_OF_RANGE")) {
+        if (!foundDimension) {
             if (counter == 0) {
                 counter++;
                 flyCounter++;
@@ -42,67 +41,23 @@ public class FindMissingDimension implements Phase {
                 return drone.echo(drone.currentHeading);
             }
         } else {
-            initializeMapDimensionHelper(drone.currentHeading, responseStorage.getRange());
-            initializeMapDimensionHelper(drone.currentHeading.backSide(drone.currentHeading), flyCounter);
-            // logger.info(flyCounter);
-            // logger.info("topY: " + topY + " bottomY: " + bottomY + " leftX: " + leftX + "
-            // rightX: " + rightX);
-            logger.info("INITIALIZING THE MAPPINGS BABY");
-            map.initializeMap();
-            logger.info("MAPPPY 1");
-            drone.initializeCurrentLocation(mapInitializer.leftX, mapInitializer.topY, mapInitializer.facingGround);
-            logger.info("MAPPPY 2");
-            map.initialized = true;
-
-            logger.info("WE DID IT BOIII");
-            return drone.stop();
-            // return null;
-
-            // if (counter == 0) {
-            // counter++;
-            // return drone.scan();
-
-            // } else {
-            // counter = 0;
-            // reachEnd = true;
-            // logger.info("WE DID IT BOIII");
-            // return drone.stop();
-            // // return null;
-
-            // }
-        }
-    }
-
-    private void initializeMapDimensionHelper(Heading heading, Integer range) {
-        switch (heading) {
-            case N:
-                mapInitializer.topY = range;
-                break;
-            case E:
-                mapInitializer.rightX = range;
-                break;
-            case S:
-                mapInitializer.bottomY = range;
-                break;
-            case W:
-                mapInitializer.leftX = range;
-                break;
-            default:
-                break;
+            reachedEnd = true;
+            logger.info("WWWWWWW");
+            return drone.scan();
         }
     }
 
     public void processResponse(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
-        if (!(responseStorage.getCost() == null)) {
+        if (drone.getAction().equals("echo")) {
             if (responseStorage.getFound().equals("OUT_OF_RANGE")) {
-                mapInitializer.initializeMapDimensions(drone.getDirection(), responseStorage.getRange());
-
-            } else {
-                mapInitializer.distanceToGround = responseStorage.getRange();
-                mapInitializer.facingGround = true;
+                mapInitializer.initializeMapDimensions(drone.currentHeading, responseStorage.getRange());
+                mapInitializer.initializeMapDimensions(drone.currentHeading.backSide(drone.currentHeading), flyCounter);
+                String rowsOrColumns = mapInitializer.rowsOrColumns();
+                map.initializeMap();
+                drone.initializeCurrentLocation(mapInitializer.leftX, mapInitializer.topY,
+                        mapInitializer.spawnedFacingGround);
+                foundDimension = true;
             }
         }
-
     }
-
 }
