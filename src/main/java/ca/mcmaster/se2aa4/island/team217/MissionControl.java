@@ -28,9 +28,10 @@ public class MissionControl {
 
     Boolean searchedCoast = false;
     Boolean stop = false;
-    //List<String> nextDecision = new ArrayList<String>();
+    // List<String> nextDecision = new ArrayList<String>();
     ResponseStorage responseStorage = new ResponseStorage();
-    //HashMap<String, List<String>> responseStorage = new HashMap<String, List<String>>();
+    // HashMap<String, List<String>> responseStorage = new HashMap<String,
+    // List<String>>();
     Initializer initializer;
 
     MapInitializer mapInitializer;
@@ -59,31 +60,31 @@ public class MissionControl {
      */
     public String nextDecision() {
 
-        if (drone.getBatteryLevel() < 50){
+        if (drone.getBatteryLevel() < 50) {
             return drone.stop();
         }
 
         // first echo to determine where the drone is located
         // if (initialEchoed == false) {
-        //     initialEchoed = true;
-        //     return drone.echo(this.drone.initialHeading);
+        // initialEchoed = true;
+        // return drone.echo(this.drone.initialHeading);
         // }
 
         // if (drone.getAction().equals("scan")) {
-        //     map.storeScanResults(responseStorage, drone.currentLocation);
+        // map.storeScanResults(responseStorage, drone.currentLocation);
         // }
 
-        if (responseStorage.getCost() != null){
-            if (drone.getAction().equals("scan")){
+        if (responseStorage.getCost() != null) {
+            if (drone.getAction().equals("scan")) {
                 map.storeScanResults(responseStorage, drone.currentLocation);
             }
             current.processResponse(responseStorage, drone, map);
         }
 
-        while (!current.isFinal()){
-            while (!current.reachedEnd()){
+        while (!current.isFinal()) {
+            while (!current.reachedEnd()) {
                 String decision = current.nextDecision(responseStorage, drone, map);
-                if (!(decision == null)){
+                if (!(decision == null)) {
                     return decision;
                 }
                 /// handler.process(decision); questionable
@@ -91,10 +92,13 @@ public class MissionControl {
             this.current = current.getNextPhase();
         }
 
+        logger.info("WE DEDEDED");
+
         // initializatoin and finding ground
-        if (map.initialized == false) {
-            return initializer.initializeMission(this.drone.initialHeading, responseStorage);
-        }
+        // if (map.initialized == false) {
+        // return initializer.initializeMission(this.drone.initialHeading,
+        // responseStorage);
+        // }
 
         // just testing out the point and biome stuff
         // logger.info(drone.currentLocation.getX());
@@ -105,11 +109,11 @@ public class MissionControl {
         // logger.info("MAP INITIALIZED");
         // return drone.stop();
 
-        if (map.initialized == true && gridSearch == false) {
-            return gridSearcher.searchGrid(responseStorage);
-        }
+        // if (map.initialized == true && gridSearch == false) {
+        // return gridSearcher.searchGrid(responseStorage);
+        // }
 
-        logger.info("MAP INITIALIZED");
+        // logger.info("MAP INITIALIZED");
         return drone.stop();
     }
 

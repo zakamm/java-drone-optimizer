@@ -3,8 +3,7 @@ package ca.mcmaster.se2aa4.island.team217;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-
-public class FindMissingDimension implements Phase{
+public class FindMissingDimension implements Phase {
 
     private final Logger logger = LogManager.getLogger();
 
@@ -18,7 +17,7 @@ public class FindMissingDimension implements Phase{
     public FindMissingDimension(MapInitializer mapInitializer){
         this.mapInitializer = mapInitializer;
     }
-        
+
     public Boolean reachedEnd() {
         return reachedEnd;
     }
@@ -30,7 +29,7 @@ public class FindMissingDimension implements Phase{
     public Boolean isFinal() {
         return false;
     }
-    
+
     public String nextDecision(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
         if (!foundDimension){
             if (counter == 0) {

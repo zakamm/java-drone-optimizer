@@ -26,7 +26,7 @@ public class TurnToGround implements Phase{
     public Boolean isFinal() {
         return false;
     }
-    
+
     public String nextDecision(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
         if (counter == 0){
             if (mapInitializer.directionToEcho == drone.currentHeading.leftSide(drone.currentHeading) ){

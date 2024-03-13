@@ -7,6 +7,12 @@ public class LocateGround implements Phase{
 
     private final Logger logger = LogManager.getLogger();
 
+    Boolean flyCheck = true;
+    Boolean foundLand = false;
+    Boolean reachEnd = false;
+
+    Boolean tempState = true;
+
     MapInitializer mapInitializer;
 
     int counter = 0;
@@ -14,7 +20,9 @@ public class LocateGround implements Phase{
 
     public LocateGround(MapInitializer mapInitializer){
         this.mapInitializer = mapInitializer;
+
     }
+
     public Boolean reachedEnd() {
         return reachedEnd;
     }
@@ -26,7 +34,7 @@ public class LocateGround implements Phase{
     public Boolean isFinal() {
         return false;
     }
-    
+
     public String nextDecision(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
         if (counter == 0){
             counter++;
@@ -48,5 +56,9 @@ public class LocateGround implements Phase{
             mapInitializer.distanceToGround = responseStorage.getRange();
         }
     }
-    
+
+    public void processResponse(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
+
+    }
+
 }
