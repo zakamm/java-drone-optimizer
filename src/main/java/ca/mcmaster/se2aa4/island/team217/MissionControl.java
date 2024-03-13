@@ -64,18 +64,24 @@ public class MissionControl {
         }
 
         // first echo to determine where the drone is located
-        if (initialEchoed == false) {
-            initialEchoed = true;
-            return drone.echo(this.drone.initialHeading);
-        }
+        // if (initialEchoed == false) {
+        //     initialEchoed = true;
+        //     return drone.echo(this.drone.initialHeading);
+        // }
 
-        if (drone.getAction().equals("scan")) {
-            map.storeScanResults(responseStorage, drone.currentLocation);
+        // if (drone.getAction().equals("scan")) {
+        //     map.storeScanResults(responseStorage, drone.currentLocation);
+        // }
+
+        if (responseStorage.getCost() != null){
+            if (drone.getAction().equals("scan")){
+                map.storeScanResults(responseStorage, drone.currentLocation);
+            }
+            current.processResponse(responseStorage, drone, map);
         }
 
         while (!current.isFinal()){
             while (!current.reachedEnd()){
-                current.processResponse(responseStorage, drone, map);
                 String decision = current.nextDecision(responseStorage, drone, map);
                 if (!(decision == null)){
                     return decision;
