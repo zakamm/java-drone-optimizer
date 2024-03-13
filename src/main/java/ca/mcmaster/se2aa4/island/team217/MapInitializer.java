@@ -15,6 +15,12 @@ public class MapInitializer {
     Integer leftX;
     Integer rightX;
 
+    Heading directionToEcho;
+
+    Boolean spawnedFacingGround = false;
+
+    int distanceToGround = 0;
+
     MapRepresenter map;
 
     public MapInitializer(MapRepresenter map) {
@@ -22,6 +28,7 @@ public class MapInitializer {
     }
 
     public void initializeMapDimensions(Heading heading, Integer range) {
+        logger.info("Range"+ range);
         switch (heading) {
             case N:
                 topY = range;
@@ -37,6 +44,25 @@ public class MapInitializer {
                 break;
             default:
                 break;
+        }
+    }
+
+    public String rowsOrColumns() {
+        if (topY != null && bottomY != null && leftX != null && rightX != null) {
+            map.rows = topY + bottomY + 1;
+            map.columns = leftX + rightX + 1;
+            logger.info("Rows" + map.rows);
+            logger.info("columns"+  map.columns);
+            return "both";
+        }
+        if (topY != null && bottomY != null) {
+            map.rows = topY + bottomY + 1;
+            return "rows";
+        } else if (leftX != null && rightX != null) {
+            map.columns = leftX + rightX + 1;
+            return "columns";
+        } else {
+            return "none";
         }
     }
 
