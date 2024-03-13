@@ -1,36 +1,41 @@
 package ca.mcmaster.se2aa4.island.team217;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 
 public class LocateGround implements Phase{
-
-    private final Logger logger = LogManager.getLogger();
-
+    
+    private boolean reachedEnd = false;
+    private boolean groundLocated = false;
+    private Initializer initializer;
     MapInitializer mapInitializer;
-    public LocateGround(MapInitializer mapInitializer){
-        this.mapInitializer = mapInitializer;
-    }
+    
+
     public Boolean reachedEnd() {
-        return false;
+        return reachedEnd();
     }
 
     public Phase getNextPhase() {
-        return null;
+        if (reachedEnd) {
+            return new TurnToGround();
+        } else {
+            return null;
+        }
     }
 
     public Boolean isFinal() {
         return false;
     }
-    
-    public String nextDecision(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
-        logger.info("LocateGround");
-        return drone.stop();
-    }
 
-    public void processResponse(ResponseStorage responseStorage, Drone drone, MapRepresenter map){
-        
+    public String nextDecision(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
+        if (groundLocated) {
+            reachedEnd = true;
+            return drone.stop();
+        } else {
+            return drone.echo(initializer.directionToEcho(drone.currentHeading));
+        }
     }
-    
+    public void processResponse(ResponseStorage responseStorage, Drone drone, MapRepresenter map){
+        if ("GROUND".equals(responseStorage.getFound())) {
+            groundLocated = true;
+        }
+    }
 }
