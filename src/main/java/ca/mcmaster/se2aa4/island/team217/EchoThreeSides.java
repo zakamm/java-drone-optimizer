@@ -5,7 +5,7 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class EchoThreeSides implements Phase{
+public class EchoThreeSides implements Phase {
 
     private final Logger logger = LogManager.getLogger();
 
@@ -14,7 +14,7 @@ public class EchoThreeSides implements Phase{
 
     MapInitializer mapInitializer;
 
-    public EchoThreeSides(MapInitializer mapInitializer){
+    public EchoThreeSides(MapInitializer mapInitializer) {
         this.mapInitializer = mapInitializer;
     }
 
@@ -26,10 +26,9 @@ public class EchoThreeSides implements Phase{
         // want to know if we are found land or not
         // if we have found land, we want to go to the FindMissingDimension phase
         // else we go to the checkbehinddirection phase
-        if (mapInitializer.spawnedFacingGround){
-            return new FindMissingDimension(mapInitializer.distanceToGround, mapInitializer);
-        }
-        else{
+        if (mapInitializer.spawnedFacingGround) {
+            return new FindMissingDimension(mapInitializer);
+        } else {
             return new CheckBehindDirection(mapInitializer);
         }
     }
@@ -37,23 +36,20 @@ public class EchoThreeSides implements Phase{
     public Boolean isFinal() {
         return false;
     }
-    
+
     public String nextDecision(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
         logger.info(drone.getBatteryLevel());
         if (counter == 0) {
             counter++;
             return drone.echo(drone.initialHeading);
-        }
-        else if (counter == 1){
+        } else if (counter == 1) {
             counter++;
             return drone.echo(drone.initialHeading.rightSide(drone.initialHeading));
-        }
-        else if (counter == 2){
+        } else if (counter == 2) {
             counter++;
             reachedEnd = true;
             return drone.echo(drone.initialHeading.leftSide(drone.initialHeading));
-        }
-        else{
+        } else {
             reachedEnd = true;
             return null;
         }
@@ -61,7 +57,7 @@ public class EchoThreeSides implements Phase{
 
     public void processResponse(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
         // we want to process the response from the echo
-        if (!(responseStorage.getCost() == null)){
+        if (!(responseStorage.getCost() == null)) {
             if (responseStorage.getFound().equals("OUT_OF_RANGE")) {
                 mapInitializer.initializeMapDimensions(drone.getDirection(), responseStorage.getRange());
             } else {
@@ -69,7 +65,7 @@ public class EchoThreeSides implements Phase{
                 mapInitializer.spawnedFacingGround = true;
             }
         }
-        
+
     }
 
 }

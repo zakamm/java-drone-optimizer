@@ -5,7 +5,6 @@ import org.apache.logging.log4j.Logger;
 
 import ca.mcmaster.se2aa4.island.team217.Drone.Heading;
 
-
 public class MapInitializer {
 
     private final Logger logger = LogManager.getLogger();
@@ -14,6 +13,7 @@ public class MapInitializer {
     Integer bottomY;
     Integer leftX;
     Integer rightX;
+    Boolean facingGround;
 
     Heading directionToEcho;
 
@@ -28,7 +28,7 @@ public class MapInitializer {
     }
 
     public void initializeMapDimensions(Heading heading, Integer range) {
-        logger.info("Range"+ range);
+        logger.info("Range" + range);
         switch (heading) {
             case N:
                 topY = range;
@@ -52,7 +52,7 @@ public class MapInitializer {
             map.rows = topY + bottomY + 1;
             map.columns = leftX + rightX + 1;
             logger.info("Rows" + map.rows);
-            logger.info("columns"+  map.columns);
+            logger.info("columns" + map.columns);
             return "both";
         }
         if (topY != null && bottomY != null) {
@@ -65,6 +65,4 @@ public class MapInitializer {
             return "none";
         }
     }
-
-
 }
