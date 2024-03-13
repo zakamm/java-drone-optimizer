@@ -33,13 +33,19 @@ public class MissionControl {
     //HashMap<String, List<String>> responseStorage = new HashMap<String, List<String>>();
     Initializer initializer;
 
+    MapInitializer mapInitializer;
+
     GridSearcher gridSearcher;
+
+    Phase current;
 
     public MissionControl(Drone drone, MapRepresenter map) {
         this.drone = drone;
         this.map = map;
+        this.mapInitializer = new MapInitializer(map);
         this.initializer = new Initializer(drone, map);
         this.gridSearcher = new GridSearcher(drone, map);
+        this.current = new EchoThreeSides(mapInitializer);
     }
 
     /*
@@ -65,6 +71,18 @@ public class MissionControl {
 
         if (drone.getAction().equals("scan")) {
             map.storeScanResults(responseStorage, drone.currentLocation);
+        }
+
+        while (!current.isFinal()){
+            while (!current.reachedEnd()){
+                current.processResponse(responseStorage, drone, map);
+                String decision = current.nextDecision(responseStorage, drone, map);
+                if (!(decision == null)){
+                    return decision;
+                }
+                /// handler.process(decision); questionable
+            }
+            this.current = current.getNextPhase();
         }
 
         // initializatoin and finding ground

@@ -1,6 +1,6 @@
 package ca.mcmaster.se2aa4.island.team217;
 
-public class CheckBehindDirection implements Phase{
+public class FlyToGround implements Phase{
     public Boolean reachedEnd() {
         return false;
     }
@@ -18,6 +18,6 @@ public class CheckBehindDirection implements Phase{
     }
 
     public void processResponse(ResponseStorage responseStorage, Drone drone, MapRepresenter map){
-        
+
     }
-}
+} 

@@ -13,7 +13,7 @@ import java.util.List;
 public class Initializer {
 
     private final Logger logger = LogManager.getLogger();
-
+    
     Drone drone;
     MapRepresenter map;
 

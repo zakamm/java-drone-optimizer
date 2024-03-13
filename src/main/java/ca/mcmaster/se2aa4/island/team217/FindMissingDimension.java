@@ -1,6 +1,17 @@
 package ca.mcmaster.se2aa4.island.team217;
 
-public class CheckBehindDirection implements Phase{
+
+public class FindMissingDimension implements Phase{
+
+    int distanceToGround;
+
+    MapInitializer mapInitializer;
+
+    public FindMissingDimension(int distanceToGround, MapInitializer mapInitializer){
+        this.distanceToGround = distanceToGround;
+        this.mapInitializer = mapInitializer;
+    }
+        
     public Boolean reachedEnd() {
         return false;
     }
