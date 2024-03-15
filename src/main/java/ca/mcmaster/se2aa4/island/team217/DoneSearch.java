@@ -3,17 +3,17 @@ package ca.mcmaster.se2aa4.island.team217;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class FlyToGround implements Phase {
+import ca.mcmaster.se2aa4.island.team217.Drone.Heading;
 
+public class DoneSearch implements Phase {
     private final Logger logger = LogManager.getLogger();
-    int counter = 0;
+    Boolean reachedEnd = false;
 
-    boolean reachedEnd = false;
+    GridSearchPhases griddy;
 
-    MapInitializer mapInitializer;
+    public DoneSearch(GridSearchPhases griddy) {
+        this.griddy = griddy;
 
-    public FlyToGround(MapInitializer mapInitializer) {
-        this.mapInitializer = mapInitializer;
     }
 
     public Boolean reachedEnd() {
@@ -29,13 +29,8 @@ public class FlyToGround implements Phase {
     }
 
     public String nextDecision(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
-        if (mapInitializer.distanceToGround == 0) {
-            reachedEnd = true;
-            return drone.scan();
-        } else {
-            mapInitializer.distanceToGround--;
-            return drone.fly();
-        }
+        reachedEnd = true;
+        return drone.stop();
     }
 
     public void processResponse(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {

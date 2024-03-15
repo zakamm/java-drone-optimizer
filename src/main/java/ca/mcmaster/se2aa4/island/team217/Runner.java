@@ -15,7 +15,7 @@ public class Runner {
 
                     .startingAt(1, 1, "EAST")
 
-                    .backBefore(30000)
+                    .backBefore(25000)
                     .withCrew(5)
                     .collecting(1000, "WOOD")
                     .storingInto("./outputs")

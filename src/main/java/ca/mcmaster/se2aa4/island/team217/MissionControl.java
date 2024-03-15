@@ -36,17 +36,22 @@ public class MissionControl {
 
     MapInitializer mapInitializer;
 
+    GridSearchPhases griddy;
+
     GridSearcher gridSearcher;
 
-    Phase current;
+    Phase current1;
+    Phase current2;
 
     public MissionControl(Drone drone, MapRepresenter map) {
         this.drone = drone;
         this.map = map;
         this.mapInitializer = new MapInitializer(map);
+        this.griddy = new GridSearchPhases();
         this.initializer = new Initializer(drone, map);
         this.gridSearcher = new GridSearcher(drone, map);
-        this.current = new EchoThreeSides(mapInitializer);
+        this.current1 = new EchoThreeSides(mapInitializer);
+        this.current2 = new InitializeGridSearch(griddy);
     }
 
     /*
@@ -78,22 +83,34 @@ public class MissionControl {
             if (drone.getAction().equals("scan")) {
                 map.storeScanResults(responseStorage, drone.currentLocation);
             }
-            current.processResponse(responseStorage, drone, map);
+            current1.processResponse(responseStorage, drone, map);
         }
 
-        while (!current.isFinal()) {
-            while (!current.reachedEnd()) {
-                String decision = current.nextDecision(responseStorage, drone, map);
+        while (!current1.isFinal()) {
+            while (!current1.reachedEnd()) {
+                String decision = current1.nextDecision(responseStorage, drone, map);
                 if (!(decision == null)) {
                     return decision;
                 }
                 /// handler.process(decision); questionable
             }
-            this.current = current.getNextPhase();
+            this.current1 = current1.getNextPhase();
         }
 
-        logger.info("WE DEDEDED");
+        logger.info("Map Initializeddd");
 
+        while (!current2.isFinal()) {
+            while (!current2.reachedEnd()) {
+                String decision = current2.nextDecision(responseStorage, drone, map);
+                if (!(decision == null)) {
+                    return decision;
+                }
+                /// handler.process(decision); questionable
+            }
+            this.current2 = current2.getNextPhase();
+        }
+
+        logger.info("WE DEDEDDD");
         // initializatoin and finding ground
         // if (map.initialized == false) {
         // return initializer.initializeMission(this.drone.initialHeading,
@@ -117,6 +134,8 @@ public class MissionControl {
         return drone.stop();
     }
 
+    // refactor: Use GoF - Decorative pattern to store, biomes with a wrapper of
+    // points of interest
     public void storeResponse(String action, JSONObject previousResponse) {
         // want to clear at the start of each iteration, sets all values to null
         responseStorage.clear();

@@ -3,7 +3,7 @@ package ca.mcmaster.se2aa4.island.team217;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class LocateGround implements Phase{
+public class LocateGround implements Phase {
 
     private final Logger logger = LogManager.getLogger();
 
@@ -18,7 +18,7 @@ public class LocateGround implements Phase{
     int counter = 0;
     boolean reachedEnd = false;
 
-    public LocateGround(MapInitializer mapInitializer){
+    public LocateGround(MapInitializer mapInitializer) {
         this.mapInitializer = mapInitializer;
 
     }
@@ -36,29 +36,23 @@ public class LocateGround implements Phase{
     }
 
     public String nextDecision(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
-        if (counter == 0){
+        if (counter == 0) {
             counter++;
             return drone.fly();
-        }
-        else if (counter == 1){
+        } else if (counter == 1) {
             counter = 0;
-            return drone.echo(mapInitializer.directionToEcho);   
-        }
-        else{
+            return drone.echo(mapInitializer.directionToEcho);
+        } else {
             return null;
         }
     }
 
-    public void processResponse(ResponseStorage responseStorage, Drone drone, MapRepresenter map){
+    public void processResponse(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
         logger.info(mapInitializer.distanceToGround);
-        if (responseStorage.getFound().equals("GROUND")){
+        if (responseStorage.getFound().equals("GROUND")) {
             reachedEnd = true;
             mapInitializer.distanceToGround = responseStorage.getRange();
         }
-    }
-
-    public void processResponse(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
-
     }
 
 }

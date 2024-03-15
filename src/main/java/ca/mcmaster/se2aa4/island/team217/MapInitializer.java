@@ -23,6 +23,11 @@ public class MapInitializer {
 
     MapRepresenter map;
 
+    Boolean middle;
+    Boolean echoed = false;
+    Heading generalDirection;
+    Integer outOfRangeCounter = 0;
+
     public MapInitializer(MapRepresenter map) {
         this.map = map;
     }
@@ -88,6 +93,5 @@ public class MapInitializer {
             }
         }
     }
-
 
 }
