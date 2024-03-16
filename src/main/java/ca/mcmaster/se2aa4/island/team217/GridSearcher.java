@@ -4,7 +4,6 @@ package ca.mcmaster.se2aa4.island.team217;
 
 import ca.mcmaster.se2aa4.island.team217.MapRepresenter;
 import ca.mcmaster.se2aa4.island.team217.Drone.Heading;
-import ca.mcmaster.se2aa4.island.team217.Initializer;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
@@ -33,7 +32,7 @@ public class GridSearcher {
     Boolean middle;
     int outOfRangeCounter = 0;
     Point initialLocation;
-    Heading initialHeading; 
+    Heading initialHeading;
     String sideToTranslate = "";
     String sideToTurn = "";
     Boolean needToTranslate = false;
@@ -59,6 +58,8 @@ public class GridSearcher {
             initializeGridSearch = true;
             initialLocation = drone.currentLocation;
             initialHeading = drone.currentHeading;
+
+            // need to refactor this in the future
             middle = drone.spawnedFacingGround;
             initializeGeneralDirection();
         }
@@ -74,8 +75,7 @@ public class GridSearcher {
             // of range or if it needs to keep searching, this is done through activating
             // this next state of "atEdge"
             if (counter == 0 &&
-                responseStorage.getFound().equals("OUT_OF_RANGE")) 
-            {
+                    responseStorage.getFound().equals("OUT_OF_RANGE")) {
                 logger.info("WE SETTING atEdge!!!");
                 atEdge = true;
             }
@@ -90,10 +90,9 @@ public class GridSearcher {
                     atEdge = false;
                     return drone.scan();
                 } else {
-                    if (gridSearchDirection == generalDirection.leftSide(generalDirection)){
+                    if (gridSearchDirection == generalDirection.leftSide(generalDirection)) {
                         sideToTurn = "right";
-                    }
-                    else if (gridSearchDirection == generalDirection.rightSide(generalDirection)){
+                    } else if (gridSearchDirection == generalDirection.rightSide(generalDirection)) {
                         sideToTurn = "left";
                     }
                     logger.info("COUNTERRRR {} , ", counter);
@@ -101,8 +100,8 @@ public class GridSearcher {
                 }
             }
 
-
-            // Once we have turned around, and echoed, if we are out of range, we determine if we are done or not
+            // Once we have turned around, and echoed, if we are out of range, we determine
+            // if we are done or not
             if (echoed && !atEdge && counter == 1 && !needToTranslate) {
                 if (responseStorage.getFound().equals("OUT_OF_RANGE")) {
                     needToTranslate = true;
@@ -111,28 +110,25 @@ public class GridSearcher {
                     if (!middle && outOfRangeCounter == 2) {
                         logger.info("DONE");
                         return drone.stop();
-                    }
-                    else if (middle && outOfRangeCounter == 3) {
+                    } else if (middle && outOfRangeCounter == 3) {
                         logger.info("DONE");
                         return drone.stop();
-                    }
-                    else{
-                        if (gridSearchDirection == generalDirection.leftSide(generalDirection)){
+                    } else {
+                        if (gridSearchDirection == generalDirection.leftSide(generalDirection)) {
                             sideToTranslate = "left";
-                        }
-                        else if (gridSearchDirection == generalDirection.rightSide(generalDirection)){
+                        } else if (gridSearchDirection == generalDirection.rightSide(generalDirection)) {
                             sideToTranslate = "right";
                         }
                     }
                 }
             }
-            // this moves the drone horizontally to the left or right by one so that we can grid search again in the opposite general direction
+            // this moves the drone horizontally to the left or right by one so that we can
+            // grid search again in the opposite general direction
             if (needToTranslate) {
                 if (turnCounter == 5) {
-                    if(responseStorage.getFound().equals(null) && !needToFly) {
+                    if (responseStorage.getFound().equals(null) && !needToFly) {
                         return drone.echo(drone.currentHeading);
-                    }
-                    else if (responseStorage.getFound().equals("OUT_OF_RANGE")) {
+                    } else if (responseStorage.getFound().equals("OUT_OF_RANGE")) {
                         distanceOutOfBounds = responseStorage.getRange();
                         needToFly = true;
                     }
@@ -188,13 +184,12 @@ public class GridSearcher {
 
     }
 
-    private String normalTurnAroundGridSearch(String sideToTurn){
+    private String normalTurnAroundGridSearch(String sideToTurn) {
         if (sideToTurn.equals("left")) {
             if (counter == 0) {
                 counter++;
                 return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
-            }
-            else if (counter == 1){
+            } else if (counter == 1) {
                 counter++;
                 return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
             }
@@ -202,15 +197,17 @@ public class GridSearcher {
             if (counter == 0) {
                 counter++;
                 return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
-            } else if (counter == 1){
+            } else if (counter == 1) {
                 counter++;
                 return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
             }
         }
         return null;
     }
-    
-    // this method translates the drone over one spot to the left or right when we reach the end of the island so we can grid search in the opposite general direction
+
+    // this method translates the drone over one spot to the left or right when we
+    // reach the end of the island so we can grid search in the opposite general
+    // direction
     // it only needs two squares above and to the side to perform the maneuver
     private String translateOver(String sideToTranslate) {
         logger.info("WE TURNING AROUNDDD");
@@ -256,35 +253,31 @@ public class GridSearcher {
 
     }
 
-    // this method initializes the general direction of the drone based on where it is located on the island and the initial heading when it touches ground
+    // this method initializes the general direction of the drone based on where it
+    // is located on the island and the initial heading when it touches ground
     public void initializeGeneralDirection() {
         if (initialLocation.getX() < 26 && initialLocation.getY() < 26) {
-            if (initialHeading == Heading.N || initialHeading == Heading.S){
+            if (initialHeading == Heading.N || initialHeading == Heading.S) {
                 generalDirection = Heading.E;
-            }
-            else if (initialHeading == Heading.E || initialHeading == Heading.W){
+            } else if (initialHeading == Heading.E || initialHeading == Heading.W) {
                 generalDirection = Heading.S;
             }
-        }
-        else if (initialLocation.getY() >= 26 && initialLocation.getX() < 26) {
-            if (initialHeading == Heading.N || initialHeading == Heading.S){
+        } else if (initialLocation.getY() >= 26 && initialLocation.getX() < 26) {
+            if (initialHeading == Heading.N || initialHeading == Heading.S) {
                 generalDirection = Heading.W;
-            }
-            else if (initialHeading == Heading.E || initialHeading == Heading.W){
+            } else if (initialHeading == Heading.E || initialHeading == Heading.W) {
                 generalDirection = Heading.S;
             }
         } else if (initialLocation.getX() >= 26 && initialLocation.getY() < 26) {
-            if (initialHeading == Heading.N || initialHeading == Heading.S){
+            if (initialHeading == Heading.N || initialHeading == Heading.S) {
                 generalDirection = Heading.E;
-            }
-            else if (initialHeading == Heading.E || initialHeading == Heading.W){
+            } else if (initialHeading == Heading.E || initialHeading == Heading.W) {
                 generalDirection = Heading.N;
             }
         } else if (initialLocation.getY() >= 26 && initialLocation.getX() >= 26) {
-            if (initialHeading == Heading.N || initialHeading == Heading.S){
+            if (initialHeading == Heading.N || initialHeading == Heading.S) {
                 generalDirection = Heading.W;
-            }
-            else if (initialHeading == Heading.E || initialHeading == Heading.W){
+            } else if (initialHeading == Heading.E || initialHeading == Heading.W) {
                 generalDirection = Heading.N;
             }
         }

@@ -2,9 +2,7 @@ package ca.mcmaster.se2aa4.island.team217;
 
 //import 3.4;
 
-import ca.mcmaster.se2aa4.island.team217.MapRepresenter;
 import ca.mcmaster.se2aa4.island.team217.Drone.Heading;
-import ca.mcmaster.se2aa4.island.team217.Initializer;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
@@ -28,18 +26,23 @@ public class MissionControl {
 
     Boolean searchedCoast = false;
     Boolean stop = false;
-    //List<String> nextDecision = new ArrayList<String>();
+    // List<String> nextDecision = new ArrayList<String>();
     ResponseStorage responseStorage = new ResponseStorage();
-    //HashMap<String, List<String>> responseStorage = new HashMap<String, List<String>>();
-    Initializer initializer;
+    // HashMap<String, List<String>> responseStorage = new HashMap<String,
+    // List<String>>();
+
+    MapInitializer mapInitializer;
 
     GridSearcher gridSearcher;
+
+    Phase current;
 
     public MissionControl(Drone drone, MapRepresenter map) {
         this.drone = drone;
         this.map = map;
-        this.initializer = new Initializer(drone, map);
+        this.mapInitializer = new MapInitializer(drone, map);
         this.gridSearcher = new GridSearcher(drone, map);
+        this.current = new EchoThreeSides(mapInitializer);
     }
 
     /*
@@ -53,42 +56,36 @@ public class MissionControl {
      */
     public String nextDecision() {
 
-        if (drone.getBatteryLevel() < 50){
+        logger.info("Battery Level: "+ drone.getBatteryLevel());
+
+        if (drone.getBatteryLevel() < 50) {
             return drone.stop();
         }
 
-        // first echo to determine where the drone is located
-        if (initialEchoed == false) {
-            initialEchoed = true;
-            return drone.echo(this.drone.initialHeading);
+        if (responseStorage.getCost() != null) {
+            if (drone.getAction().equals("scan")) {
+                map.storeScanResults(responseStorage, drone.currentLocation);
+            }
+            if (current instanceof ResponsePhase) {
+                ((ResponsePhase) current).processResponse(responseStorage, drone, map);
+            }
         }
 
-        if (drone.getAction().equals("scan")) {
-            map.storeScanResults(responseStorage, drone.currentLocation);
+        while (!current.isFinal()) {
+            while (!current.reachedEnd()) {
+                String decision = current.nextDecision(responseStorage, drone, map);
+                if (!(decision == null)) {
+                    return decision;
+                }
+                /// handler.process(decision); questionable
+            }
+            this.current = current.getNextPhase();
         }
-
-        // initializatoin and finding ground
-        if (map.initialized == false) {
-            return initializer.initializeMission(this.drone.initialHeading, responseStorage);
-        }
-
-        // just testing out the point and biome stuff
-        // logger.info(drone.currentLocation.getX());
-        // logger.info(drone.currentLocation.getY());
-        // logger.info(drone.currentLocation.getGround());
-        // logger.info(drone.currentLocation.biomes.get(0));
-
-        // logger.info("MAP INITIALIZED");
-        // return drone.stop();
-
-        if (map.initialized == true && gridSearch == false) {
-            return gridSearcher.searchGrid(responseStorage);
-        }
-
-        logger.info("MAP INITIALIZED");
         return drone.stop();
     }
 
+    // refactor: Use GoF - Decorative pattern to store, biomes with a wrapper of
+    // points of interest
     public void storeResponse(String action, JSONObject previousResponse) {
         // want to clear at the start of each iteration, sets all values to null
         responseStorage.clear();
