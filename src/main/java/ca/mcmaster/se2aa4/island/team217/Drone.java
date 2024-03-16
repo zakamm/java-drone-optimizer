@@ -111,7 +111,7 @@ public class Drone {
 
     // this method also updates the current location of the drone
     public String fly() {
-        try{
+        try {
             switch (currentHeading) {
                 case N:
                     currentLocation = mapRepresenter.map.get(currentLocation.getX() - 1).get(currentLocation.getY());
@@ -189,7 +189,7 @@ public class Drone {
                         return null;
                 }
             }
-    
+
             if (heading == currentHeading.rightSide(currentHeading)) {
                 switch (currentHeading) {
                     case N:
