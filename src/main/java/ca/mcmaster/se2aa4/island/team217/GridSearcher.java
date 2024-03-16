@@ -4,7 +4,6 @@ package ca.mcmaster.se2aa4.island.team217;
 
 import ca.mcmaster.se2aa4.island.team217.MapRepresenter;
 import ca.mcmaster.se2aa4.island.team217.Drone.Heading;
-import ca.mcmaster.se2aa4.island.team217.Initializer;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;

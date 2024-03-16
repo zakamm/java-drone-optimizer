@@ -3,7 +3,7 @@ package ca.mcmaster.se2aa4.island.team217;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class EchoThreeSides implements Phase {
+public class EchoThreeSides implements ResponsePhase {
 
     private final Logger logger = LogManager.getLogger();
 

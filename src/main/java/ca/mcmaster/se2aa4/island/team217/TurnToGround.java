@@ -44,11 +44,6 @@ public class TurnToGround implements Phase{
         }
         return turnToGround(sideToTurn, drone);
     }
-
-    public void processResponse(ResponseStorage responseStorage, Drone drone, MapRepresenter map){
-
-    }
-    
     
     private String turnToGround(String sideToTurn, Drone drone){
         if (sideToTurn.equals("left")) {

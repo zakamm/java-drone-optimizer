@@ -38,16 +38,9 @@ public class CheckBehindDirection implements Phase {
             counter++;
             return drone.echo(drone.initialHeading.backSide(drone.initialHeading));
         } else {
+
+            // this is questionable 
             logger.info("Reached end of CheckBehindDirection");
-            reachedEnd = true;
-            mapInitializer.directionToEcho(drone.currentHeading);
-            return null;
-        }
-    }
-
-    public void processResponse(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
-        if (drone.getAction().equals("echo")) {
-
             mapInitializer.initializeMapDimensions(drone.getDirection(), responseStorage.getRange() - 1);
             String rowsOrColumns = mapInitializer.rowsOrColumns();
             logger.info("rows or columns: " + rowsOrColumns);
@@ -57,6 +50,9 @@ public class CheckBehindDirection implements Phase {
                 drone.initializeCurrentLocation(mapInitializer.leftX, mapInitializer.topY,
                         mapInitializer.spawnedFacingGround);
             }
+            reachedEnd = true;
+            mapInitializer.directionToEcho(drone.currentHeading);
+            return null;
         }
     }
 

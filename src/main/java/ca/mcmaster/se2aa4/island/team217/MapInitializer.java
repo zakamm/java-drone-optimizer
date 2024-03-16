@@ -22,13 +22,15 @@ public class MapInitializer {
     int distanceToGround = 0;
 
     MapRepresenter map;
+    Drone drone;
 
     Boolean middle;
     Boolean echoed = false;
     Heading generalDirection;
     Integer outOfRangeCounter = 0;
 
-    public MapInitializer(MapRepresenter map) {
+    public MapInitializer(Drone drone, MapRepresenter map) {
+        this.drone = drone;
         this.map = map;
     }
 

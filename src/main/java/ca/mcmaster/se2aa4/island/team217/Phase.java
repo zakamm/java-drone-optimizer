@@ -8,6 +8,5 @@ public interface Phase {
     Phase getNextPhase();
 
     Boolean isFinal();
-
-    void processResponse(ResponseStorage responseStorage, Drone drone, MapRepresenter map);
+    
 }

@@ -2,9 +2,7 @@ package ca.mcmaster.se2aa4.island.team217;
 
 //import 3.4;
 
-import ca.mcmaster.se2aa4.island.team217.MapRepresenter;
 import ca.mcmaster.se2aa4.island.team217.Drone.Heading;
-import ca.mcmaster.se2aa4.island.team217.Initializer;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
@@ -32,26 +30,19 @@ public class MissionControl {
     ResponseStorage responseStorage = new ResponseStorage();
     // HashMap<String, List<String>> responseStorage = new HashMap<String,
     // List<String>>();
-    Initializer initializer;
 
     MapInitializer mapInitializer;
 
-    GridSearchPhases griddy;
-
     GridSearcher gridSearcher;
 
-    Phase current1;
-    Phase current2;
+    Phase current;
 
     public MissionControl(Drone drone, MapRepresenter map) {
         this.drone = drone;
         this.map = map;
-        this.mapInitializer = new MapInitializer(map);
-        this.griddy = new GridSearchPhases();
-        this.initializer = new Initializer(drone, map);
+        this.mapInitializer = new MapInitializer(drone, map);
         this.gridSearcher = new GridSearcher(drone, map);
-        this.current1 = new EchoThreeSides(mapInitializer);
-        this.current2 = new InitializeGridSearch(griddy);
+        this.current = new EchoThreeSides(mapInitializer);
     }
 
     /*
@@ -65,72 +56,31 @@ public class MissionControl {
      */
     public String nextDecision() {
 
+        logger.info("Battery Level: "+ drone.getBatteryLevel());
+
         if (drone.getBatteryLevel() < 50) {
             return drone.stop();
         }
-
-        // first echo to determine where the drone is located
-        // if (initialEchoed == false) {
-        // initialEchoed = true;
-        // return drone.echo(this.drone.initialHeading);
-        // }
-
-        // if (drone.getAction().equals("scan")) {
-        // map.storeScanResults(responseStorage, drone.currentLocation);
-        // }
 
         if (responseStorage.getCost() != null) {
             if (drone.getAction().equals("scan")) {
                 map.storeScanResults(responseStorage, drone.currentLocation);
             }
-            current1.processResponse(responseStorage, drone, map);
+            if (current instanceof ResponsePhase) {
+                ((ResponsePhase) current).processResponse(responseStorage, drone, map);
+            }
         }
 
-        while (!current1.isFinal()) {
-            while (!current1.reachedEnd()) {
-                String decision = current1.nextDecision(responseStorage, drone, map);
+        while (!current.isFinal()) {
+            while (!current.reachedEnd()) {
+                String decision = current.nextDecision(responseStorage, drone, map);
                 if (!(decision == null)) {
                     return decision;
                 }
                 /// handler.process(decision); questionable
             }
-            this.current1 = current1.getNextPhase();
+            this.current = current.getNextPhase();
         }
-
-        logger.info("Map Initializeddd");
-
-        while (!current2.isFinal()) {
-            while (!current2.reachedEnd()) {
-                String decision = current2.nextDecision(responseStorage, drone, map);
-                if (!(decision == null)) {
-                    return decision;
-                }
-                /// handler.process(decision); questionable
-            }
-            this.current2 = current2.getNextPhase();
-        }
-
-        logger.info("WE DEDEDDD");
-        // initializatoin and finding ground
-        // if (map.initialized == false) {
-        // return initializer.initializeMission(this.drone.initialHeading,
-        // responseStorage);
-        // }
-
-        // just testing out the point and biome stuff
-        // logger.info(drone.currentLocation.getX());
-        // logger.info(drone.currentLocation.getY());
-        // logger.info(drone.currentLocation.getGround());
-        // logger.info(drone.currentLocation.biomes.get(0));
-
-        // logger.info("MAP INITIALIZED");
-        // return drone.stop();
-
-        // if (map.initialized == true && gridSearch == false) {
-        // return gridSearcher.searchGrid(responseStorage);
-        // }
-
-        // logger.info("MAP INITIALIZED");
         return drone.stop();
     }
 

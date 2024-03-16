@@ -3,7 +3,6 @@ package ca.mcmaster.se2aa4.island.team217;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import ca.mcmaster.se2aa4.island.team217.GridSearchPhases;
 import ca.mcmaster.se2aa4.island.team217.Drone.Heading;
 
 public class TranslateDrone implements Phase {
@@ -12,10 +11,11 @@ public class TranslateDrone implements Phase {
     Integer turnCounter = 0;
     Integer distanceOutOfBounds;
 
-    GridSearchPhases griddy;
+    GridSearch gridSearch;
+    String sideToTranslate;
 
-    public TranslateDrone(GridSearchPhases griddy) {
-        this.griddy = griddy;
+    public TranslateDrone(GridSearch gridSearch) {
+        this.gridSearch = gridSearch;
     }
 
     public Boolean reachedEnd() {
@@ -23,7 +23,7 @@ public class TranslateDrone implements Phase {
     }
 
     public Phase getNextPhase() {
-        return new ScanAndFly(griddy);
+        return new EchoCheck(gridSearch);
     }
 
     public Boolean isFinal() {
@@ -31,30 +31,23 @@ public class TranslateDrone implements Phase {
     }
 
     public String nextDecision(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
+
         if (turnCounter == 5) {
-            if (responseStorage.getFound().equals(null)) { // took out !needToFly
-                return drone.echo(drone.currentHeading);
-            } else if (responseStorage.getFound().equals("OUT_OF_RANGE")) {
-                distanceOutOfBounds = responseStorage.getRange();
-                // needToFly = true;
-            }
-            if (distanceOutOfBounds >= 3) { // took out needToFly
-                distanceOutOfBounds--;
-                return drone.fly();
-            }
-            // needToFly = false;
             turnCounter = 0;
-            griddy.gridSearchDirection = drone.currentHeading;
-            griddy.generalDirection = griddy.generalDirection.backSide(griddy.generalDirection);
-            griddy.atEdge = false;
-
+            gridSearch.atEdge = false;
+            gridSearch.generalDirection = gridSearch.generalDirection.backSide(gridSearch.generalDirection);
             reachedEnd = true;
+            gridSearch.translated = true;
             return drone.scan();
-        } else {
-            logger.info("TURNCOUNTERRRR {} , ", turnCounter);
-            return translateOver(griddy.sideToTranslate, drone);
         }
-
+        else{
+            if (gridSearch.gridSearchDirection == gridSearch.generalDirection.leftSide(gridSearch.generalDirection)) {
+                sideToTranslate = "left";
+            } else if (gridSearch.gridSearchDirection == gridSearch.generalDirection.rightSide(gridSearch.generalDirection)) {
+                sideToTranslate = "right";
+            }
+            return translateOver(sideToTranslate, drone);
+        }
     }
 
     // this method translates the drone over one spot to the left or right when we
@@ -62,8 +55,8 @@ public class TranslateDrone implements Phase {
     // direction
     // it only needs two squares above and to the side to perform the maneuver
     private String translateOver(String sideToTranslate, Drone drone) {
-        logger.info("WE TURNING AROUNDDD");
-        logger.info(griddy.gridSearchDirection);
+        logger.info("Translating the Drone over to the {} side", sideToTranslate);
+
         if (sideToTranslate.equals("left")) {
             // Only needs one spot above it turn
             if (turnCounter == 0) {
@@ -102,10 +95,6 @@ public class TranslateDrone implements Phase {
             }
         }
         return null;
-
-    }
-
-    public void processResponse(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
 
     }
 }
