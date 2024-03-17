@@ -1,7 +1,5 @@
 package ca.mcmaster.se2aa4.island.team217;
 
-import ca.mcmaster.se2aa4.island.team217.Point;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,7 +12,6 @@ public class Drone {
     Boolean spawnedFacingGround;
     public Heading currentHeading;
     public final Heading initialHeading;
-    int counter = 0;
 
     public MapRepresenter mapRepresenter;
 
