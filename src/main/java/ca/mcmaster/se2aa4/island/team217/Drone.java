@@ -74,7 +74,7 @@ public class Drone {
         this.currentHeading = Heading.valueOf(initialHeading);
         this.initialHeading = Heading.valueOf(initialHeading);
         // initialize it at (100, 100) for now
-        this.currentLocation = new Point(100, 100);
+        this.currentLocation = new NormalPoint(100, 100);
         this.mapRepresenter = map;
     }
 

@@ -16,15 +16,11 @@ public class Explorer implements IExplorerRaid {
 
     private final Logger logger = LogManager.getLogger();
 
-  
-
     private JSONObject checker = new JSONObject(); // used by explorer system
 
     Drone drone;
     MapRepresenter map;
-
     MissionControl missionControl; 
-
 
     @Override
     public void initialize(String s) {
@@ -68,24 +64,25 @@ public class Explorer implements IExplorerRaid {
 
     @Override
     public String deliverFinalReport() {
-        List<PointOfInterest> creeks = map.creeks;
+        List<PointWithCreeks> creeks = map.creeks;
         
-        PointOfInterest site = map.site;
+        PointWithSite site = map.site;
         double distance = map.computeMinDistance();
         if (map.closestCreek == null) {
             map.closestCreek = creeks.get(0);
         }
-        String report = map.closestCreek.getIdentifier();
+        String report = map.closestCreek.getIdentifiers().get(0);
+        logger.info("** The identifier of the emergency site is {}", site.getIdentifier());
         logger.info("The location of the emergency site is {}", site.getX() + ", " + site.getY());
         logger.info("** The distance between emergency site and closest creek is {}", distance);
-        logger.info("** The identifier of the closest creek is {}", map.closestCreek.getIdentifier());
+        logger.info("** The identifier of the closest creek is {}", map.closestCreek.getIdentifiers().get(0));
         logger.info("** The location of the closest creek is {}", map.closestCreek.getX() + ", " + map.closestCreek.getY());
         logger.info("** Delivering the final report");
         logger.info("** The drone has stopped");
         
         return report;
     }
-    
+
     public static void main(String[] args) {
         Explorer e = new Explorer();
         e.initialize("{\"budget\":1000,\"heading\":\"N\"}");
