@@ -26,12 +26,4 @@ public class PointOfInterest extends Point {
     public String getType() {
         return type;
     }
-
-    // could just get all the info at once if needed
-
-    public ArrayList<String> getInfo() {
-        return null;
-
-    }
-
 }

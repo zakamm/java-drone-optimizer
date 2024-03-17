@@ -71,7 +71,7 @@ public class Explorer implements IExplorerRaid {
         List<PointOfInterest> creeks = map.creeks;
         
         PointOfInterest site = map.site;
-        double distance = map.computeDistance();
+        double distance = map.computeMinDistance();
         if (map.closestCreek == null) {
             map.closestCreek = creeks.get(0);
         }
@@ -85,9 +85,7 @@ public class Explorer implements IExplorerRaid {
         
         return report;
     }
-
-    // write code to keep count of iterations and battery level
-
+    
     public static void main(String[] args) {
         Explorer e = new Explorer();
         e.initialize("{\"budget\":1000,\"heading\":\"N\"}");

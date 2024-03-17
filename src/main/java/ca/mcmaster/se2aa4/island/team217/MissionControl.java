@@ -1,14 +1,11 @@
 package ca.mcmaster.se2aa4.island.team217;
 
-//import 3.4;
-
 import ca.mcmaster.se2aa4.island.team217.Drone.Heading;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.HashMap;
 import java.util.List;
 import org.json.JSONObject;
 import org.json.JSONArray;
@@ -26,13 +23,9 @@ public class MissionControl {
 
     Boolean searchedCoast = false;
     Boolean stop = false;
-    // List<String> nextDecision = new ArrayList<String>();
+
     ResponseStorage responseStorage = new ResponseStorage();
-    // HashMap<String, List<String>> responseStorage = new HashMap<String,
-    // List<String>>();
-
     MapInitializer mapInitializer;
-
     GridSearcher gridSearcher;
 
     Phase current;
@@ -77,7 +70,6 @@ public class MissionControl {
                 if (!(decision == null)) {
                     return decision;
                 }
-                /// handler.process(decision); questionable
             }
             this.current = current.getNextPhase();
         }

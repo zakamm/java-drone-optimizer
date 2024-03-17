@@ -1,16 +1,11 @@
 package ca.mcmaster.se2aa4.island.team217;
 
-import ca.mcmaster.se2aa4.island.team217.PointOfInterest;
-
-import ca.mcmaster.se2aa4.island.team217.Point;
-
 import ca.mcmaster.se2aa4.island.team217.Drone.Heading;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class MapRepresenter {
@@ -46,6 +41,7 @@ public class MapRepresenter {
             for (String creekIdentifier : scanResults.getCreeks()) {
                 PointOfInterest poi = new PointOfInterest(currentLocation.getX(), currentLocation.getY(),
                         creekIdentifier, "creek");
+                currentLocation = poi;
                 creeks.add(poi);
             }
         }
@@ -54,6 +50,7 @@ public class MapRepresenter {
             // if there are sites, add them to the POI list
             site = new PointOfInterest(currentLocation.getX(), currentLocation.getY(),
                         scanResults.getSite(), "site");
+            currentLocation = site;
         }
         currentLocation.addBiomes(scanResults.getBiomes());
 
@@ -76,20 +73,7 @@ public class MapRepresenter {
 
     }
 
-    // random things that dont do much for now
-    // public PointOfInterest getPOI(int x, int y){
-
-    // return null;
-
-    // }
-
-    // // add poi method
-    // public void addPOI(PointOfInterest poi){
-
-    // pois.add(poi);
-    // }
-
-    public double computeDistance(){
+    public double computeMinDistance(){
         if (site == null){
             return 0;
         }
@@ -104,5 +88,4 @@ public class MapRepresenter {
         }
         return minDistance;
     }
-    
 }
