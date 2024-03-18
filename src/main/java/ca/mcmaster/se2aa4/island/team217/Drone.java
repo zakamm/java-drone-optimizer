@@ -1,7 +1,5 @@
 package ca.mcmaster.se2aa4.island.team217;
 
-import ca.mcmaster.se2aa4.island.team217.Point;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,7 +12,6 @@ public class Drone {
     Boolean spawnedFacingGround;
     public Heading currentHeading;
     public final Heading initialHeading;
-    int counter = 0;
 
     public MapRepresenter mapRepresenter;
 
@@ -77,7 +74,7 @@ public class Drone {
         this.currentHeading = Heading.valueOf(initialHeading);
         this.initialHeading = Heading.valueOf(initialHeading);
         // initialize it at (100, 100) for now
-        this.currentLocation = new Point(100, 100);
+        this.currentLocation = new NormalPoint(100, 100);
         this.mapRepresenter = map;
     }
 
