@@ -98,6 +98,7 @@ public class MapInitializer {
                 directionToEcho = Heading.N;
             }
         }
+        logger.info("Direction to Echo: " + directionToEcho);
     }
 
 }
