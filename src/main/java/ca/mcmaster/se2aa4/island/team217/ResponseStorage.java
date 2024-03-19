@@ -7,7 +7,7 @@ import org.json.JSONTokener;
 import org.json.JSONArray;
 
 public class ResponseStorage {
-   
+
     private Integer range;
     private Integer cost;
     private String found;
@@ -15,59 +15,69 @@ public class ResponseStorage {
     private List<String> biomes;
     private String site;
 
-    public ResponseStorage(){
+    // used for singleton pattern implementation
+    private static ResponseStorage uniqueInstance = null;
+
+    private ResponseStorage() {
 
     }
 
-    public void setRange(Integer range){
+    public static ResponseStorage getInstance() {
+        if (uniqueInstance == null) {
+            uniqueInstance = new ResponseStorage();
+        }
+        return uniqueInstance;
+    }
+
+    public void setRange(Integer range) {
         this.range = range;
     }
 
-    public void setCost(Integer cost){
+    public void setCost(Integer cost) {
         this.cost = cost;
     }
 
-    public void setFound(String found){
+    public void setFound(String found) {
         this.found = found;
     }
 
-    public void setBiomes(List<String> biomes){
+    public void setBiomes(List<String> biomes) {
         this.biomes = biomes;
     }
 
-    public void setCreeks(List<String> creeks){
+    public void setCreeks(List<String> creeks) {
         this.creeks = creeks;
     }
 
-    public void setSite(String site){
+    public void setSite(String site) {
         this.site = site;
     }
 
-    public Integer getRange(){
+    public Integer getRange() {
         return this.range;
     }
 
-    public Integer getCost(){
+    public Integer getCost() {
         return this.cost;
     }
 
-    public String getFound(){
+    public String getFound() {
         return this.found;
     }
 
-    public List<String> getBiomes(){
+    public List<String> getBiomes() {
         return this.biomes;
     }
 
-    public List<String> getCreeks(){
+    public List<String> getCreeks() {
         return this.creeks;
     }
 
-    public String getSite(){
+    public String getSite() {
         return this.site;
     }
 
-    public void clear(){
+    public void clear() {
         this.range = -1;
         this.cost = null;
         this.found = "null";
@@ -124,7 +134,5 @@ public class ResponseStorage {
             setSite(temp.get(0));
         }
     }
-
-
 
 }
