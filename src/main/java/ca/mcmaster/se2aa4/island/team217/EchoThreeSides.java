@@ -28,7 +28,7 @@ public class EchoThreeSides implements ResponsePhase {
             return new FindMissingDimension( mapInitializer);
         }
         else{
-            return new CheckBehindDirection(mapInitializer);
+            return new LocateGround(mapInitializer);
         }
     }
 
@@ -49,7 +49,6 @@ public class EchoThreeSides implements ResponsePhase {
             reachedEnd = true;
             return drone.echo(drone.initialHeading.leftSide(drone.initialHeading));
         } else {
-            reachedEnd = true;
             return null;
         }
     }
@@ -62,6 +61,11 @@ public class EchoThreeSides implements ResponsePhase {
             } else {
                 mapInitializer.distanceToGround = responseStorage.getRange();
                 mapInitializer.spawnedFacingGround = true;
+            }
+            if (reachedEnd && !mapInitializer.spawnedFacingGround) {
+                mapInitializer.initializeMapDimensions(drone.currentHeading.backSide(drone.currentHeading), 0);
+                drone.initializeCurrentLocation(mapInitializer.leftColumns, mapInitializer.topRows, mapInitializer.spawnedFacingGround);
+                mapInitializer.directionToEcho(drone.currentHeading);
             }
         }
 

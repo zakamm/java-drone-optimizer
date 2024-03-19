@@ -78,34 +78,6 @@ public class Drone {
         this.mapRepresenter = map;
     }
 
-    // // these methods are based on the actions that the drone can take
-    // public String turnLeft() {
-    // currentHeading = currentHeading.leftSide(currentHeading);
-    // return decisionTaken("heading", currentHeading.toString());
-    // }
-
-    // public String turnRight() {
-    // currentHeading = currentHeading.rightSide(currentHeading);
-    // return decisionTaken("heading", currentHeading.toString());
-    // }
-
-    // need to fix this method
-    // public String turnAround(){
-    // Heading left = this.currentHeading.leftSide();
-    // switch (this.currentHeading) {
-    // case N:
-    // return decisionTaken("heading", left.toString());
-    // case E:
-    // return decisionTaken("heading", left.toString());
-    // case S:
-    // return decisionTaken("heading", left.toString());
-    // case W:
-    // return decisionTaken("heading", left.toString());
-    // default:
-    // return null;
-    // }
-    // }
-
     // this method also updates the current location of the drone
     public String fly() {
         try {
