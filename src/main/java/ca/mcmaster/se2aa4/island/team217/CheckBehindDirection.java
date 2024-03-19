@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import ca.mcmaster.se2aa4.island.team217.Drone.Heading;
 
-public class CheckBehindDirection implements Phase {
+public class CheckBehindDirection implements ResponsePhase {
 
     private final Logger logger = LogManager.getLogger();
 
@@ -37,9 +37,12 @@ public class CheckBehindDirection implements Phase {
         } else if (counter == 1) {
             counter++;
             return drone.echo(drone.initialHeading.backSide(drone.initialHeading));
-        } else {
+        } 
+        return null;
+    }
 
-            // this is questionable 
+    public void processResponse(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
+        if (drone.getAction().equals("echo")) {
             logger.info("Reached end of CheckBehindDirection");
             mapInitializer.initializeMapDimensions(drone.getDirection(), responseStorage.getRange() - 1);
             String rowsOrColumns = mapInitializer.rowsOrColumns();
@@ -47,24 +50,23 @@ public class CheckBehindDirection implements Phase {
             if (rowsOrColumns.equals("both")) {
                 // directionToEcho = directionToEcho(drone.currentHeading);
                 map.initializeMap();
-                drone.initializeCurrentLocation(mapInitializer.leftX, mapInitializer.topY,
+                drone.initializeCurrentLocation(mapInitializer.leftColumns, mapInitializer.topRows,
                         mapInitializer.spawnedFacingGround);
             }
             reachedEnd = true;
             mapInitializer.directionToEcho(drone.currentHeading);
-            return null;
         }
     }
 
     private String initialTurn(Drone drone) {
         if (drone.initialHeading == Heading.N || drone.initialHeading == Heading.S) {
-            if (mapInitializer.leftX > mapInitializer.rightX) {
+            if (mapInitializer.leftColumns > mapInitializer.rightColumns) {
                 return drone.heading(Heading.W);
             } else {
                 return drone.heading(Heading.E);
             }
         } else if (drone.initialHeading == Heading.E || drone.initialHeading == Heading.W) {
-            if (mapInitializer.topY > mapInitializer.bottomY) {
+            if (mapInitializer.topRows > mapInitializer.bottomRows) {
                 return drone.heading(Heading.N);
             } else {
                 return drone.heading(Heading.S);

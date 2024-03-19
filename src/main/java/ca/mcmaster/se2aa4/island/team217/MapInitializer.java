@@ -9,10 +9,10 @@ public class MapInitializer {
 
     private final Logger logger = LogManager.getLogger();
 
-    Integer topY;
-    Integer bottomY;
-    Integer leftX;
-    Integer rightX;
+    Integer topRows;
+    Integer bottomRows;
+    Integer leftColumns;
+    Integer rightColumns;
     Boolean facingGround;
 
     Heading directionToEcho;
@@ -38,16 +38,16 @@ public class MapInitializer {
         logger.info("Range" + range);
         switch (heading) {
             case N:
-                topY = range;
+                topRows = range;
                 break;
             case E:
-                rightX = range;
+                rightColumns = range;
                 break;
             case S:
-                bottomY = range;
+                bottomRows = range;
                 break;
             case W:
-                leftX = range;
+                leftColumns = range;
                 break;
             default:
                 break;
@@ -55,18 +55,22 @@ public class MapInitializer {
     }
 
     public String rowsOrColumns() {
-        if (topY != null && bottomY != null && leftX != null && rightX != null) {
-            map.rows = topY + bottomY + 1;
-            map.columns = leftX + rightX + 1;
+        logger.info("topRows" + topRows);
+        logger.info("bottomRows" + bottomRows);
+        logger.info("leftColumns" + leftColumns);
+        logger.info("rightColumns" + rightColumns);
+        if (topRows != null && bottomRows != null && leftColumns != null && rightColumns != null) {
+            map.rows = topRows + bottomRows + 1;
+            map.columns = leftColumns + rightColumns + 1;
             logger.info("Rows" + map.rows);
             logger.info("columns" + map.columns);
             return "both";
         }
-        if (topY != null && bottomY != null) {
-            map.rows = topY + bottomY + 1;
+        if (topRows != null && bottomRows != null) {
+            map.rows = topRows + bottomRows + 1;
             return "rows";
-        } else if (leftX != null && rightX != null) {
-            map.columns = leftX + rightX + 1;
+        } else if (leftColumns != null && rightColumns != null) {
+            map.columns = leftColumns + rightColumns + 1;
             return "columns";
         } else {
             return "none";
@@ -78,19 +82,19 @@ public class MapInitializer {
     // that is furthest to the edge of the map
     public void directionToEcho(Heading currentHeading) {
         if (currentHeading == Heading.N || currentHeading == Heading.S) {
-            if (leftX > rightX) {
+            if (leftColumns > rightColumns) {
                 directionToEcho = Heading.W;
-            } else if (rightX > leftX) {
+            } else if (rightColumns > leftColumns) {
                 directionToEcho = Heading.E;
-            } else if (leftX == rightX) {
+            } else if (leftColumns == rightColumns) {
                 directionToEcho = Heading.E;
             }
         } else if (currentHeading == Heading.E || currentHeading == Heading.W) {
-            if (topY > bottomY) {
+            if (topRows > bottomRows) {
                 directionToEcho = Heading.N;
-            } else if (bottomY > topY) {
+            } else if (bottomRows > topRows) {
                 directionToEcho = Heading.S;
-            } else if (bottomY == topY) {
+            } else if (bottomRows == topRows) {
                 directionToEcho = Heading.N;
             }
         }

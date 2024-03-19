@@ -7,8 +7,8 @@ public class FindMissingDimension implements ResponsePhase {
 
     private final Logger logger = LogManager.getLogger();
 
-    int counter;
-    int flyCounter;
+    int counter = 0;
+    int flyCounter = 0;
     boolean reachedEnd = false;
     boolean foundDimension = false;
 
@@ -54,7 +54,7 @@ public class FindMissingDimension implements ResponsePhase {
                 mapInitializer.initializeMapDimensions(drone.currentHeading.backSide(drone.currentHeading), flyCounter);
                 String rowsOrColumns = mapInitializer.rowsOrColumns();
                 map.initializeMap();
-                drone.initializeCurrentLocation(mapInitializer.leftX, mapInitializer.topY, mapInitializer.spawnedFacingGround);
+                drone.initializeCurrentLocation(mapInitializer.leftColumns, mapInitializer.topRows, mapInitializer.spawnedFacingGround);
                 foundDimension = true;
             }
         }

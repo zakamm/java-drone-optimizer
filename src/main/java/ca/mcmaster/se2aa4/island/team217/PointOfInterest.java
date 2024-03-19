@@ -1,29 +1,37 @@
 package ca.mcmaster.se2aa4.island.team217;
 
-import ca.mcmaster.se2aa4.island.team217.Point;
+import java.util.List;
 
-import java.util.ArrayList;
+import ca.mcmaster.se2aa4.island.team217.ResponseStorage;
 
-public class PointOfInterest extends Point {
+public abstract class PointOfInterest implements Point {
+    protected Point poi;
 
-    // this is based off what we see in the pois.json file, it has a iD, type and
-    // location
-    private String identifier;
-    private String type;
-
-    public PointOfInterest(int x, int y, String identifier, String type) {
-        super(x, y); // Explicitly invoke the constructor of the superclass Point
-        this.identifier = identifier;
-        this.type = type;
-        super.isPOI = true;
-        super.isGround = true;
+    public PointOfInterest(Point poi) {
+        this.poi = poi;
     }
 
-    public String getIdentifier() {
-        return identifier;
+    @Override
+    public int getRow() {
+        return poi.getRow();
     }
 
-    public String getType() {
-        return type;
+    @Override
+    public int getColumn() {
+        return poi.getColumn();
     }
+
+    @Override
+    public Boolean getGround() {
+        return poi.getGround();
+    }
+
+    @Override
+    public void addBiomes(List<String> biomes) {
+        poi.addBiomes(biomes);
+    }
+
+    // Abstract method for storeScanResults
+    @Override
+    public abstract void storeScanResults(ResponseStorage scanResults);
 }
