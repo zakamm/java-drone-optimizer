@@ -12,15 +12,15 @@ import java.util.*;
 public class PointOfInterestTest {
 
     // @Test
-    // public void testGetX() {
+    // public void testgetRow() {
     //     PointOfInterest p = new PointOfInterest(1, 2, "204392", "creek");
-    //     assertEquals(1, p.getX());
+    //     assertEquals(1, p.getRow());
     // }
 
     // @Test
-    // public void testGetY() {
+    // public void testgetColumn() {
     //     PointOfInterest p = new PointOfInterest(1, 2, "204392", "creek");
-    //     assertEquals(2, p.getY());
+    //     assertEquals(2, p.getColumn());
     // }
 
     // @Test

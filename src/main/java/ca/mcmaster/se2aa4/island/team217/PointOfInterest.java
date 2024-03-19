@@ -12,13 +12,13 @@ public abstract class PointOfInterest implements Point {
     }
 
     @Override
-    public int getX() {
-        return poi.getX();
+    public int getRow() {
+        return poi.getRow();
     }
 
     @Override
-    public int getY() {
-        return poi.getY();
+    public int getColumn() {
+        return poi.getColumn();
     }
 
     @Override

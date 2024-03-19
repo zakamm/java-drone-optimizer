@@ -111,16 +111,16 @@ public class Drone {
         try {
             switch (currentHeading) {
                 case N:
-                    currentLocation = mapRepresenter.map.get(currentLocation.getX() - 1).get(currentLocation.getY());
+                    currentLocation = mapRepresenter.map.get(currentLocation.getRow() - 1).get(currentLocation.getColumn());
                     break;
                 case E:
-                    currentLocation = mapRepresenter.map.get(currentLocation.getX()).get(currentLocation.getY() + 1);
+                    currentLocation = mapRepresenter.map.get(currentLocation.getRow()).get(currentLocation.getColumn() + 1);
                     break;
                 case S:
-                    currentLocation = mapRepresenter.map.get(currentLocation.getX() + 1).get(currentLocation.getY());
+                    currentLocation = mapRepresenter.map.get(currentLocation.getRow() + 1).get(currentLocation.getColumn());
                     break;
                 case W:
-                    currentLocation = mapRepresenter.map.get(currentLocation.getX()).get(currentLocation.getY() - 1);
+                    currentLocation = mapRepresenter.map.get(currentLocation.getRow()).get(currentLocation.getColumn() - 1);
                     break;
                 default:
                     break;
@@ -130,31 +130,32 @@ public class Drone {
             return decisionTaken("stop");
         }
 
-        logger.info(currentLocation.getX() + " " + currentLocation.getY());
+        logger.info(currentLocation.getRow() + " " + currentLocation.getColumn());
 
         return decisionTaken("fly");
     }
 
-    public void initializeCurrentLocation(Integer leftX, Integer topY, Boolean spawnedFacingGround) {
-        int x;
-        int y;
+    public void initializeCurrentLocation(Integer leftColumns, Integer topRows, Boolean spawnedFacingGround) {
+        int rows;
+        int columns;
         this.spawnedFacingGround = spawnedFacingGround;
 
-        // we didnt change heading and so leftX and topY are the same as the current
+        // we didnt change heading and so leftColumns and topRows are the same as the current
         // location
         if (spawnedFacingGround) {
-            x = topY;
-            y = leftX;
+            rows = topRows;
+            columns = leftColumns;
         }
-        // since we changed heading, leftX and topY are off by a bit, the 100 we
+        // since we changed heading, leftColumns and topRows are off by a bit, the 100 we
         // intialized currentLocation at (100, 100)
         else {
-            x = topY + currentLocation.getY() - 100;
-            y = leftX + currentLocation.getX() - 100;
+            rows = topRows + currentLocation.getRow() - 100;
+            columns = leftColumns + currentLocation.getColumn() - 100;
         }
-        logger.info(x);
-        logger.info(y);
-        currentLocation = mapRepresenter.map.get(x).get(y);
+        logger.info("Current location, X" + currentLocation.getRow() + " Y" + currentLocation.getColumn());
+        logger.info(rows);
+        logger.info(columns);
+        currentLocation = mapRepresenter.map.get(rows).get(columns);
     }
 
     // this method also updates current location based on current heading and next
@@ -167,20 +168,20 @@ public class Drone {
             if (heading == currentHeading.leftSide(currentHeading)) {
                 switch (currentHeading) {
                     case N:
-                        currentLocation = mapRepresenter.map.get(currentLocation.getX() - 1)
-                                .get(currentLocation.getY() - 1);
+                        currentLocation = mapRepresenter.map.get(currentLocation.getRow() - 1)
+                                .get(currentLocation.getColumn() - 1);
                         break;
                     case E:
-                        currentLocation = mapRepresenter.map.get(currentLocation.getX() - 1)
-                                .get(currentLocation.getY() + 1);
+                        currentLocation = mapRepresenter.map.get(currentLocation.getRow() - 1)
+                                .get(currentLocation.getColumn() + 1);
                         break;
                     case S:
-                        currentLocation = mapRepresenter.map.get(currentLocation.getX() + 1)
-                                .get(currentLocation.getY() + 1);
+                        currentLocation = mapRepresenter.map.get(currentLocation.getRow() + 1)
+                                .get(currentLocation.getColumn() + 1);
                         break;
                     case W:
-                        currentLocation = mapRepresenter.map.get(currentLocation.getX() + 1)
-                                .get(currentLocation.getY() - 1);
+                        currentLocation = mapRepresenter.map.get(currentLocation.getRow() + 1)
+                                .get(currentLocation.getColumn() - 1);
                         break;
                     default:
                         return null;
@@ -190,20 +191,20 @@ public class Drone {
             if (heading == currentHeading.rightSide(currentHeading)) {
                 switch (currentHeading) {
                     case N:
-                        currentLocation = mapRepresenter.map.get(currentLocation.getX() - 1)
-                                .get(currentLocation.getY() + 1);
+                        currentLocation = mapRepresenter.map.get(currentLocation.getRow() - 1)
+                                .get(currentLocation.getColumn() + 1);
                         break;
                     case E:
-                        currentLocation = mapRepresenter.map.get(currentLocation.getX() + 1)
-                                .get(currentLocation.getY() + 1);
+                        currentLocation = mapRepresenter.map.get(currentLocation.getRow() + 1)
+                                .get(currentLocation.getColumn() + 1);
                         break;
                     case S:
-                        currentLocation = mapRepresenter.map.get(currentLocation.getX() + 1)
-                                .get(currentLocation.getY() - 1);
+                        currentLocation = mapRepresenter.map.get(currentLocation.getRow() + 1)
+                                .get(currentLocation.getColumn() - 1);
                         break;
                     case W:
-                        currentLocation = mapRepresenter.map.get(currentLocation.getX() - 1)
-                                .get(currentLocation.getY() - 1);
+                        currentLocation = mapRepresenter.map.get(currentLocation.getRow() - 1)
+                                .get(currentLocation.getColumn() - 1);
                         break;
                     default:
                         return null;
@@ -213,7 +214,7 @@ public class Drone {
             logger.info("Out of bounds");
             return decisionTaken("stop");
         }
-        logger.info(currentLocation.getX() + " " + currentLocation.getY());
+        logger.info(currentLocation.getRow() + " " + currentLocation.getColumn());
         return decisionTaken("heading", heading.toString());
     }
 
