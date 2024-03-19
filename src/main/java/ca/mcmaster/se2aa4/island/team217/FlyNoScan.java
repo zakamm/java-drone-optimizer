@@ -19,7 +19,12 @@ public class FlyNoScan implements Phase {
     }
 
     public Phase getNextPhase() {
-        return new ScanAndFly(gridSearch);
+        if (gridSearch.translated){
+            return new NormalTurn(gridSearch);
+        }
+        else{
+            return new ScanAndFly(gridSearch);
+        }
     }
 
     public Boolean isFinal() {

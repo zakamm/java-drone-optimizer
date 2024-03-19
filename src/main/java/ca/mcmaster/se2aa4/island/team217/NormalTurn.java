@@ -38,7 +38,6 @@ public class NormalTurn implements Phase {
             gridSearch.gridSearchDirection = drone.currentHeading;
             gridSearch.atEdge = false;
             reachedEnd = true;
-            return drone.scan();
         }
         else{
             if (gridSearch.gridSearchDirection == gridSearch.generalDirection.leftSide(gridSearch.generalDirection)) {
@@ -49,6 +48,7 @@ public class NormalTurn implements Phase {
             }
             return normalTurnAroundGridSearch(sideToTurn, drone);
         }
+        return null;
     }
 
     private String normalTurnAroundGridSearch(String sideToTurn, Drone drone) {

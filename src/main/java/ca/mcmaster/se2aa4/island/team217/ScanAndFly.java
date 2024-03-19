@@ -4,11 +4,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import ca.mcmaster.se2aa4.island.team217.Drone.Heading;
+import java.util.List;
+import java.util.ArrayList;
 
 public class ScanAndFly implements ResponsePhase {
     private final Logger logger = LogManager.getLogger();
 
     Boolean reachedEnd = false;
+    Boolean isFinal = false;
 
    //scan first then fly
     Boolean flyCheck = false;
@@ -31,7 +34,7 @@ public class ScanAndFly implements ResponsePhase {
     }
 
     public Boolean isFinal() {
-        return false;
+        return isFinal;
     }
 
     public String nextDecision(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
@@ -55,20 +58,48 @@ public class ScanAndFly implements ResponsePhase {
             if (!drone.currentLocation.getGround()) {
                 gridSearch.atEdge = true;
             }
+            if (map.site != null) {
+                foundClosestCreek(map);
+            }
         }
         if (drone.getAction().equals("echo")) {
             if (responseStorage.getFound().equals("OUT_OF_RANGE")) {
                 gridSearch.atEdge = true;
                 nextPhase = new NormalTurn(gridSearch);
             } else {
-                gridSearch.distanceToFly = responseStorage.getRange();
+                gridSearch.distanceToFly = responseStorage.getRange() + 1;
                 gridSearch.atEdge = false;
-                if (gridSearch.distanceToFly == 0) {
-                    nextPhase = new ScanAndFly(gridSearch);
-                } else {
-                    nextPhase = new FlyNoScan(gridSearch);
-                }
+                nextPhase = new FlyNoScan(gridSearch);
             }
+        }
+    }
+
+    public void foundClosestCreek(MapRepresenter map) {
+        boolean foundClosestCreek = true;
+        double radius = map.closestCreekDistance;
+        outerloop:
+        for (List<Point> pointRow : map.map) {
+            for (Point p : pointRow) {
+                double distance = map.distanceBetweenTwoPoints(p, map.site);
+                if (distance <= radius){
+                    NormalPoint normalPoint = (NormalPoint) p;
+                    if (!normalPoint.beenScanned && normalPoint.getGround()){
+                        logger.info("NOT SCANNED");
+                        logger.info("Distance: " + distance);
+                        logger.info("Row: " + p.getRow());
+                        logger.info("Column: " + p.getColumn());
+                        foundClosestCreek = false;
+                        break outerloop;
+                    }
+                }
+
+            }
+        }
+
+        if (foundClosestCreek){
+            logger.info("Found closest creek");
+            reachedEnd = true;
+            isFinal = true;
         }
     }
 }
