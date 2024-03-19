@@ -75,55 +75,8 @@ public class MissionControl {
         }
         return drone.stop();
     }
-
-    // refactor: Use GoF - Decorative pattern to store, biomes with a wrapper of
-    // points of interest
+    
     public void storeResponse(String action, JSONObject previousResponse) {
-        // want to clear at the start of each iteration, sets all values to null
-        responseStorage.clear();
-
-        // all actions will have cost
-        List<String> temp = new ArrayList<String>();
-        responseStorage.setCost(previousResponse.getInt("cost"));
-
-        if (action.equals("echo")) {
-            responseStorage.setRange(previousResponse.getJSONObject("extras").getInt("range"));
-            responseStorage.setFound(previousResponse.getJSONObject("extras").getString("found"));
-        }
-
-        // store as lists with first item being null if empty
-        else if (action.equals("scan")) {
-            temp = new ArrayList<String>();
-            JSONArray creeksArray = previousResponse.getJSONObject("extras").getJSONArray("creeks");
-            if (creeksArray.length() == 0) {
-                temp.add("null");
-            } else {
-                for (int i = 0; i < creeksArray.length(); i++) {
-                    temp.add(creeksArray.getString(i));
-                }
-            }
-            responseStorage.setCreeks(temp);
-
-            temp = new ArrayList<String>();
-            JSONArray biomesArray = previousResponse.getJSONObject("extras").getJSONArray("biomes");
-            if (biomesArray.length() == 0) {
-                temp.add("null");
-            } else {
-                for (int i = 0; i < biomesArray.length(); i++) {
-                    temp.add(biomesArray.getString(i));
-                }
-            }
-            responseStorage.setBiomes(temp);
-
-            // assuming there is only one site, we only store the first value
-            temp = new ArrayList<String>();
-            JSONArray sitesArray = previousResponse.getJSONObject("extras").getJSONArray("sites");
-            if (sitesArray.length() == 0) {
-                temp.add("null");
-            } else {
-                temp.add(sitesArray.getString(0));
-            }
-            responseStorage.setSite(temp.get(0));
-        }
+        responseStorage.storeResponse(action, previousResponse);
     }
 }

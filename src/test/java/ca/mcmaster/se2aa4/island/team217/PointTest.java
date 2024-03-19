@@ -11,28 +11,28 @@ import java.util.*;
 public class PointTest {
 
     // @Test
-    // public void testGetX() {
+    // public void testgetRow() {
     //     Point p = new Point(1, 2);
-    //     assertEquals(1, p.getX());
+    //     assertEquals(1, p.getRow());
     // }
 
     // @Test
-    // public void testGetY() {
+    // public void testgetColumn() {
     //     Point p = new Point(1, 2);
-    //     assertEquals(2, p.getY());
+    //     assertEquals(2, p.getColumn());
     // }
 
     // @Test
     // public void testZeroValues() {
     //     Point p = new Point(0, 0);
-    //     assertEquals(0, p.getX());
-    //     assertEquals(0, p.getY());
+    //     assertEquals(0, p.getRow());
+    //     assertEquals(0, p.getColumn());
     // }
 
     // @Test
     // public void testNegativeValues() {
     //     Point p = new Point(-1, 2);
-    //     assertEquals(-1, p.getX());
+    //     assertEquals(-1, p.getRow());
     // }
 
     // // @Test

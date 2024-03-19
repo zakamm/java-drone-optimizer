@@ -41,7 +41,7 @@ public class MapRepresenter {
             PointWithCreeks pointWithCreeks = new PointWithCreeks(currentLocation);
             pointWithCreeks.storeScanResults(scanResults);
             creeks.add(pointWithCreeks);
-            //map.get(currentLocation.getX()).set(currentLocation.getY(), pointWithCreeks);
+            //map.get(currentLocation.getRow()).set(currentLocation.getColumn(), pointWithCreeks);
         }
 
         if (!(scanResults.getSite().equals("null"))) {
@@ -60,14 +60,16 @@ public class MapRepresenter {
 
         // initialize the map with the given dimensions
         logger.info("Initializing map with dimensions: " + columns + "x" + rows);
-        for (int i = 0; i < columns; i++) {
+        for (int i = 0; i < rows; i++) {
             List<Point> row = new ArrayList<>();
-            for (int j = 0; j < rows; j++) {
+            for (int j = 0; j < columns; j++) {
                 Point point = new NormalPoint(i, j);
                 row.add(point);
             }
             map.add(row);
         }
+        logger.info("Number of rows" + map.size());
+        logger.info("Number of columns" + map.get(0).size());
 
     }
 
@@ -77,10 +79,15 @@ public class MapRepresenter {
         }
         closestCreek = creeks.get(0);
         double minDistance = 1000000;
+        double tolerance = 0.05;
         for (PointWithCreeks creek : creeks){
-            double distance = Math.sqrt(Math.pow((creek.getX() - site.getX()), 2) + Math.pow((creek.getY() - site.getY()), 2));
+            double distance = Math.sqrt(Math.pow((creek.getRow() - site.getRow()), 2) + Math.pow((creek.getColumn() - site.getColumn()), 2));
+            logger.info("Distance: " + distance);
+            logger.info("creek: " + creek.getRow() + " " + creek.getColumn());
             if (distance < minDistance){
+                logger.info("Distance: " + distance);
                 closestCreek = creek;
+                logger.info("Closest creek: " + closestCreek.getRow() + " " + closestCreek.getColumn());
                 minDistance = distance;
             }
         }

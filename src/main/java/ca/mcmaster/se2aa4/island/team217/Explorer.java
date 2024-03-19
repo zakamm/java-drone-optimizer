@@ -65,6 +65,11 @@ public class Explorer implements IExplorerRaid {
     @Override
     public String deliverFinalReport() {
         List<PointWithCreeks> creeks = map.creeks;
+
+        for (PointWithCreeks creek : creeks) {
+            logger.info("Creek: {}", creek.getIdentifiers().get(0));
+            logger.info("Location: {}", creek.getRow() + ", " + creek.getColumn());
+        }
         
         PointWithSite site = map.site;
         double distance = map.computeMinDistance();
@@ -73,10 +78,10 @@ public class Explorer implements IExplorerRaid {
         }
         String report = map.closestCreek.getIdentifiers().get(0);
         logger.info("** The identifier of the emergency site is {}", site.getIdentifier());
-        logger.info("The location of the emergency site is {}", site.getX() + ", " + site.getY());
+        logger.info("The location of the emergency site is {}", site.getRow() + ", " + site.getColumn());
         logger.info("** The distance between emergency site and closest creek is {}", distance);
         logger.info("** The identifier of the closest creek is {}", map.closestCreek.getIdentifiers().get(0));
-        logger.info("** The location of the closest creek is {}", map.closestCreek.getX() + ", " + map.closestCreek.getY());
+        logger.info("** The location of the closest creek is {}", map.closestCreek.getRow() + ", " + map.closestCreek.getColumn());
         logger.info("** Delivering the final report");
         logger.info("** The drone has stopped");
         

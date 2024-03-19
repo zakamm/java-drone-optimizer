@@ -52,7 +52,7 @@ public class EchoCheck implements ResponsePhase {
         }else if (responseStorage.getFound().equals("OUT_OF_RANGE") && gridSearch.translated) {
             reachedEnd = true;
             gridSearch.translated = false;
-            gridSearch.distanceToFly = responseStorage.getRange() - 2;
+            gridSearch.distanceToFly = responseStorage.getRange() - 5;
             nextPhase = new FlyNoScan(gridSearch);
         
         }else if (responseStorage.getFound().equals("GROUND")) {

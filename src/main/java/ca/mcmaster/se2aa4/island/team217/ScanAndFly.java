@@ -10,8 +10,8 @@ public class ScanAndFly implements ResponsePhase {
 
     Boolean reachedEnd = false;
 
-   //fly first then scan
-    Boolean flyCheck = true;
+   //scan first then fly
+    Boolean flyCheck = false;
 
     GridSearch gridSearch;
 

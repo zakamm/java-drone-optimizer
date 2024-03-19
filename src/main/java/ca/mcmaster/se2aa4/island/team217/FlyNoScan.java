@@ -30,7 +30,7 @@ public class FlyNoScan implements Phase {
         logger.info("FlyingNoScan");
         if (gridSearch.distanceToFly == 0) {
             reachedEnd = true;
-            return drone.scan();
+            return null;
         } else {
             gridSearch.distanceToFly--;
             return drone.fly();

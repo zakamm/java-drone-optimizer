@@ -256,25 +256,25 @@ public class GridSearcher {
     // this method initializes the general direction of the drone based on where it
     // is located on the island and the initial heading when it touches ground
     public void initializeGeneralDirection() {
-        if (initialLocation.getX() < 26 && initialLocation.getY() < 26) {
+        if (initialLocation.getRow() < 26 && initialLocation.getColumn() < 26) {
             if (initialHeading == Heading.N || initialHeading == Heading.S) {
                 generalDirection = Heading.E;
             } else if (initialHeading == Heading.E || initialHeading == Heading.W) {
                 generalDirection = Heading.S;
             }
-        } else if (initialLocation.getY() >= 26 && initialLocation.getX() < 26) {
+        } else if (initialLocation.getColumn() >= 26 && initialLocation.getRow() < 26) {
             if (initialHeading == Heading.N || initialHeading == Heading.S) {
                 generalDirection = Heading.W;
             } else if (initialHeading == Heading.E || initialHeading == Heading.W) {
                 generalDirection = Heading.S;
             }
-        } else if (initialLocation.getX() >= 26 && initialLocation.getY() < 26) {
+        } else if (initialLocation.getRow() >= 26 && initialLocation.getColumn() < 26) {
             if (initialHeading == Heading.N || initialHeading == Heading.S) {
                 generalDirection = Heading.E;
             } else if (initialHeading == Heading.E || initialHeading == Heading.W) {
                 generalDirection = Heading.N;
             }
-        } else if (initialLocation.getY() >= 26 && initialLocation.getX() >= 26) {
+        } else if (initialLocation.getColumn() >= 26 && initialLocation.getRow() >= 26) {
             if (initialHeading == Heading.N || initialHeading == Heading.S) {
                 generalDirection = Heading.W;
             } else if (initialHeading == Heading.E || initialHeading == Heading.W) {

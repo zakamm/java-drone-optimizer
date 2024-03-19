@@ -68,8 +68,8 @@ public class DroneTest {
     //     String result = d.fly();
     //     assertEquals("fly", d.getAction());
     //     Point expected = new Point(0, 1);
-    //     assertEquals(expected.getX(), d.currentLocation.getX());
-    //     assertEquals(expected.getY(), d.currentLocation.getY());
+    //     assertEquals(expected.getRow(), d.currentLocation.getRow());
+    //     assertEquals(expected.getColumn(), d.currentLocation.getColumn());
     // }
 
 
@@ -80,15 +80,15 @@ public class DroneTest {
     //     //initial heading is E and we are turning left here
     //     String result = d.heading(Heading.N);
     //     Point expected = new Point(9, 11);
-    //     assertEquals(expected.getX(), d.currentLocation.getX());
-    //     assertEquals(expected.getY(), d.currentLocation.getY());
+    //     assertEquals(expected.getRow(), d.currentLocation.getRow());
+    //     assertEquals(expected.getColumn(), d.currentLocation.getColumn());
     //     assertEquals(Heading.N, d.currentHeading);
 
     //     //initial heading is N and we are turning right here
     //     result = d.heading(Heading.E);
     //     expected = new Point(8, 12);
-    //     assertEquals(expected.getX(), d.currentLocation.getX());
-    //     assertEquals(expected.getY(), d.currentLocation.getY());
+    //     assertEquals(expected.getRow(), d.currentLocation.getRow());
+    //     assertEquals(expected.getColumn(), d.currentLocation.getColumn());
     //     assertEquals(Heading.E, d.currentHeading);
 
     //     //initial heading is E and we are turning back here
@@ -97,8 +97,8 @@ public class DroneTest {
     //     });
     //     assertEquals("Invalid heading", backwardException.getMessage());
     //     assertEquals(Heading.E, d.currentHeading);
-    //     assertEquals(expected.getX(), d.currentLocation.getX());
-    //     assertEquals(expected.getY(), d.currentLocation.getY());
+    //     assertEquals(expected.getRow(), d.currentLocation.getRow());
+    //     assertEquals(expected.getColumn(), d.currentLocation.getColumn());
 
     //     // initial heading is east and we try to heading forward
     //     IllegalArgumentException forwardException = assertThrows(IllegalArgumentException.class, () -> {
@@ -106,8 +106,8 @@ public class DroneTest {
     //     });
     //     assertEquals("Invalid heading", forwardException.getMessage());
     //     assertEquals(Heading.E, d.currentHeading);
-    //     assertEquals(expected.getX(), d.currentLocation.getX());
-    //     assertEquals(expected.getY(), d.currentLocation.getY());
+    //     assertEquals(expected.getRow(), d.currentLocation.getRow());
+    //     assertEquals(expected.getColumn(), d.currentLocation.getColumn());
     // }
 
     // @Test
