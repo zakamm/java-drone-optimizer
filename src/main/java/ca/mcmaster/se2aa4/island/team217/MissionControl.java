@@ -24,18 +24,28 @@ public class MissionControl {
     Boolean searchedCoast = false;
     Boolean stop = false;
 
-    ResponseStorage responseStorage = new ResponseStorage();
+    ResponseStorage responseStorage = ResponseStorage.getInstance();
     MapInitializer mapInitializer;
     GridSearcher gridSearcher;
 
     Phase current;
 
-    public MissionControl(Drone drone, MapRepresenter map) {
+    // used for singleton pattern implementation
+    private static MissionControl uniqueInstance = null;
+
+    private MissionControl(Drone drone, MapRepresenter map) {
         this.drone = drone;
         this.map = map;
         this.mapInitializer = new MapInitializer(drone, map);
         this.gridSearcher = new GridSearcher(drone, map);
         this.current = new EchoThreeSides(mapInitializer);
+    }
+
+    public static MissionControl getInstance(Drone drone, MapRepresenter map) {
+        if (uniqueInstance == null) {
+            uniqueInstance = new MissionControl(drone, map);
+        }
+        return uniqueInstance;
     }
 
     /*
@@ -49,7 +59,7 @@ public class MissionControl {
      */
     public String nextDecision() {
 
-        logger.info("Battery Level: "+ drone.getBatteryLevel());
+        logger.info("Battery Level: " + drone.getBatteryLevel());
 
         if (drone.getBatteryLevel() < 50) {
             return drone.stop();
@@ -75,7 +85,7 @@ public class MissionControl {
         }
         return drone.stop();
     }
-    
+
     public void storeResponse(String action, JSONObject previousResponse) {
         responseStorage.storeResponse(action, previousResponse);
     }

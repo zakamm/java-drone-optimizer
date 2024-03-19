@@ -22,7 +22,10 @@ public class MapRepresenter {
     List<List<Point>> map = new ArrayList<>();
     public Boolean initialized = false;
 
-    public MapRepresenter() {
+    // used for singleton pattern implementation
+    private static MapRepresenter uniqueInstance = null;
+
+    private MapRepresenter() {
         // initialize with these dimensions for now, will refactor this later
         for (int i = 0; i < 200; i++) {
             List<Point> row = new ArrayList<>();
@@ -34,6 +37,13 @@ public class MapRepresenter {
         }
     }
 
+    public static MapRepresenter getInstance() {
+        if (uniqueInstance == null) {
+            uniqueInstance = new MapRepresenter();
+        }
+        return uniqueInstance;
+    }
+
     public void storeScanResults(ResponseStorage scanResults, Point currentLocation) {
 
         if (!(scanResults.getCreeks().get(0).equals("null"))) {
@@ -41,15 +51,15 @@ public class MapRepresenter {
             PointWithCreeks pointWithCreeks = new PointWithCreeks(currentLocation);
             pointWithCreeks.storeScanResults(scanResults);
             creeks.add(pointWithCreeks);
-            //map.get(currentLocation.getRow()).set(currentLocation.getColumn(), pointWithCreeks);
+            // map.get(currentLocation.getRow()).set(currentLocation.getColumn(),
+            // pointWithCreeks);
         }
 
         if (!(scanResults.getSite().equals("null"))) {
             PointWithSite pointWithSite = new PointWithSite(currentLocation);
             pointWithSite.storeScanResults(scanResults);
             site = pointWithSite;
-        }
-        else {
+        } else {
             currentLocation.storeScanResults(scanResults);
         }
     }
@@ -73,18 +83,19 @@ public class MapRepresenter {
 
     }
 
-    public double computeMinDistance(){
-        if (site == null){
+    public double computeMinDistance() {
+        if (site == null) {
             return 0;
         }
         closestCreek = creeks.get(0);
         double minDistance = 1000000;
         double tolerance = 0.05;
-        for (PointWithCreeks creek : creeks){
-            double distance = Math.sqrt(Math.pow((creek.getRow() - site.getRow()), 2) + Math.pow((creek.getColumn() - site.getColumn()), 2));
+        for (PointWithCreeks creek : creeks) {
+            double distance = Math.sqrt(Math.pow((creek.getRow() - site.getRow()), 2)
+                    + Math.pow((creek.getColumn() - site.getColumn()), 2));
             logger.info("Distance: " + distance);
             logger.info("creek: " + creek.getRow() + " " + creek.getColumn());
-            if (distance < minDistance){
+            if (distance < minDistance) {
                 logger.info("Distance: " + distance);
                 closestCreek = creek;
                 logger.info("Closest creek: " + closestCreek.getRow() + " " + closestCreek.getColumn());

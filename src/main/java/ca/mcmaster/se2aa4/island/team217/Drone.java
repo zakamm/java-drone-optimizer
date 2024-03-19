@@ -19,6 +19,9 @@ public class Drone {
     private String action;
     private Heading direction;
 
+    // used for singleton pattern implementation
+    private static Drone uniqueInstance = null;
+
     public enum Heading {
         N, E, S, W;
 
@@ -69,7 +72,7 @@ public class Drone {
         }
     }
 
-    public Drone(Integer batteryLevel, String initialHeading, MapRepresenter map) {
+    private Drone(Integer batteryLevel, String initialHeading, MapRepresenter map) {
         this.batteryLevel = batteryLevel;
         this.currentHeading = Heading.valueOf(initialHeading);
         this.initialHeading = Heading.valueOf(initialHeading);
@@ -78,21 +81,32 @@ public class Drone {
         this.mapRepresenter = map;
     }
 
+    public static Drone getInstance(Integer batteryLevel, String initialHeading, MapRepresenter map) {
+        if (uniqueInstance == null) {
+            uniqueInstance = new Drone(batteryLevel, initialHeading, map);
+        }
+        return uniqueInstance;
+    }
+
     // this method also updates the current location of the drone
     public String fly() {
         try {
             switch (currentHeading) {
                 case N:
-                    currentLocation = mapRepresenter.map.get(currentLocation.getRow() - 1).get(currentLocation.getColumn());
+                    currentLocation = mapRepresenter.map.get(currentLocation.getRow() - 1)
+                            .get(currentLocation.getColumn());
                     break;
                 case E:
-                    currentLocation = mapRepresenter.map.get(currentLocation.getRow()).get(currentLocation.getColumn() + 1);
+                    currentLocation = mapRepresenter.map.get(currentLocation.getRow())
+                            .get(currentLocation.getColumn() + 1);
                     break;
                 case S:
-                    currentLocation = mapRepresenter.map.get(currentLocation.getRow() + 1).get(currentLocation.getColumn());
+                    currentLocation = mapRepresenter.map.get(currentLocation.getRow() + 1)
+                            .get(currentLocation.getColumn());
                     break;
                 case W:
-                    currentLocation = mapRepresenter.map.get(currentLocation.getRow()).get(currentLocation.getColumn() - 1);
+                    currentLocation = mapRepresenter.map.get(currentLocation.getRow())
+                            .get(currentLocation.getColumn() - 1);
                     break;
                 default:
                     break;
@@ -112,13 +126,15 @@ public class Drone {
         int columns;
         this.spawnedFacingGround = spawnedFacingGround;
 
-        // we didnt change heading and so leftColumns and topRows are the same as the current
+        // we didnt change heading and so leftColumns and topRows are the same as the
+        // current
         // location
         if (spawnedFacingGround) {
             rows = topRows;
             columns = leftColumns;
         }
-        // since we changed heading, leftColumns and topRows are off by a bit, the 100 we
+        // since we changed heading, leftColumns and topRows are off by a bit, the 100
+        // we
         // intialized currentLocation at (100, 100)
         else {
             rows = topRows + currentLocation.getRow() - 100;

@@ -20,7 +20,7 @@ public class Explorer implements IExplorerRaid {
 
     Drone drone;
     MapRepresenter map;
-    MissionControl missionControl; 
+    MissionControl missionControl;
 
     @Override
     public void initialize(String s) {
@@ -30,10 +30,9 @@ public class Explorer implements IExplorerRaid {
         String direction = info.getString("heading");
         Integer batteryLevel = info.getInt("budget");
 
-        map = new MapRepresenter();
-        drone = new Drone(batteryLevel, direction, map);
-        missionControl = new MissionControl(drone, map);
-        
+        map = MapRepresenter.getInstance();
+        drone = Drone.getInstance(batteryLevel, direction, map);
+        missionControl = MissionControl.getInstance(drone, map);
 
         logger.info("The drone is facing {}", direction);
         logger.info("Battery level is {}", batteryLevel);
@@ -70,7 +69,7 @@ public class Explorer implements IExplorerRaid {
             logger.info("Creek: {}", creek.getIdentifiers().get(0));
             logger.info("Location: {}", creek.getRow() + ", " + creek.getColumn());
         }
-        
+
         PointWithSite site = map.site;
         double distance = map.computeMinDistance();
         if (map.closestCreek == null) {
@@ -81,10 +80,11 @@ public class Explorer implements IExplorerRaid {
         logger.info("The location of the emergency site is {}", site.getRow() + ", " + site.getColumn());
         logger.info("** The distance between emergency site and closest creek is {}", distance);
         logger.info("** The identifier of the closest creek is {}", map.closestCreek.getIdentifiers().get(0));
-        logger.info("** The location of the closest creek is {}", map.closestCreek.getRow() + ", " + map.closestCreek.getColumn());
+        logger.info("** The location of the closest creek is {}",
+                map.closestCreek.getRow() + ", " + map.closestCreek.getColumn());
         logger.info("** Delivering the final report");
         logger.info("** The drone has stopped");
-        
+
         return report;
     }
 
