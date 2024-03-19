@@ -26,7 +26,6 @@ public class MissionControl {
 
     ResponseStorage responseStorage = ResponseStorage.getInstance();
     MapInitializer mapInitializer;
-    GridSearcher gridSearcher;
 
     Phase current;
 
@@ -37,7 +36,6 @@ public class MissionControl {
         this.drone = drone;
         this.map = map;
         this.mapInitializer = new MapInitializer(drone, map);
-        this.gridSearcher = new GridSearcher(drone, map);
         this.current = new EchoThreeSides(mapInitializer);
     }
 
