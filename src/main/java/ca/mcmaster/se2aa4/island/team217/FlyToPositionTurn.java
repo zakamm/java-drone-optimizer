@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import ca.mcmaster.se2aa4.island.team217.Drone;
+import ca.mcmaster.se2aa4.island.team217.MapRepresenter;
 import ca.mcmaster.se2aa4.island.team217.NormalTurn;
 import ca.mcmaster.se2aa4.island.team217.Drone.Heading;
 import java.util.List;
@@ -24,7 +25,6 @@ public class FlyToPositionTurn implements Phase {
 
     public FlyToPositionTurn(GridSearch gridSearch) {
         this.gridSearch = gridSearch;
-
     }
 
     public Boolean reachedEnd() {

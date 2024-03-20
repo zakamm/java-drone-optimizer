@@ -19,6 +19,8 @@ public class Drone {
     private String action;
     private Heading direction;
 
+    Boolean translated = false;
+
     // used for singleton pattern implementation
     private static Drone uniqueInstance = null;
 

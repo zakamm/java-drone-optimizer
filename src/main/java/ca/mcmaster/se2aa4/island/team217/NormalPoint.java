@@ -10,6 +10,7 @@ public class NormalPoint implements Point {
     boolean isGround = false;
     boolean isPOI = false;
     boolean beenScanned = false;
+
     List<String> biomes = new ArrayList<>();
 
     public NormalPoint(int x, int y) {

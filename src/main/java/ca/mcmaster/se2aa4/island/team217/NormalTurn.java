@@ -38,8 +38,7 @@ public class NormalTurn implements Phase {
             gridSearch.gridSearchDirection = drone.currentHeading;
             gridSearch.atEdge = false;
             reachedEnd = true;
-        }
-        else{
+        } else {
             if (gridSearch.gridSearchDirection == gridSearch.generalDirection.leftSide(gridSearch.generalDirection)) {
                 sideToTurn = "right";
             } else if (gridSearch.gridSearchDirection == gridSearch.generalDirection
@@ -72,5 +71,6 @@ public class NormalTurn implements Phase {
         return null;
     }
 
-    // idea of an intializer method that calls some sort of method that is required to instantiate this phase
+    // idea of an intializer method that calls some sort of method that is required
+    // to instantiate this phase
 }
