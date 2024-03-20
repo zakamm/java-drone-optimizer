@@ -24,10 +24,9 @@ public class EchoThreeSides implements ResponsePhase {
         // want to know if we are found land or not
         // if we have found land, we want to go to the FindMissingDimension phase
         // else we go to the checkbehinddirection phase
-        if (mapInitializer.spawnedFacingGround){
-            return new FindMissingDimension( mapInitializer);
-        }
-        else{
+        if (mapInitializer.spawnedFacingGround) {
+            return new FindMissingDimension(mapInitializer);
+        } else {
             return new LocateGround(mapInitializer);
         }
     }
@@ -64,7 +63,8 @@ public class EchoThreeSides implements ResponsePhase {
             }
             if (reachedEnd && !mapInitializer.spawnedFacingGround) {
                 mapInitializer.initializeMapDimensions(drone.currentHeading.backSide(drone.currentHeading), 0);
-                drone.initializeCurrentLocation(mapInitializer.leftColumns, mapInitializer.topRows, mapInitializer.spawnedFacingGround);
+                drone.initializeCurrentLocation(mapInitializer.leftColumns, mapInitializer.topRows,
+                        mapInitializer.spawnedFacingGround);
                 mapInitializer.directionToEcho(drone.currentHeading);
             }
         }

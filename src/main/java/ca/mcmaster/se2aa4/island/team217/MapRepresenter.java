@@ -22,6 +22,7 @@ public class MapRepresenter {
     List<List<Point>> map = new ArrayList<>();
     public Boolean initialized = false;
     double closestCreekDistance = 0.0;
+    double radius = -10.0;
 
     // used for singleton pattern implementation
     private static MapRepresenter uniqueInstance = null;
@@ -84,7 +85,7 @@ public class MapRepresenter {
 
     }
 
-    public double distanceBetweenTwoPoints(Point point1, Point point2){
+    public double distanceBetweenTwoPoints(Point point1, Point point2) {
         return Math.sqrt(Math.pow((point1.getRow() - point2.getRow()), 2)
                 + Math.pow((point1.getColumn() - point2.getColumn()), 2));
     }
@@ -97,7 +98,7 @@ public class MapRepresenter {
         double minDistance = 1000000;
         double tolerance = 0.05;
         for (PointWithCreeks creek : creeks) {
-            double distance = distanceBetweenTwoPoints(creek, site);  
+            double distance = distanceBetweenTwoPoints(creek, site);
             logger.info("Distance: " + distance);
             logger.info("creek: " + creek.getRow() + " " + creek.getColumn());
             if (distance < minDistance) {

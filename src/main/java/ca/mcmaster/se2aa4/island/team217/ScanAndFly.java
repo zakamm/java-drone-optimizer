@@ -13,7 +13,7 @@ public class ScanAndFly implements ResponsePhase {
     Boolean reachedEnd = false;
     Boolean isFinal = false;
 
-   //scan first then fly
+    // scan first then fly
     Boolean flyCheck = false;
 
     GridSearch gridSearch;
@@ -54,18 +54,19 @@ public class ScanAndFly implements ResponsePhase {
     }
 
     public void processResponse(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
-        if (drone.getAction().equals("scan")){    
+        if (drone.getAction().equals("scan")) {
             if (!drone.currentLocation.getGround()) {
                 gridSearch.atEdge = true;
             }
-            if (map.site != null) {
+            if (map.site != null && !map.creeks.isEmpty()) {
                 foundClosestCreek(map);
             }
         }
         if (drone.getAction().equals("echo")) {
             if (responseStorage.getFound().equals("OUT_OF_RANGE")) {
                 gridSearch.atEdge = true;
-                nextPhase = new NormalTurn(gridSearch);
+                nextPhase = new FlyToPositionTurn(gridSearch);
+
             } else {
                 gridSearch.distanceToFly = responseStorage.getRange() + 1;
                 gridSearch.atEdge = false;
@@ -77,18 +78,18 @@ public class ScanAndFly implements ResponsePhase {
     public void foundClosestCreek(MapRepresenter map) {
         boolean foundClosestCreek = true;
         double radius = map.closestCreekDistance;
-        outerloop:
-        for (List<Point> pointRow : map.map) {
+        outerloop: for (List<Point> pointRow : map.map) {
             for (Point p : pointRow) {
                 double distance = map.distanceBetweenTwoPoints(p, map.site);
-                if (distance <= radius){
+                if (distance <= radius) {
                     NormalPoint normalPoint = (NormalPoint) p;
-                    if (!normalPoint.beenScanned && normalPoint.getGround()){
+                    if (!normalPoint.beenScanned && normalPoint.getGround()) {
                         logger.info("NOT SCANNED");
                         logger.info("Distance: " + distance);
                         logger.info("Row: " + p.getRow());
                         logger.info("Column: " + p.getColumn());
                         foundClosestCreek = false;
+                        map.radius = 2 * distance;
                         break outerloop;
                     }
                 }
@@ -96,7 +97,7 @@ public class ScanAndFly implements ResponsePhase {
             }
         }
 
-        if (foundClosestCreek){
+        if (foundClosestCreek) {
             logger.info("Found closest creek");
             reachedEnd = true;
             isFinal = true;
