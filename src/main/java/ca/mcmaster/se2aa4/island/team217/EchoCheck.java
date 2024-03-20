@@ -39,6 +39,7 @@ public class EchoCheck implements ResponsePhase {
 
     public void processResponse(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
         if (responseStorage.getFound().equals("OUT_OF_RANGE") && !gridSearch.translated) {
+            map.setAsScanned(drone, responseStorage.getRange());
             reachedEnd = true;
             gridSearch.outOfRangeCounter++;
             if (gridSearch.middle && gridSearch.outOfRangeCounter == 3) {
@@ -50,12 +51,14 @@ public class EchoCheck implements ResponsePhase {
                 nextPhase = new TranslateDrone(gridSearch);
             }
         }else if (responseStorage.getFound().equals("OUT_OF_RANGE") && gridSearch.translated) {
+            map.setAsScanned(drone, responseStorage.getRange());
             reachedEnd = true;
             gridSearch.translated = false;
             gridSearch.distanceToFly = responseStorage.getRange() - 5;
             nextPhase = new FlyNoScan(gridSearch);
         
         }else if (responseStorage.getFound().equals("GROUND")) {
+            map.setAsScanned(drone, responseStorage.getRange());
             reachedEnd = true;
             gridSearch.translated = false;
             gridSearch.distanceToFly = responseStorage.getRange();

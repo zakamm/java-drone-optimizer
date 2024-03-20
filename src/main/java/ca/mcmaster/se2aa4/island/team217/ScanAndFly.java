@@ -63,9 +63,10 @@ public class ScanAndFly implements ResponsePhase {
             }
         }
         if (drone.getAction().equals("echo")) {
+            map.setAsScanned(drone, responseStorage.getRange());
             if (responseStorage.getFound().equals("OUT_OF_RANGE")) {
                 gridSearch.atEdge = true;
-                nextPhase = new NormalTurn(gridSearch);
+                nextPhase = new FlyToPositionTurn(gridSearch);
             } else {
                 gridSearch.distanceToFly = responseStorage.getRange() + 1;
                 gridSearch.atEdge = false;
@@ -83,11 +84,13 @@ public class ScanAndFly implements ResponsePhase {
                 double distance = map.distanceBetweenTwoPoints(p, map.site);
                 if (distance <= radius){
                     NormalPoint normalPoint = (NormalPoint) p;
-                    if (!normalPoint.beenScanned && normalPoint.getGround()){
+                    if (!normalPoint.beenScanned){
+                        // logger the biomes to make sure it is indeed ground
                         logger.info("NOT SCANNED");
                         logger.info("Distance: " + distance);
                         logger.info("Row: " + p.getRow());
                         logger.info("Column: " + p.getColumn());
+                        logger.info("Radius: " + radius);
                         foundClosestCreek = false;
                         break outerloop;
                     }

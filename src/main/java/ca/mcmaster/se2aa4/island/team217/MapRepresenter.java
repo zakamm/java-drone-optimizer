@@ -113,4 +113,41 @@ public class MapRepresenter {
     public void updateClosestCreek() {
         closestCreekDistance = uniqueInstance.computeMinDistance();
     }
+
+    public void setAsScanned(Drone drone, int distance){
+        Point currentLocation = drone.currentLocation;
+        Heading currentHeading = drone.currentHeading;
+        switch (currentHeading){
+            case N:
+                int distanceNorth = currentLocation.getRow() - distance;
+                for (int i = currentLocation.getRow(); i >= distanceNorth; i--){
+                    NormalPoint normalPoint = (NormalPoint) map.get(i).get(currentLocation.getColumn());
+                    normalPoint.beenScanned = true;
+                }
+                break;
+            case E:
+                int distanceEast = currentLocation.getColumn() + distance;
+                for (int i = currentLocation.getColumn(); i < distanceEast; i++){
+                    NormalPoint normalPoint = (NormalPoint) map.get(currentLocation.getRow()).get(i);
+                    normalPoint.beenScanned = true;
+                }
+                break;
+            case S:
+                int distanceSouth = currentLocation.getRow() + distance;
+                for (int i = currentLocation.getRow(); i < distanceSouth; i++){
+                    NormalPoint normalPoint = (NormalPoint) map.get(i).get(currentLocation.getColumn());
+                    normalPoint.beenScanned = true;
+                }
+                break;
+            case W:
+                int distanceWest = currentLocation.getColumn() - distance;
+                for (int i = currentLocation.getColumn(); i >= distanceWest; i--){
+                    NormalPoint normalPoint = (NormalPoint) map.get(currentLocation.getRow()).get(i);
+                    normalPoint.beenScanned = true;
+                }
+                break;
+        }
+        NormalPoint normalPoint = (NormalPoint) currentLocation;
+        normalPoint.beenScanned = true;
+    }
 }
