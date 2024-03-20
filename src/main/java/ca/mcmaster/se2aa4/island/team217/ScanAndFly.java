@@ -83,7 +83,7 @@ public class ScanAndFly implements ResponsePhase {
                 double distance = map.distanceBetweenTwoPoints(p, map.site);
                 if (distance <= radius) {
                     NormalPoint normalPoint = (NormalPoint) p;
-                    if (!normalPoint.beenScanned && normalPoint.getGround()) {
+                    if (!normalPoint.beenScanned && !normalPoint.isOcean) {
                         logger.info("NOT SCANNED");
                         logger.info("Distance: " + distance);
                         logger.info("Row: " + p.getRow());

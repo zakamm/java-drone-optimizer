@@ -29,7 +29,7 @@ public class FlyToGround implements Phase {
     }
 
     public String nextDecision(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
-        if (mapInitializer.distanceToGround == 0) {
+        if (mapInitializer.distanceToGround == 1) {
             reachedEnd = true;
             return drone.scan();
         } else {

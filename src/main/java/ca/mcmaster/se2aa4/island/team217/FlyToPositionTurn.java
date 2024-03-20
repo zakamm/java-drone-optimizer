@@ -24,7 +24,6 @@ public class FlyToPositionTurn implements Phase {
 
     public FlyToPositionTurn(GridSearch gridSearch) {
         this.gridSearch = gridSearch;
-
     }
 
     public Boolean reachedEnd() {
@@ -60,6 +59,9 @@ public class FlyToPositionTurn implements Phase {
             if (responseStorage.getFound().equals("OUT_OF_RANGE")
                     || (responseStorage.getFound().equals("GROUND") && responseStorage.getRange() > 2)) {
                 logger.info("REACHED END");
+                if (responseStorage.getFound().equals("OUT_OF_RANGE")) {
+                    map.scannedRow(drone);
+                }
                 nextPhase = new NormalTurn(gridSearch);
                 reachedEnd = true;
                 return null;
