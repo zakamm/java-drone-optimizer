@@ -9,12 +9,47 @@ public class DroneTest {
 
     MapRepresenter map = MapRepresenter.getInstance();
 
-    // @Test
-    // public void testGetBatteryLevel() {
-    // Drone d = Drone.getInstance(7000, "E", map);
-    // assertEquals(7000, d.getBatteryLevel());
-    // }
+    @Test
+    void testFly() {
+        Drone drone = Drone.getInstance(1000, "N", MapRepresenter.getInstance());
+        String result = drone.fly();
+        assertEquals("{\"action\": \"fly\"}", result);
+    }
+    @Test
+    void testScan() {
+        Drone drone = Drone.getInstance(1000, "N", MapRepresenter.getInstance());
+        String result = drone.scan();
+        assertEquals("{\"action\": \"scan\"}", result);
+    }
 
+    @Test
+    void testEcho() {
+        Drone drone = Drone.getInstance(1000, "N", MapRepresenter.getInstance());
+        String result = drone.echo(Drone.Heading.N);
+        assertEquals("{\"action\": \"echo\", \"parameters\": { \"direction\": \"N\"}}", result);
+    }
+
+    @Test
+    void testHeading() {
+        Drone drone = Drone.getInstance(1000, "N", MapRepresenter.getInstance());
+        String result = drone.heading(Drone.Heading.E);
+        assertEquals("{\"action\": \"heading\", \"parameters\": { \"direction\": \"E\"}}", result);
+    }
+
+    @Test
+    void testUpdateBatteryLevel() {
+        Drone drone = Drone.getInstance(1000, "N", MapRepresenter.getInstance());
+        drone.updateBatteryLevel(100);
+        assertEquals(900, drone.getBatteryLevel());
+    }
+
+    @Test
+    void testInitializeCurrentLocation() {
+        Drone drone = Drone.getInstance(1000, "N", MapRepresenter.getInstance());
+        drone.initializeCurrentLocation(10, 10, true);
+        assertEquals(10, drone.currentLocation.getRow());
+        assertEquals(10, drone.currentLocation.getColumn());
+    }
     // @Test
     // public void testUpdateBatteryLevel() {
     // Drone d = Drone.getInstance(7000, "E", map);
