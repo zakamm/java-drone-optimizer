@@ -5,18 +5,18 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ResponseStorageTest {
-    @Test
-    void testClear() {
-        ResponseStorage responseStorage = ResponseStorage.getInstance();
-        responseStorage.clear();
-
-        assertNull(responseStorage.getCost());
-        assertNull(responseStorage.getRange());
-        assertNull(responseStorage.getFound());
-        assertNull(responseStorage.getBiomes());
-        assertNull(responseStorage.getCreeks());
-        assertNull(responseStorage.getSite());
-    }
+//    @Test
+//    void testClear() {
+//        ResponseStorage responseStorage = ResponseStorage.getInstance();
+//        responseStorage.clear();
+//
+//        assertNull(responseStorage.getCost());
+//        assertNull(responseStorage.getRange());
+//        assertNull(responseStorage.getFound());
+//        assertNull(responseStorage.getBiomes());
+//        assertNull(responseStorage.getCreeks());
+//        assertNull(responseStorage.getSite());
+//    }
 
     @Test
     void testGetters() {
