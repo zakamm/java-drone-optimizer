@@ -18,7 +18,7 @@ public class ResponseStorage {
     // used for singleton pattern implementation
     private static ResponseStorage uniqueInstance = null;
 
-    private ResponseStorage() {
+    ResponseStorage() {
 
     }
 
