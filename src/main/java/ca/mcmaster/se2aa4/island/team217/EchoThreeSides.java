@@ -63,6 +63,8 @@ public class EchoThreeSides implements ResponsePhase {
             }
             if (reachedEnd && !mapInitializer.spawnedFacingGround) {
                 mapInitializer.initializeMapDimensions(drone.currentHeading.backSide(drone.currentHeading), 0);
+                mapInitializer.initializeRowsAndColumns();
+                map.initializeMap();
                 drone.initializeCurrentLocation(mapInitializer.leftColumns, mapInitializer.topRows,
                         mapInitializer.spawnedFacingGround);
                 mapInitializer.directionToEcho(drone.currentHeading);

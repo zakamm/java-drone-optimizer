@@ -30,6 +30,7 @@ public class ScanAndFly implements ResponsePhase {
     }
 
     public Phase getNextPhase() {
+        //return null;
         return nextPhase;
     }
 
@@ -63,7 +64,7 @@ public class ScanAndFly implements ResponsePhase {
             }
         }
         if (drone.getAction().equals("echo")) {
-            map.setAsScanned(drone, responseStorage.getRange());
+            map.setAsScanned(drone, responseStorage.getRange(), drone.currentHeading);
             if (responseStorage.getFound().equals("OUT_OF_RANGE")) {
                 gridSearch.atEdge = true;
                 if (gridSearch.gridSearchDirection == gridSearch.generalDirection.leftSide(gridSearch.generalDirection)) {
@@ -97,7 +98,6 @@ public class ScanAndFly implements ResponsePhase {
                         logger.info("Column: " + p.getColumn());
                         logger.info("Radius: " + radius);
                         foundClosestCreek = false;
-                        map.radius = 2 * distance;
                         break outerloop;
                     }
                 }

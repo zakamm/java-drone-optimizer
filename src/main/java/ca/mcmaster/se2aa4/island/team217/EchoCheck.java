@@ -39,26 +39,34 @@ public class EchoCheck implements ResponsePhase {
 
     public void processResponse(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
         if (responseStorage.getFound().equals("OUT_OF_RANGE") && !gridSearch.translated) {
-            map.setAsScanned(drone, responseStorage.getRange());
+            map.setAsScanned(drone, responseStorage.getRange(), drone.currentHeading);
+            map.setAsScanned(drone, responseStorage.getRange(), drone.currentHeading.backSide(drone.currentHeading));
             reachedEnd = true;
             gridSearch.outOfRangeCounter++;
             if (gridSearch.middle && gridSearch.outOfRangeCounter == 3) {
+                logger.info("FINISHED MIDDLE");
                 isFinal = true;
             }else if (!gridSearch.middle && gridSearch.outOfRangeCounter == 2) {
                 isFinal = true;
+                logger.info("FINISHED");
             }
             else{
                 nextPhase = new TranslateDrone(gridSearch);
             }
         }else if (responseStorage.getFound().equals("OUT_OF_RANGE") && gridSearch.translated) {
-            map.setAsScanned(drone, responseStorage.getRange());
+            map.setAsScanned(drone, responseStorage.getRange(), drone.currentHeading);
+            map.setAsScanned(drone, responseStorage.getRange(), drone.currentHeading.backSide(drone.currentHeading));
             reachedEnd = true;
             gridSearch.translated = false;
             gridSearch.distanceToFly = responseStorage.getRange() - 5;
             nextPhase = new FlyNoScan(gridSearch);
         
         }else if (responseStorage.getFound().equals("GROUND")) {
-            map.setAsScanned(drone, responseStorage.getRange());
+            logger.info("Ground found after turn");
+            map.setAsScanned(drone, responseStorage.getRange(), drone.currentHeading);
+            logger.info("Scanned ground");
+            map.setAsScanned(drone, responseStorage.getRange(), drone.currentHeading.backSide(drone.currentHeading));
+            logger.info("Scanned ground");
             reachedEnd = true;
             gridSearch.translated = false;
             gridSearch.distanceToFly = responseStorage.getRange();

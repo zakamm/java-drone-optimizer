@@ -11,8 +11,8 @@ public class ResponseStorageTest {
         responseStorage.clear();
 
         assertNull(responseStorage.getCost());
-        assertNull(responseStorage.getRange());
-        assertNull(responseStorage.getFound());
+        assertEquals(responseStorage.getRange(), -1);
+        assertEquals(responseStorage.getFound(), "null");
         assertNull(responseStorage.getBiomes());
         assertNull(responseStorage.getCreeks());
         assertNull(responseStorage.getSite());
