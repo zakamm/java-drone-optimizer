@@ -74,7 +74,7 @@ public class Drone {
         }
     }
 
-    private Drone(Integer batteryLevel, String initialHeading, MapRepresenter map) {
+    Drone(Integer batteryLevel, String initialHeading, MapRepresenter map) {
         this.batteryLevel = batteryLevel;
         this.currentHeading = Heading.valueOf(initialHeading);
         this.initialHeading = Heading.valueOf(initialHeading);
