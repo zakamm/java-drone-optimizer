@@ -51,7 +51,10 @@ public class LocateGround implements ResponsePhase {
         logger.info(mapInitializer.distanceToGround);
         if (responseStorage.getFound().equals("GROUND")) {
             reachedEnd = true;
-            mapInitializer.distanceToGround = responseStorage.getRange();
+            mapInitializer.distanceToGround = responseStorage.getRange() + 1;
+        }
+        if (responseStorage.getFound().equals("OUT_OF_RANGE")) {
+            map.setAsScanned(drone, responseStorage.getRange(), mapInitializer.directionToEcho);
         }
     }
 

@@ -18,6 +18,7 @@ public class GridSearch {
     boolean middle;
     Boolean atEdge = false;
     Boolean translated = false;
+    String sideToTurn = "";
     
     public GridSearch(Drone drone, MapRepresenter map){
         this.drone = drone;

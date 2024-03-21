@@ -38,7 +38,6 @@ public class TranslateDrone implements Phase {
             gridSearch.generalDirection = gridSearch.generalDirection.backSide(gridSearch.generalDirection);
             reachedEnd = true;
             gridSearch.translated = true;
-            return drone.scan();
         }
         else{
             if (gridSearch.gridSearchDirection == gridSearch.generalDirection.leftSide(gridSearch.generalDirection)) {
@@ -48,6 +47,7 @@ public class TranslateDrone implements Phase {
             }
             return translateOver(sideToTranslate, drone);
         }
+        return null;
     }
 
     // this method translates the drone over one spot to the left or right when we

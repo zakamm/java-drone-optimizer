@@ -21,11 +21,12 @@ public class MapRepresenter {
     public PointWithSite site;
     List<List<Point>> map = new ArrayList<>();
     public Boolean initialized = false;
+    double closestCreekDistance = 0.0;
 
     // used for singleton pattern implementation
     private static MapRepresenter uniqueInstance = null;
 
-    private MapRepresenter() {
+    MapRepresenter() {
         // initialize with these dimensions for now, will refactor this later
         for (int i = 0; i < 200; i++) {
             List<Point> row = new ArrayList<>();
@@ -51,14 +52,14 @@ public class MapRepresenter {
             PointWithCreeks pointWithCreeks = new PointWithCreeks(currentLocation);
             pointWithCreeks.storeScanResults(scanResults);
             creeks.add(pointWithCreeks);
-            // map.get(currentLocation.getRow()).set(currentLocation.getColumn(),
-            // pointWithCreeks);
+            updateClosestCreek();
         }
 
         if (!(scanResults.getSite().equals("null"))) {
             PointWithSite pointWithSite = new PointWithSite(currentLocation);
             pointWithSite.storeScanResults(scanResults);
             site = pointWithSite;
+            updateClosestCreek();
         } else {
             currentLocation.storeScanResults(scanResults);
         }
@@ -83,6 +84,11 @@ public class MapRepresenter {
 
     }
 
+    public double distanceBetweenTwoPoints(Point point1, Point point2) {
+        return Math.sqrt(Math.pow((point1.getRow() - point2.getRow()), 2)
+                + Math.pow((point1.getColumn() - point2.getColumn()), 2));
+    }
+
     public double computeMinDistance() {
         if (site == null) {
             return 0;
@@ -91,8 +97,7 @@ public class MapRepresenter {
         double minDistance = 1000000;
         double tolerance = 0.05;
         for (PointWithCreeks creek : creeks) {
-            double distance = Math.sqrt(Math.pow((creek.getRow() - site.getRow()), 2)
-                    + Math.pow((creek.getColumn() - site.getColumn()), 2));
+            double distance = distanceBetweenTwoPoints(creek, site);
             logger.info("Distance: " + distance);
             logger.info("creek: " + creek.getRow() + " " + creek.getColumn());
             if (distance < minDistance) {
@@ -103,5 +108,65 @@ public class MapRepresenter {
             }
         }
         return minDistance;
+    }
+
+    public void updateClosestCreek() {
+        closestCreekDistance = uniqueInstance.computeMinDistance();
+    }
+
+    public void setAsScanned(Drone drone, int distance, Heading heading) {
+        Point currentLocation = drone.currentLocation;
+        switch (heading){
+            case Heading.N:
+                if (heading == drone.currentHeading.backSide(drone.currentHeading)){
+                    distance = 0;
+                }
+                else{
+                    distance = currentLocation.getRow() - distance;
+                }
+                for (int i = currentLocation.getRow(); i >= distance; i--){
+                    NormalPoint normalPoint = (NormalPoint) map.get(i).get(currentLocation.getColumn());
+                    normalPoint.beenScanned = true;
+                }
+                break;
+            case Heading.E:
+                if (heading == drone.currentHeading.backSide(drone.currentHeading)){
+                    distance = this.columns;
+                }
+                else{
+                    distance = currentLocation.getColumn() + distance + 1;
+                }
+                for (int i = currentLocation.getColumn(); i < distance; i++){
+                    NormalPoint normalPoint = (NormalPoint) map.get(currentLocation.getRow()).get(i);
+                    normalPoint.beenScanned = true;
+                }
+                break;
+            case Heading.S:
+                if (heading == drone.currentHeading.backSide(drone.currentHeading)){
+                    distance = this.rows;
+                }
+                else{
+                    distance = currentLocation.getRow() + distance + 1;
+                }
+                for (int i = currentLocation.getRow(); i < distance; i++){
+                    NormalPoint normalPoint = (NormalPoint) map.get(i).get(currentLocation.getColumn());
+                    normalPoint.beenScanned = true;
+                }
+                break;
+            case Heading.W:
+                if (heading == drone.currentHeading.backSide(drone.currentHeading)){
+                    distance = 0;
+                }
+                else{
+                    distance = currentLocation.getColumn() - distance;
+                }
+                for (int i = currentLocation.getColumn(); i >= distance; i--){
+                    NormalPoint normalPoint = (NormalPoint) map.get(currentLocation.getRow()).get(i);
+                    normalPoint.beenScanned = true;
+                }
+                break;
+        }
+        NormalPoint normalPoint = (NormalPoint) currentLocation;
+        normalPoint.beenScanned = true;
     }
 }

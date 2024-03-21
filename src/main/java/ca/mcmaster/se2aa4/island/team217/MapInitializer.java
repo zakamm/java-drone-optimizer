@@ -35,7 +35,6 @@ public class MapInitializer {
     }
 
     public void initializeMapDimensions(Heading heading, Integer range) {
-        logger.info("Range" + range);
         switch (heading) {
             case N:
                 topRows = range;
@@ -54,26 +53,10 @@ public class MapInitializer {
         }
     }
 
-    public String rowsOrColumns() {
-        logger.info("topRows" + topRows);
-        logger.info("bottomRows" + bottomRows);
-        logger.info("leftColumns" + leftColumns);
-        logger.info("rightColumns" + rightColumns);
+    public void initializeRowsAndColumns() {
         if (topRows != null && bottomRows != null && leftColumns != null && rightColumns != null) {
             map.rows = topRows + bottomRows + 1;
             map.columns = leftColumns + rightColumns + 1;
-            logger.info("Rows" + map.rows);
-            logger.info("columns" + map.columns);
-            return "both";
-        }
-        if (topRows != null && bottomRows != null) {
-            map.rows = topRows + bottomRows + 1;
-            return "rows";
-        } else if (leftColumns != null && rightColumns != null) {
-            map.columns = leftColumns + rightColumns + 1;
-            return "columns";
-        } else {
-            return "none";
         }
     }
 

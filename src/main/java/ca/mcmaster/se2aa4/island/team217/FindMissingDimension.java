@@ -52,7 +52,7 @@ public class FindMissingDimension implements ResponsePhase {
             if (responseStorage.getFound().equals("OUT_OF_RANGE")){
                 mapInitializer.initializeMapDimensions(drone.currentHeading, responseStorage.getRange());
                 mapInitializer.initializeMapDimensions(drone.currentHeading.backSide(drone.currentHeading), flyCounter);
-                String rowsOrColumns = mapInitializer.rowsOrColumns();
+                mapInitializer.initializeRowsAndColumns();
                 map.initializeMap();
                 drone.initializeCurrentLocation(mapInitializer.leftColumns, mapInitializer.topRows, mapInitializer.spawnedFacingGround);
                 foundDimension = true;

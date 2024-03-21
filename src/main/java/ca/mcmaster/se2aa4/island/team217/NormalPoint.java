@@ -9,6 +9,8 @@ public class NormalPoint implements Point {
     private int y;
     boolean isGround = false;
     boolean isPOI = false;
+    boolean beenScanned = false;
+
     List<String> biomes = new ArrayList<>();
 
     public NormalPoint(int x, int y) {
@@ -25,6 +27,10 @@ public class NormalPoint implements Point {
     }
 
     public Boolean getGround() {
+        if (biomes.size() == 0) {
+            isGround = false;
+            return isGround;
+        }
         if (biomes.size() == 1 && biomes.get(0).equals("OCEAN")) {
             isGround = false;
         } else {
@@ -44,6 +50,8 @@ public class NormalPoint implements Point {
     }
 
     public void storeScanResults(ResponseStorage scanResults) {
+        beenScanned = true;
         addBiomes(scanResults.getBiomes());
+
     }
 }
