@@ -11,13 +11,10 @@ public class NormalTurn implements Phase {
     Boolean reachedEnd = false;
 
     GridSearch gridSearch;
-    String sideToTurn;
-
     int counter;
 
     public NormalTurn(GridSearch gridSearch) {
         this.gridSearch = gridSearch;
-
     }
 
     public Boolean reachedEnd() {
@@ -39,13 +36,7 @@ public class NormalTurn implements Phase {
             gridSearch.atEdge = false;
             reachedEnd = true;
         } else {
-            if (gridSearch.gridSearchDirection == gridSearch.generalDirection.leftSide(gridSearch.generalDirection)) {
-                sideToTurn = "right";
-            } else if (gridSearch.gridSearchDirection == gridSearch.generalDirection
-                    .rightSide(gridSearch.generalDirection)) {
-                sideToTurn = "left";
-            }
-            return normalTurnAroundGridSearch(sideToTurn, drone);
+            return normalTurnAroundGridSearch(gridSearch.sideToTurn, drone);
         }
         return null;
     }

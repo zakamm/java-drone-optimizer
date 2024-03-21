@@ -66,6 +66,12 @@ public class ScanAndFly implements ResponsePhase {
             map.setAsScanned(drone, responseStorage.getRange());
             if (responseStorage.getFound().equals("OUT_OF_RANGE")) {
                 gridSearch.atEdge = true;
+                if (gridSearch.gridSearchDirection == gridSearch.generalDirection.leftSide(gridSearch.generalDirection)) {
+                    gridSearch.sideToTurn = "right";
+                } else if (gridSearch.gridSearchDirection == gridSearch.generalDirection
+                        .rightSide(gridSearch.generalDirection)) {
+                    gridSearch.sideToTurn = "left";
+                }
                 nextPhase = new FlyToPositionTurn(gridSearch);
             } else {
                 gridSearch.distanceToFly = responseStorage.getRange() + 1;

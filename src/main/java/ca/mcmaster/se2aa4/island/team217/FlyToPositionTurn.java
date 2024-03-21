@@ -3,14 +3,11 @@ package ca.mcmaster.se2aa4.island.team217;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import ca.mcmaster.se2aa4.island.team217.Drone;
-import ca.mcmaster.se2aa4.island.team217.MapRepresenter;
-import ca.mcmaster.se2aa4.island.team217.NormalTurn;
 import ca.mcmaster.se2aa4.island.team217.Drone.Heading;
 import java.util.List;
 import java.util.ArrayList;
 
-public class FlyToPositionTurn implements Phase {
+public class FlyToPositionTurn implements ResponsePhase {
     private final Logger logger = LogManager.getLogger();
 
     Boolean reachedEnd = false;
@@ -43,27 +40,10 @@ public class FlyToPositionTurn implements Phase {
         logger.info("WE ARE IN FLY TO TURNING POSITION");
 
         if (!flyCheck) {
-            String sideToTurn = findSideToTurn();
             logger.info("ECHOING");
             flyCheck = true;
-            if (sideToTurn.equals("left")) {
-                logger.info("ECHOING LEFT, {}", drone.currentHeading.leftSide(drone.currentHeading));
-                return drone.echo(drone.currentHeading.leftSide(drone.currentHeading));
-            } else if (sideToTurn.equals("right")) {
-                logger.info("ECHOING RIGHT, {}", drone.currentHeading.rightSide(drone.currentHeading));
-                return drone.echo(drone.currentHeading.rightSide(drone.currentHeading));
-            }
-
+            return drone.echo(gridSearch.generalDirection);
         } else if (flyCheck) {
-            logger.info("Range for ground {}", responseStorage.getRange());
-            logger.info("reponseStorage FOUND {}", responseStorage.getFound());
-            if (responseStorage.getFound().equals("OUT_OF_RANGE")
-                    || (responseStorage.getFound().equals("GROUND") && responseStorage.getRange() > 2)) {
-                logger.info("REACHED END");
-                nextPhase = new NormalTurn(gridSearch);
-                reachedEnd = true;
-                return null;
-            }
             flyCheck = false;
             logger.info("Flying");
             return drone.fly();
@@ -71,28 +51,16 @@ public class FlyToPositionTurn implements Phase {
         return null;
     }
 
-    private String findSideToTurn() {
-        String sideToTurn = "";
-
-        if (gridSearch.gridSearchDirection == gridSearch.generalDirection.leftSide(gridSearch.generalDirection)) {
-            sideToTurn = "right";
-        } else if (gridSearch.gridSearchDirection == gridSearch.generalDirection
-                .rightSide(gridSearch.generalDirection)) {
-            sideToTurn = "left";
-        }
-        return sideToTurn;
-    }
-
     public void processResponse(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
-        // if (drone.getAction().equals("echo")) {
-        //     if (responseStorage.getFound().equals("OUT_OF_RANGE")) {
-        //         gridSearch.atEdge = true;
-        //         nextPhase = new NormalTurn(gridSearch);
-        //     } else {
-        //         gridSearch.distanceToFly = responseStorage.getRange() + 1;
-        //         gridSearch.atEdge = false;
-        //     }
-        // }
+        if (drone.getAction().equals("echo")) {
+            if (responseStorage.getFound().equals("OUT_OF_RANGE")
+                    || (responseStorage.getFound().equals("GROUND") && responseStorage.getRange() > 2)) {
+                logger.info("REACHED END");
+                nextPhase = new NormalTurn(gridSearch);
+                reachedEnd = true;
+            }
+        }
+    
     }
 
 }
