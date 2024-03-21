@@ -11,7 +11,7 @@ public class FlyNoScan implements Phase {
 
     Boolean reachedEnd = false;
 
-    Boolean skipFirstTile = true;
+    // Boolean skipFirstTile = true;
 
     GridSearch gridSearch;
 
@@ -40,9 +40,9 @@ public class FlyNoScan implements Phase {
         if (gridSearch.distanceToFly == 0) {
             reachedEnd = true;
             return null;
-        // } else if (skipFirstTile) {
-        //     skipFirstTile = false;
-        //     return drone.scan();
+            // } else if (skipFirstTile) {
+            // skipFirstTile = false;
+            // return drone.scan();
         } else {
             gridSearch.distanceToFly--;
             return drone.fly();

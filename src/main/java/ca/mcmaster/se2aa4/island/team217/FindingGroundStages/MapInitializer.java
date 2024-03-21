@@ -85,4 +85,38 @@ public class MapInitializer {
         logger.info("Direction to Echo: " + directionToEcho);
     }
 
+    // For Testing Purposes
+
+    public void setTopRows(Integer set) {
+        topRows = set;
+    }
+
+    public void setBottomRows(Integer set) {
+        bottomRows = set;
+    }
+
+    public void setRightColumns(Integer set) {
+        rightColumns = set;
+    }
+
+    public void setLeftColumns(Integer set) {
+        leftColumns = set;
+    }
+
+    public Integer getTopRows() {
+        return topRows;
+    }
+
+    public Integer getBottomRows() {
+        return bottomRows;
+    }
+
+    public Integer getRightColumns() {
+        return rightColumns;
+    }
+
+    public Integer getLeftColumns() {
+        return leftColumns;
+    }
+
 }
