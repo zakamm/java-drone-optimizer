@@ -27,7 +27,7 @@ public class MapRepresenter {
     // used for singleton pattern implementation
     private static MapRepresenter uniqueInstance = null;
 
-    private MapRepresenter() {
+    MapRepresenter() {
         // initialize with these dimensions for now, will refactor this later
         for (int i = 0; i < 200; i++) {
             List<Point> row = new ArrayList<>();
