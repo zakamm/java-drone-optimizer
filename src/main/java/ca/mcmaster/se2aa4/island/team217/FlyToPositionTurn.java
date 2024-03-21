@@ -54,13 +54,13 @@ public class FlyToPositionTurn implements ResponsePhase {
     public void processResponse(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
         if (drone.getAction().equals("echo")) {
             if (responseStorage.getFound().equals("OUT_OF_RANGE")
-                    || (responseStorage.getFound().equals("GROUND") && responseStorage.getRange() > 2)) {
+                    || (responseStorage.getFound().equals("GROUND") && responseStorage.getRange() > 3)) {
                 logger.info("REACHED END");
                 nextPhase = new NormalTurn(gridSearch);
                 reachedEnd = true;
             }
         }
-    
+
     }
 
 }
