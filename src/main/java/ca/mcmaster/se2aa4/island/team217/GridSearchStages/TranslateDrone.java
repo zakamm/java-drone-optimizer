@@ -1,9 +1,10 @@
-package ca.mcmaster.se2aa4.island.team217;
+package ca.mcmaster.se2aa4.island.team217.GridSearchStages;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import ca.mcmaster.se2aa4.island.team217.Drone.Heading;
+import ca.mcmaster.se2aa4.island.team217.*;
+import ca.mcmaster.se2aa4.island.team217.MapRepresentation.*;
 
 public class TranslateDrone implements Phase {
     private final Logger logger = LogManager.getLogger();
@@ -35,14 +36,14 @@ public class TranslateDrone implements Phase {
         if (turnCounter == 5) {
             turnCounter = 0;
             gridSearch.atEdge = false;
-            gridSearch.generalDirection = gridSearch.generalDirection.backSide(gridSearch.generalDirection);
+            gridSearch.generalDirection = gridSearch.generalDirection.backSide();
             reachedEnd = true;
             gridSearch.translated = true;
         }
         else{
-            if (gridSearch.gridSearchDirection == gridSearch.generalDirection.leftSide(gridSearch.generalDirection)) {
+            if (gridSearch.gridSearchDirection == gridSearch.generalDirection.leftSide()) {
                 sideToTranslate = "left";
-            } else if (gridSearch.gridSearchDirection == gridSearch.generalDirection.rightSide(gridSearch.generalDirection)) {
+            } else if (gridSearch.gridSearchDirection == gridSearch.generalDirection.rightSide()) {
                 sideToTranslate = "right";
             }
             return translateOver(sideToTranslate, drone);
@@ -61,37 +62,37 @@ public class TranslateDrone implements Phase {
             // Only needs one spot above it turn
             if (turnCounter == 0) {
                 turnCounter++;
-                return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
+                return drone.heading(drone.getCurrentHeading().leftSide());
             } else if (turnCounter == 1) {
                 turnCounter++;
                 return drone.fly();
             } else if (turnCounter == 2) {
                 turnCounter++;
-                return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
+                return drone.heading(drone.getCurrentHeading().leftSide());
             } else if (turnCounter == 3) {
                 turnCounter++;
-                return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
+                return drone.heading(drone.getCurrentHeading().leftSide());
             } else if (turnCounter == 4) {
                 turnCounter++;
-                return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
+                return drone.heading(drone.getCurrentHeading().leftSide());
             }
         } else if (sideToTranslate.equals("right")) {
             // needs one spot above it to turn
             if (turnCounter == 0) {
                 turnCounter++;
-                return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
+                return drone.heading(drone.getCurrentHeading().rightSide());
             } else if (turnCounter == 1) {
                 turnCounter++;
                 return drone.fly();
             } else if (turnCounter == 2) {
                 turnCounter++;
-                return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
+                return drone.heading(drone.getCurrentHeading().rightSide());
             } else if (turnCounter == 3) {
                 turnCounter++;
-                return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
+                return drone.heading(drone.getCurrentHeading().rightSide());
             } else if (turnCounter == 4) {
                 turnCounter++;
-                return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
+                return drone.heading(drone.getCurrentHeading().rightSide());
             }
         }
         return null;

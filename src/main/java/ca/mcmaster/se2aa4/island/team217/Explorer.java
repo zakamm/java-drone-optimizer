@@ -1,5 +1,7 @@
 package ca.mcmaster.se2aa4.island.team217;
 
+import ca.mcmaster.se2aa4.island.team217.MapRepresentation.*;
+
 import java.io.StringReader;
 import java.util.HashMap;
 
@@ -63,25 +65,26 @@ public class Explorer implements IExplorerRaid {
 
     @Override
     public String deliverFinalReport() {
-        List<PointWithCreeks> creeks = map.creeks;
+        List<PointWithCreeks> creeks = map.getCreeks();
+        PointWithCreeks closestCreek = map.getClosestCreek();
 
         for (PointWithCreeks creek : creeks) {
             logger.info("Creek: {}", creek.getIdentifiers().get(0));
             logger.info("Location: {}", creek.getRow() + ", " + creek.getColumn());
         }
 
-        PointWithSite site = map.site;
+        PointWithSite site = map.getSite();
         double distance = map.computeMinDistance();
-        if (map.closestCreek == null) {
-            map.closestCreek = creeks.get(0);
+        if (closestCreek == null) {
+            closestCreek = creeks.get(0);
         }
-        String report = map.closestCreek.getIdentifiers().get(0);
+        String report = closestCreek.getIdentifiers().get(0);
         logger.info("** The identifier of the emergency site is {}", site.getIdentifier());
         logger.info("The location of the emergency site is {}", site.getRow() + ", " + site.getColumn());
         logger.info("** The distance between emergency site and closest creek is {}", distance);
-        logger.info("** The identifier of the closest creek is {}", map.closestCreek.getIdentifiers().get(0));
+        logger.info("** The identifier of the closest creek is {}", closestCreek.getIdentifiers().get(0));
         logger.info("** The location of the closest creek is {}",
-                map.closestCreek.getRow() + ", " + map.closestCreek.getColumn());
+                closestCreek.getRow() + ", " + closestCreek.getColumn());
         logger.info("** Delivering the final report");
         logger.info("** The drone has stopped");
 

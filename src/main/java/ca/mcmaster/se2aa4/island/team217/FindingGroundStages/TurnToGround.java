@@ -1,7 +1,7 @@
-package ca.mcmaster.se2aa4.island.team217;
+package ca.mcmaster.se2aa4.island.team217.FindingGroundStages;
 
-import java.util.Map;
-import ca.mcmaster.se2aa4.island.team217.Drone.Heading;
+import ca.mcmaster.se2aa4.island.team217.*;
+import ca.mcmaster.se2aa4.island.team217.MapRepresentation.*;
 
 public class TurnToGround implements Phase{
 
@@ -29,7 +29,7 @@ public class TurnToGround implements Phase{
 
     public String nextDecision(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
         if (counter == 0){
-            if (mapInitializer.directionToEcho == drone.currentHeading.leftSide(drone.currentHeading) ){
+            if (mapInitializer.directionToEcho == drone.getCurrentHeading().leftSide() ){
                 sideToTurn = "left";
             }
             else{
@@ -50,53 +50,53 @@ public class TurnToGround implements Phase{
             // Only needs one spot above it turn
             if (counter == 0) {
                 counter++;
-                return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
+                return drone.heading(drone.getCurrentHeading().leftSide());
             } else if (counter == 1) {
                 counter++;
                 return drone.fly();
             } else if (counter == 2) {
                 counter++;
-                return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
+                return drone.heading(drone.getCurrentHeading().leftSide());
             } else if (counter == 3) {
                 counter++;
                 return drone.fly();
             } else if (counter == 4) {
                 counter++;
-                return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
+                return drone.heading(drone.getCurrentHeading().leftSide());
             }
             else if (counter == 5) {
                 counter++;
-                return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
+                return drone.heading(drone.getCurrentHeading().leftSide());
             }
             else if (counter == 6) {
                 counter++;
-                return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
+                return drone.heading(drone.getCurrentHeading().leftSide());
             }
         } else if (sideToTurn.equals("right")) {
             // needs one spot above it to turn
             if (counter == 0) {
                 counter++;
-                return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
+                return drone.heading(drone.getCurrentHeading().rightSide());
             } else if (counter == 1) {
                 counter++;
                 return drone.fly();
             } else if (counter == 2) {
                 counter++;
-                return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
+                return drone.heading(drone.getCurrentHeading().rightSide());
             } else if (counter == 3) {
                 counter++;
                 return drone.fly();
             } else if (counter == 4) {
                 counter++;
-                return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
+                return drone.heading(drone.getCurrentHeading().rightSide());
             }
             else if (counter == 5) {
                 counter++;
-                return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
+                return drone.heading(drone.getCurrentHeading().rightSide());
             }
             else if (counter == 6) {
                 counter++;
-                return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
+                return drone.heading(drone.getCurrentHeading().rightSide());
             }
         }
         return null;

@@ -1,6 +1,7 @@
-package ca.mcmaster.se2aa4.island.team217;
+package ca.mcmaster.se2aa4.island.team217.GridSearchStages;
 
-import ca.mcmaster.se2aa4.island.team217.Drone.Heading;
+import ca.mcmaster.se2aa4.island.team217.*;
+import ca.mcmaster.se2aa4.island.team217.MapRepresentation.*;
 
 public class GridSearch {
     
@@ -22,11 +23,11 @@ public class GridSearch {
     
     public GridSearch(Drone drone, MapRepresenter map){
         this.drone = drone;
-        this.initialLocation = drone.currentLocation;
-        this.initialHeading = drone.currentHeading;
+        this.initialLocation = drone.getCurrentLocation();
+        this.initialHeading = drone.getCurrentHeading();
         this.gridSearchDirection = initialHeading;
         this.map = map;
-        this.middle = drone.spawnedFacingGround;
+        this.middle = drone.getSpawnedFacingGround();
         initializeGeneralDirection();
     }
 

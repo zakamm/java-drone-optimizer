@@ -1,9 +1,10 @@
-package ca.mcmaster.se2aa4.island.team217;
+package ca.mcmaster.se2aa4.island.team217.GridSearchStages;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import ca.mcmaster.se2aa4.island.team217.Drone.Heading;
+import ca.mcmaster.se2aa4.island.team217.*;
+import ca.mcmaster.se2aa4.island.team217.MapRepresentation.*;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -41,7 +42,7 @@ public class ScanAndFly implements ResponsePhase {
     public String nextDecision(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
         if (gridSearch.atEdge) {
             reachedEnd = true;
-            return drone.echo(drone.currentHeading);
+            return drone.echo(drone.getCurrentHeading());
         } else if (!flyCheck) {
             logger.info("Scanning");
             flyCheck = true;
@@ -56,21 +57,21 @@ public class ScanAndFly implements ResponsePhase {
 
     public void processResponse(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
         if (drone.getAction().equals("scan")) {
-            if (!drone.currentLocation.getGround()) {
+            if (!drone.getCurrentLocation().getGround()) {
                 gridSearch.atEdge = true;
             }
-            if (map.site != null && !map.creeks.isEmpty()) {
+            if (map.getSite() != null && !map.getCreeks().isEmpty()) {
                 foundClosestCreek(map);
             }
         }
         if (drone.getAction().equals("echo")) {
-            map.setAsScanned(drone, responseStorage.getRange(), drone.currentHeading);
+            map.setAsScanned(drone, responseStorage.getRange(), drone.getCurrentHeading());
             if (responseStorage.getFound().equals("OUT_OF_RANGE")) {
                 gridSearch.atEdge = true;
-                if (gridSearch.gridSearchDirection == gridSearch.generalDirection.leftSide(gridSearch.generalDirection)) {
+                if (gridSearch.gridSearchDirection == gridSearch.generalDirection.leftSide()) {
                     gridSearch.sideToTurn = "right";
                 } else if (gridSearch.gridSearchDirection == gridSearch.generalDirection
-                        .rightSide(gridSearch.generalDirection)) {
+                        .rightSide()) {
                     gridSearch.sideToTurn = "left";
                 }
                 nextPhase = new FlyToPositionTurn(gridSearch);
@@ -84,13 +85,13 @@ public class ScanAndFly implements ResponsePhase {
 
     public void foundClosestCreek(MapRepresenter map) {
         boolean foundClosestCreek = true;
-        double radius = map.closestCreekDistance;
+        double radius = map.getClosestCreekDistance();
         outerloop: for (List<Point> pointRow : map.map) {
             for (Point p : pointRow) {
-                double distance = map.distanceBetweenTwoPoints(p, map.site);
+                double distance = map.distanceBetweenTwoPoints(p, map.getSite());
                 if (distance <= radius) {
                     NormalPoint normalPoint = (NormalPoint) p;
-                    if (!normalPoint.beenScanned){
+                    if (!normalPoint.getBeenScanned()){
                         // logger the biomes to make sure it is indeed ground
                         logger.info("NOT SCANNED");
                         logger.info("Distance: " + distance);

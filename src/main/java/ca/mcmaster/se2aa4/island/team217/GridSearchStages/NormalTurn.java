@@ -1,9 +1,10 @@
-package ca.mcmaster.se2aa4.island.team217;
+package ca.mcmaster.se2aa4.island.team217.GridSearchStages;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import ca.mcmaster.se2aa4.island.team217.Drone.Heading;
+import ca.mcmaster.se2aa4.island.team217.*;
+import ca.mcmaster.se2aa4.island.team217.MapRepresentation.*;
 
 public class NormalTurn implements Phase {
     private final Logger logger = LogManager.getLogger();
@@ -32,7 +33,7 @@ public class NormalTurn implements Phase {
     public String nextDecision(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
         if (counter == 2) {
             counter = 0;
-            gridSearch.gridSearchDirection = drone.currentHeading;
+            gridSearch.gridSearchDirection = drone.getCurrentHeading();
             gridSearch.atEdge = false;
             reachedEnd = true;
         } else {
@@ -45,18 +46,18 @@ public class NormalTurn implements Phase {
         if (sideToTurn.equals("left")) {
             if (counter == 0) {
                 counter++;
-                return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
+                return drone.heading(drone.getCurrentHeading().leftSide());
             } else if (counter == 1) {
                 counter++;
-                return drone.heading(drone.currentHeading.leftSide(drone.currentHeading));
+                return drone.heading(drone.getCurrentHeading().leftSide());
             }
         } else if (sideToTurn.equals("right")) {
             if (counter == 0) {
                 counter++;
-                return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
+                return drone.heading(drone.getCurrentHeading().rightSide());
             } else if (counter == 1) {
                 counter++;
-                return drone.heading(drone.currentHeading.rightSide(drone.currentHeading));
+                return drone.heading(drone.getCurrentHeading().rightSide());
             }
         }
         return null;
