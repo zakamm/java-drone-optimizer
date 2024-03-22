@@ -1,9 +1,10 @@
-package ca.mcmaster.se2aa4.island.team217;
+package ca.mcmaster.se2aa4.island.team217.FindingGroundStages;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import ca.mcmaster.se2aa4.island.team217.Drone.Heading;
+import ca.mcmaster.se2aa4.island.team217.*;
+import ca.mcmaster.se2aa4.island.team217.MapRepresentation.*;
 
 public class MapInitializer {
 
@@ -82,6 +83,40 @@ public class MapInitializer {
             }
         }
         logger.info("Direction to Echo: " + directionToEcho);
+    }
+
+    // For Testing Purposes
+
+    public void setTopRows(Integer set) {
+        topRows = set;
+    }
+
+    public void setBottomRows(Integer set) {
+        bottomRows = set;
+    }
+
+    public void setRightColumns(Integer set) {
+        rightColumns = set;
+    }
+
+    public void setLeftColumns(Integer set) {
+        leftColumns = set;
+    }
+
+    public Integer getTopRows() {
+        return topRows;
+    }
+
+    public Integer getBottomRows() {
+        return bottomRows;
+    }
+
+    public Integer getRightColumns() {
+        return rightColumns;
+    }
+
+    public Integer getLeftColumns() {
+        return leftColumns;
     }
 
 }

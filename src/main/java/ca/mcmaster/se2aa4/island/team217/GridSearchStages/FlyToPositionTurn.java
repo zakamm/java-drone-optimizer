@@ -1,9 +1,10 @@
-package ca.mcmaster.se2aa4.island.team217;
+package ca.mcmaster.se2aa4.island.team217.GridSearchStages;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import ca.mcmaster.se2aa4.island.team217.Drone.Heading;
+import ca.mcmaster.se2aa4.island.team217.*;
+import ca.mcmaster.se2aa4.island.team217.MapRepresentation.*;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -54,13 +55,13 @@ public class FlyToPositionTurn implements ResponsePhase {
     public void processResponse(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
         if (drone.getAction().equals("echo")) {
             if (responseStorage.getFound().equals("OUT_OF_RANGE")
-                    || (responseStorage.getFound().equals("GROUND") && responseStorage.getRange() > 2)) {
+                    || (responseStorage.getFound().equals("GROUND") && responseStorage.getRange() > 3)) {
                 logger.info("REACHED END");
                 nextPhase = new NormalTurn(gridSearch);
                 reachedEnd = true;
             }
         }
-    
+
     }
 
 }

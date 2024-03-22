@@ -1,7 +1,9 @@
 package ca.mcmaster.se2aa4.island.team217;
 
-import ca.mcmaster.se2aa4.island.team217.Drone.Heading;
-import java.util.Map;
+import ca.mcmaster.se2aa4.island.team217.Heading;
+import ca.mcmaster.se2aa4.island.team217.MapRepresentation.*;
+import ca.mcmaster.se2aa4.island.team217.GridSearchStages.*;
+import ca.mcmaster.se2aa4.island.team217.FindingGroundStages.*;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,13 +18,6 @@ public class MissionControl {
     private final Logger logger = LogManager.getLogger();
     Drone drone;
     MapRepresenter map;
-
-    Boolean initialEchoed = false;
-
-    Boolean gridSearch = false;
-
-    Boolean searchedCoast = false;
-    Boolean stop = false;
 
     ResponseStorage responseStorage = ResponseStorage.getInstance();
     MapInitializer mapInitializer;
@@ -65,7 +60,7 @@ public class MissionControl {
 
         if (responseStorage.getCost() != null) {
             if (drone.getAction().equals("scan")) {
-                map.storeScanResults(responseStorage, drone.currentLocation);
+                map.storeScanResults(responseStorage, drone.getCurrentLocation());
             }
             if (current instanceof ResponsePhase) {
                 ((ResponsePhase) current).processResponse(responseStorage, drone, map);

@@ -1,7 +1,11 @@
-package ca.mcmaster.se2aa4.island.team217;
+package ca.mcmaster.se2aa4.island.team217.FindingGroundStages;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import ca.mcmaster.se2aa4.island.team217.*;
+import ca.mcmaster.se2aa4.island.team217.MapRepresentation.*;
+import ca.mcmaster.se2aa4.island.team217.GridSearchStages.*;
 
 public class FindMissingDimension implements ResponsePhase {
 
@@ -38,7 +42,7 @@ public class FindMissingDimension implements ResponsePhase {
                 return drone.fly();
             } else {
                 counter = 0;
-                return drone.echo(drone.currentHeading);
+                return drone.echo(drone.getCurrentHeading());
             }
         }
         else{
@@ -50,8 +54,8 @@ public class FindMissingDimension implements ResponsePhase {
     public void processResponse(ResponseStorage responseStorage, Drone drone, MapRepresenter map){
         if (drone.getAction().equals("echo")) {
             if (responseStorage.getFound().equals("OUT_OF_RANGE")){
-                mapInitializer.initializeMapDimensions(drone.currentHeading, responseStorage.getRange());
-                mapInitializer.initializeMapDimensions(drone.currentHeading.backSide(drone.currentHeading), flyCounter);
+                mapInitializer.initializeMapDimensions(drone.getCurrentHeading(), responseStorage.getRange());
+                mapInitializer.initializeMapDimensions(drone.getCurrentHeading().backSide(), flyCounter);
                 mapInitializer.initializeRowsAndColumns();
                 map.initializeMap();
                 drone.initializeCurrentLocation(mapInitializer.leftColumns, mapInitializer.topRows, mapInitializer.spawnedFacingGround);

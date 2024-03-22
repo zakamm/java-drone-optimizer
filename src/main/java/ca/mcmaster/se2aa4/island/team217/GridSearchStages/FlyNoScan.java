@@ -1,14 +1,17 @@
-package ca.mcmaster.se2aa4.island.team217;
+package ca.mcmaster.se2aa4.island.team217.GridSearchStages;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import ca.mcmaster.se2aa4.island.team217.*;
+import ca.mcmaster.se2aa4.island.team217.MapRepresentation.*;
 
 public class FlyNoScan implements Phase {
     private final Logger logger = LogManager.getLogger();
 
     Boolean reachedEnd = false;
 
-    Boolean skipFirstTile = true;
+    // Boolean skipFirstTile = true;
 
     GridSearch gridSearch;
 
@@ -21,9 +24,11 @@ public class FlyNoScan implements Phase {
     }
 
     public Phase getNextPhase() {
-        if (gridSearch.translated) {
+        if (gridSearch.translated){
+            gridSearch.translated = false;
             return new NormalTurn(gridSearch);
-        } else {
+        }
+        else{
             return new ScanAndFly(gridSearch);
         }
     }
@@ -37,9 +42,9 @@ public class FlyNoScan implements Phase {
         if (gridSearch.distanceToFly == 0) {
             reachedEnd = true;
             return null;
-        // } else if (skipFirstTile) {
-        //     skipFirstTile = false;
-        //     return drone.scan();
+            // } else if (skipFirstTile) {
+            // skipFirstTile = false;
+            // return drone.scan();
         } else {
             gridSearch.distanceToFly--;
             return drone.fly();

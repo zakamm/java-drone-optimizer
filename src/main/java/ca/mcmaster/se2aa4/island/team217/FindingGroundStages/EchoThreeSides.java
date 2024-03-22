@@ -1,4 +1,7 @@
-package ca.mcmaster.se2aa4.island.team217;
+package ca.mcmaster.se2aa4.island.team217.FindingGroundStages;
+
+import ca.mcmaster.se2aa4.island.team217.*;
+import ca.mcmaster.se2aa4.island.team217.MapRepresentation.*;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,11 +45,11 @@ public class EchoThreeSides implements ResponsePhase {
             return drone.echo(drone.initialHeading);
         } else if (counter == 1) {
             counter++;
-            return drone.echo(drone.initialHeading.rightSide(drone.initialHeading));
+            return drone.echo(drone.initialHeading.rightSide());
         } else if (counter == 2) {
             counter++;
             reachedEnd = true;
-            return drone.echo(drone.initialHeading.leftSide(drone.initialHeading));
+            return drone.echo(drone.initialHeading.leftSide());
         } else {
             return null;
         }
@@ -62,12 +65,12 @@ public class EchoThreeSides implements ResponsePhase {
                 mapInitializer.spawnedFacingGround = true;
             }
             if (reachedEnd && !mapInitializer.spawnedFacingGround) {
-                mapInitializer.initializeMapDimensions(drone.currentHeading.backSide(drone.currentHeading), 0);
+                mapInitializer.initializeMapDimensions(drone.getCurrentHeading().backSide(), 0);
                 mapInitializer.initializeRowsAndColumns();
                 map.initializeMap();
                 drone.initializeCurrentLocation(mapInitializer.leftColumns, mapInitializer.topRows,
                         mapInitializer.spawnedFacingGround);
-                mapInitializer.directionToEcho(drone.currentHeading);
+                mapInitializer.directionToEcho(drone.getCurrentHeading());
             }
         }
 

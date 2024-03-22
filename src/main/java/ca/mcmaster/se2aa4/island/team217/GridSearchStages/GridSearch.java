@@ -1,17 +1,27 @@
-package ca.mcmaster.se2aa4.island.team217;
+package ca.mcmaster.se2aa4.island.team217.GridSearchStages;
 
-import ca.mcmaster.se2aa4.island.team217.Drone.Heading;
+import ca.mcmaster.se2aa4.island.team217.*;
+import ca.mcmaster.se2aa4.island.team217.MapRepresentation.*;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.List;
 
 public class GridSearch {
     
+    private final Logger logger = LogManager.getLogger();
     
     Heading generalDirection;
     Heading gridSearchDirection;
 
     MapRepresenter map;
     Drone drone;
+
+    // initial location and heading of the drone when grid search started
     Point initialLocation;
     Heading initialHeading;
+
     int distanceToFly;
     int outOfRangeCounter = 0;
 
@@ -22,11 +32,11 @@ public class GridSearch {
     
     public GridSearch(Drone drone, MapRepresenter map){
         this.drone = drone;
-        this.initialLocation = drone.currentLocation;
-        this.initialHeading = drone.currentHeading;
+        this.initialLocation = drone.getCurrentLocation();
+        this.initialHeading = drone.getCurrentHeading();
         this.gridSearchDirection = initialHeading;
         this.map = map;
-        this.middle = drone.spawnedFacingGround;
+        this.middle = drone.getSpawnedFacingGround();
         initializeGeneralDirection();
     }
 
@@ -56,5 +66,31 @@ public class GridSearch {
                 generalDirection = Heading.N;
             }
         }
+    }
+
+    public Boolean foundClosestCreek(MapRepresenter map) {
+        boolean foundClosestCreek = true;
+        double radius = map.getClosestCreekDistance();
+
+        for (List<Point> pointRow : map.map) {
+            for (Point p : pointRow) {
+                double distance = map.distanceBetweenTwoPoints(p, map.getSite());
+                if (distance <= radius) {
+                    NormalPoint normalPoint = (NormalPoint) p;
+                    if (!normalPoint.getBeenScanned()){
+                        // logger the biomes to make sure it is indeed ground
+                        logger.info("NOT SCANNED");
+                        logger.info("Distance: " + distance);
+                        logger.info("Row: " + p.getRow());
+                        logger.info("Column: " + p.getColumn());
+                        logger.info("Radius: " + radius);
+                        foundClosestCreek = false;
+                        return foundClosestCreek;
+                    }
+                }
+
+            }
+        }
+        return foundClosestCreek;
     }
 }

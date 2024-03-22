@@ -1,29 +1,29 @@
-package ca.mcmaster.se2aa4.island.team217;
+package ca.mcmaster.se2aa4.island.team217.MapRepresentation;
 
+import ca.mcmaster.se2aa4.island.team217.ResponseStorage;
 import java.util.List;
 import java.util.ArrayList;
 
 public class NormalPoint implements Point {
 
-    private int x;
-    private int y;
-    boolean isGround = false;
-    boolean isPOI = false;
-    boolean beenScanned = false;
+    private int rowNumber;
+    private int columnNumber;
+    private boolean isGround = false;
+    private boolean beenScanned = false;
 
-    List<String> biomes = new ArrayList<>();
+    private List<String> biomes = new ArrayList<>();
 
-    public NormalPoint(int x, int y) {
-        this.x = x;
-        this.y = y;
+    public NormalPoint(int rowNumber, int columnNumber) {
+        this.rowNumber = rowNumber;
+        this.columnNumber = columnNumber;
     }
 
     public int getRow() {
-        return x;
+        return rowNumber;
     }
 
     public int getColumn() {
-        return y;
+        return columnNumber;
     }
 
     public Boolean getGround() {
@@ -39,8 +39,11 @@ public class NormalPoint implements Point {
         return isGround;
     }
 
-    public boolean getPOI() {
-        return isPOI;
+    public boolean getBeenScanned() {
+        return beenScanned;
+    }
+    public void setBeenScanned(boolean beenScanned) {
+        this.beenScanned = beenScanned;
     }
 
     public void addBiomes(List<String> biome) {

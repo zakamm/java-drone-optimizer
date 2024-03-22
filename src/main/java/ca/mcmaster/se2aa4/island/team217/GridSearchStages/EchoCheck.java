@@ -1,9 +1,10 @@
-package ca.mcmaster.se2aa4.island.team217;
+package ca.mcmaster.se2aa4.island.team217.GridSearchStages;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import ca.mcmaster.se2aa4.island.team217.Drone.Heading;
+import ca.mcmaster.se2aa4.island.team217.*;
+import ca.mcmaster.se2aa4.island.team217.MapRepresentation.*;
 
 public class EchoCheck implements ResponsePhase {
     private final Logger logger = LogManager.getLogger();
@@ -34,13 +35,13 @@ public class EchoCheck implements ResponsePhase {
 
     public String nextDecision(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
         logger.info("EchoCheck");
-        return drone.echo(drone.currentHeading);
+        return drone.echo(drone.getCurrentHeading());
     }
 
     public void processResponse(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
         if (responseStorage.getFound().equals("OUT_OF_RANGE") && !gridSearch.translated) {
-            map.setAsScanned(drone, responseStorage.getRange(), drone.currentHeading);
-            map.setAsScanned(drone, responseStorage.getRange(), drone.currentHeading.backSide(drone.currentHeading));
+            map.setAsScanned(drone, responseStorage.getRange(), drone.getCurrentHeading());
+            map.setAsScanned(drone, responseStorage.getRange(), drone.getCurrentHeading().backSide());
             reachedEnd = true;
             gridSearch.outOfRangeCounter++;
             if (gridSearch.middle && gridSearch.outOfRangeCounter == 3) {
@@ -54,18 +55,18 @@ public class EchoCheck implements ResponsePhase {
                 nextPhase = new TranslateDrone(gridSearch);
             }
         }else if (responseStorage.getFound().equals("OUT_OF_RANGE") && gridSearch.translated) {
-            map.setAsScanned(drone, responseStorage.getRange(), drone.currentHeading);
-            map.setAsScanned(drone, responseStorage.getRange(), drone.currentHeading.backSide(drone.currentHeading));
+            map.setAsScanned(drone, responseStorage.getRange(), drone.getCurrentHeading());
+            map.setAsScanned(drone, responseStorage.getRange(), drone.getCurrentHeading().backSide());
             reachedEnd = true;
-            gridSearch.translated = false;
             gridSearch.distanceToFly = responseStorage.getRange() - 5;
             nextPhase = new FlyNoScan(gridSearch);
+            // nextPhase = new FlyToPositionTurn(gridSearch);
         
         }else if (responseStorage.getFound().equals("GROUND")) {
             logger.info("Ground found after turn");
-            map.setAsScanned(drone, responseStorage.getRange(), drone.currentHeading);
+            map.setAsScanned(drone, responseStorage.getRange(), drone.getCurrentHeading());
             logger.info("Scanned ground");
-            map.setAsScanned(drone, responseStorage.getRange(), drone.currentHeading.backSide(drone.currentHeading));
+            map.setAsScanned(drone, responseStorage.getRange(), drone.getCurrentHeading().backSide());
             logger.info("Scanned ground");
             reachedEnd = true;
             gridSearch.translated = false;

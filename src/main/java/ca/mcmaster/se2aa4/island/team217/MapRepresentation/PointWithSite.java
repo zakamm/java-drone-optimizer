@@ -1,10 +1,11 @@
-package ca.mcmaster.se2aa4.island.team217;
+package ca.mcmaster.se2aa4.island.team217.MapRepresentation;
 
 import java.util.ArrayList;
+import ca.mcmaster.se2aa4.island.team217.ResponseStorage;
 
 public class PointWithSite extends PointOfInterest {
 
-    String identifier;
+    private String identifier;
 
     public PointWithSite(Point poi) {
         super(poi);

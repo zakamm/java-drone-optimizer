@@ -3,14 +3,17 @@ package ca.mcmaster.se2aa4.island.team217;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import ca.mcmaster.se2aa4.island.team217.Heading;
+import ca.mcmaster.se2aa4.island.team217.MapRepresentation.*;
+
 public class Drone {
 
     private final Logger logger = LogManager.getLogger();
 
     private Integer batteryLevel;
-    Point currentLocation;
-    Boolean spawnedFacingGround;
-    public Heading currentHeading;
+    private Point currentLocation;
+    private Boolean spawnedFacingGround;
+    private Heading currentHeading;
     public final Heading initialHeading;
 
     public MapRepresenter mapRepresenter;
@@ -19,60 +22,8 @@ public class Drone {
     private String action;
     private Heading direction;
 
-    Boolean translated = false;
-
     // used for singleton pattern implementation
     private static Drone uniqueInstance = null;
-
-    public enum Heading {
-        N, E, S, W;
-
-        // methods to quickly find direction on left, right and back sides
-        public Heading leftSide(Heading currentHeading) {
-            switch (currentHeading) {
-                case N:
-                    return W;
-                case E:
-                    return N;
-                case S:
-                    return E;
-                case W:
-                    return S;
-                default:
-                    throw new NullPointerException("Invalid heading: " + currentHeading);
-            }
-        }
-
-        public Heading rightSide(Heading currentHeading) {
-            switch (currentHeading) {
-                case N:
-                    return E;
-                case E:
-                    return S;
-                case S:
-                    return W;
-                case W:
-                    return N;
-                default:
-                    throw new NullPointerException("Invalid heading: " + currentHeading);
-            }
-        }
-
-        public Heading backSide(Heading currentHeading) {
-            switch (currentHeading) {
-                case N:
-                    return S;
-                case E:
-                    return W;
-                case S:
-                    return N;
-                case W:
-                    return E;
-                default:
-                    throw new NullPointerException("Invalid heading: " + currentHeading);
-            }
-        }
-    }
 
     Drone(Integer batteryLevel, String initialHeading, MapRepresenter map) {
         this.batteryLevel = batteryLevel;
@@ -96,7 +47,7 @@ public class Drone {
             switch (currentHeading) {
                 case N:
                     currentLocation = mapRepresenter.map.get(currentLocation.getRow() - 1)
-                            .get(currentLocation.getColumn());
+                        .get(currentLocation.getColumn());
                     break;
                 case E:
                     currentLocation = mapRepresenter.map.get(currentLocation.getRow())
@@ -151,11 +102,11 @@ public class Drone {
     // this method also updates current location based on current heading and next
     // heading
     public String heading(Heading heading) {
-        if (heading == currentHeading || heading == currentHeading.backSide(currentHeading)) {
+        if (heading == currentHeading || heading == currentHeading.backSide()) {
             throw new IllegalArgumentException("Invalid heading");
         }
         try {
-            if (heading == currentHeading.leftSide(currentHeading)) {
+            if (heading == currentHeading.leftSide()) {
                 switch (currentHeading) {
                     case N:
                         currentLocation = mapRepresenter.map.get(currentLocation.getRow() - 1)
@@ -178,7 +129,7 @@ public class Drone {
                 }
             }
 
-            if (heading == currentHeading.rightSide(currentHeading)) {
+            if (heading == currentHeading.rightSide()) {
                 switch (currentHeading) {
                     case N:
                         currentLocation = mapRepresenter.map.get(currentLocation.getRow() - 1)
@@ -230,6 +181,26 @@ public class Drone {
 
     public Heading getDirection() {
         return direction;
+    }
+
+    public Point getCurrentLocation() {
+        return currentLocation;
+    }
+
+    public Heading getCurrentHeading() {
+        return currentHeading;
+    }
+
+    public void setCurrentHeading(Heading currentHeading) {
+        this.currentHeading = currentHeading;
+    }
+
+    public void setCurrentLocation(Point currentLocation) {
+        this.currentLocation = currentLocation;
+    }
+
+    public Boolean getSpawnedFacingGround() {
+        return spawnedFacingGround;
     }
 
     public void updateBatteryLevel(Integer cost) {
