@@ -25,7 +25,7 @@ public class Drone {
     // used for singleton pattern implementation
     private static Drone uniqueInstance = null;
 
-    public Drone(Integer batteryLevel, String initialHeading, MapRepresenter map) {
+    private Drone(Integer batteryLevel, String initialHeading, MapRepresenter map) {
         this.batteryLevel = batteryLevel;
         this.currentHeading = Heading.valueOf(initialHeading);
         this.initialHeading = Heading.valueOf(initialHeading);

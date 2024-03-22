@@ -41,25 +41,25 @@ public class GridSearch {
     }
 
     public void initializeGeneralDirection() {
-        if (initialLocation.getRow() < 26 && initialLocation.getColumn() < 26) {
+        if (initialLocation.getRow() < map.rows/2 && initialLocation.getColumn() < map.columns/2) {
             if (initialHeading == Heading.N || initialHeading == Heading.S) {
                 generalDirection = Heading.E;
             } else if (initialHeading == Heading.E || initialHeading == Heading.W) {
                 generalDirection = Heading.S;
             }
-        } else if (initialLocation.getColumn() >= 26 && initialLocation.getRow() < 26) {
+        } else if (initialLocation.getColumn() >= map.columns/2 && initialLocation.getRow() < map.rows/2) {
             if (initialHeading == Heading.N || initialHeading == Heading.S) {
                 generalDirection = Heading.W;
             } else if (initialHeading == Heading.E || initialHeading == Heading.W) {
                 generalDirection = Heading.S;
             }
-        } else if (initialLocation.getRow() >= 26 && initialLocation.getColumn() < 26) {
+        } else if (initialLocation.getRow() >= map.rows/2 && initialLocation.getColumn() < map.columns/2) {
             if (initialHeading == Heading.N || initialHeading == Heading.S) {
                 generalDirection = Heading.E;
             } else if (initialHeading == Heading.E || initialHeading == Heading.W) {
                 generalDirection = Heading.N;
             }
-        } else if (initialLocation.getColumn() >= 26 && initialLocation.getRow() >= 26) {
+        } else if (initialLocation.getColumn() >= map.columns/2 && initialLocation.getRow() >= map.rows/2) {
             if (initialHeading == Heading.N || initialHeading == Heading.S) {
                 generalDirection = Heading.W;
             } else if (initialHeading == Heading.E || initialHeading == Heading.W) {
