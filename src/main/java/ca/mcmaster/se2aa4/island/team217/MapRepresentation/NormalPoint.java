@@ -6,24 +6,24 @@ import java.util.ArrayList;
 
 public class NormalPoint implements Point {
 
-    private int x;
-    private int y;
+    private int rowNumber;
+    private int columnNumber;
     private boolean isGround = false;
     private boolean beenScanned = false;
 
-    List<String> biomes = new ArrayList<>();
+    private List<String> biomes = new ArrayList<>();
 
-    public NormalPoint(int x, int y) {
-        this.x = x;
-        this.y = y;
+    public NormalPoint(int rowNumber, int columnNumber) {
+        this.rowNumber = rowNumber;
+        this.columnNumber = columnNumber;
     }
 
     public int getRow() {
-        return x;
+        return rowNumber;
     }
 
     public int getColumn() {
-        return y;
+        return columnNumber;
     }
 
     public Boolean getGround() {
