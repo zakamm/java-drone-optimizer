@@ -12,7 +12,7 @@ public class Drone {
 
     private Integer batteryLevel;
     private Point currentLocation;
-    private Boolean spawnedFacingGround;
+    private Boolean spawnedFacingGround = false;
     private Heading currentHeading;
     public final Heading initialHeading;
 
