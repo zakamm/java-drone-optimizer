@@ -34,9 +34,9 @@ public class DroneTest {
     @Test
     void testHeading() {
         Drone drone = Drone.getInstance(1000, "N", MapRepresenter.getInstance());
-        String result = drone.heading(Heading.E);
-        assertEquals("{\"action\": \"heading\", \"parameters\": { \"direction\": \"E\"}}", result);
-    }
+        String result = drone.heading(Heading.N);
+        assertEquals("{\"action\": \"heading\", \"parameters\": { \"direction\": \"N\"}}", result);
+}
 
     @Test
     void testEcho() {
@@ -61,16 +61,17 @@ public class DroneTest {
 
     @Test
     void testGetBatteryLevel() {
-        Drone drone = Drone.getInstance(1000, "N", MapRepresenter.getInstance());
-        assertEquals(1000, drone.getBatteryLevel());
+        Drone drone = Drone.getInstance(500, "N", MapRepresenter.getInstance());
+        assertEquals(500, drone.getBatteryLevel());
     }
 
     @Test
     void testGetAction() {
         Drone drone = Drone.getInstance(1000, "N", MapRepresenter.getInstance());
         drone.fly();
-        assertEquals("fly", drone.getAction());
-    }
+        String result = drone.getAction(); 
+        assertEquals("fly", result); 
+}
 
     @Test
     void testGetSpawnedFacingGround() {
@@ -80,9 +81,9 @@ public class DroneTest {
 
     @Test
     void testUpdateBatteryLevel() {
-        Drone drone = Drone.getInstance(1000, "N", MapRepresenter.getInstance());
+        Drone drone = Drone.getInstance(500, "N", MapRepresenter.getInstance());
         drone.updateBatteryLevel(100);
-        assertEquals(900, drone.getBatteryLevel());
+        assertEquals(400, drone.getBatteryLevel());
     }
 
     @Test
