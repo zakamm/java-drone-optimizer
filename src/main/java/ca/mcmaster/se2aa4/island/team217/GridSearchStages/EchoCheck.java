@@ -58,9 +58,9 @@ public class EchoCheck implements ResponsePhase {
             map.setAsScanned(drone, responseStorage.getRange(), drone.getCurrentHeading());
             map.setAsScanned(drone, responseStorage.getRange(), drone.getCurrentHeading().backSide());
             reachedEnd = true;
-            gridSearch.translated = false;
             gridSearch.distanceToFly = responseStorage.getRange() - 5;
             nextPhase = new FlyNoScan(gridSearch);
+            // nextPhase = new FlyToPositionTurn(gridSearch);
         
         }else if (responseStorage.getFound().equals("GROUND")) {
             logger.info("Ground found after turn");

@@ -26,7 +26,7 @@ public class MapRepresenter {
     private static MapRepresenter uniqueInstance = null;
 
     MapRepresenter() {
-        // initialize with these dimensions for now, will refactor this later
+        // initialize with these dimensions until we find the actual dimensions of the map, refactored this later
         for (int i = 0; i < 200; i++) {
             List<Point> row = new ArrayList<>();
             for (int j = 0; j < 200; j++) {
@@ -51,6 +51,7 @@ public class MapRepresenter {
             PointWithCreeks pointWithCreeks = new PointWithCreeks(currentLocation);
             pointWithCreeks.storeScanResults(scanResults);
             creeks.add(pointWithCreeks);
+            closestCreek = creeks.get(0);
             updateClosestCreek();
         }
 
@@ -88,9 +89,10 @@ public class MapRepresenter {
 
     }
 
-    public double distanceBetweenTwoPoints(Point point1, Point point2) {
-        return Math.sqrt(Math.pow((point1.getRow() - point2.getRow()), 2)
-                + Math.pow((point1.getColumn() - point2.getColumn()), 2));
+    public void updateClosestCreek() {
+        if (!creeks.isEmpty() && site != null) {
+            closestCreekDistance = uniqueInstance.computeMinDistance();
+        }
     }
 
     public double computeMinDistance() {
@@ -114,10 +116,9 @@ public class MapRepresenter {
         return minDistance;
     }
 
-    public void updateClosestCreek() {
-        if (!creeks.isEmpty() && site != null) {
-            closestCreekDistance = uniqueInstance.computeMinDistance();
-        }
+    public double distanceBetweenTwoPoints(Point point1, Point point2) {
+        return Math.sqrt(Math.pow((point1.getRow() - point2.getRow()), 2)
+                + Math.pow((point1.getColumn() - point2.getColumn()), 2));
     }
 
     public List<PointWithCreeks> getCreeks() {

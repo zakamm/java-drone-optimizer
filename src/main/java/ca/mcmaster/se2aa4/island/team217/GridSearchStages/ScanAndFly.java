@@ -16,6 +16,7 @@ public class ScanAndFly implements ResponsePhase {
 
     // scan first then fly
     Boolean flyCheck = false;
+    Boolean foundClosestCreek = false;
 
     GridSearch gridSearch;
 
@@ -61,7 +62,12 @@ public class ScanAndFly implements ResponsePhase {
                 gridSearch.atEdge = true;
             }
             if (map.getSite() != null && !map.getCreeks().isEmpty()) {
-                foundClosestCreek(map);
+                foundClosestCreek = gridSearch.foundClosestCreek(map);
+                if (foundClosestCreek) {
+                    logger.info("Found closest creek");
+                    reachedEnd = true;
+                    isFinal = true;
+                }
             }
         }
         if (drone.getAction().equals("echo")) {
@@ -80,36 +86,6 @@ public class ScanAndFly implements ResponsePhase {
                 gridSearch.atEdge = false;
                 nextPhase = new FlyNoScan(gridSearch);
             }
-        }
-    }
-
-    public void foundClosestCreek(MapRepresenter map) {
-        boolean foundClosestCreek = true;
-        double radius = map.getClosestCreekDistance();
-        outerloop: for (List<Point> pointRow : map.map) {
-            for (Point p : pointRow) {
-                double distance = map.distanceBetweenTwoPoints(p, map.getSite());
-                if (distance <= radius) {
-                    NormalPoint normalPoint = (NormalPoint) p;
-                    if (!normalPoint.getBeenScanned()){
-                        // logger the biomes to make sure it is indeed ground
-                        logger.info("NOT SCANNED");
-                        logger.info("Distance: " + distance);
-                        logger.info("Row: " + p.getRow());
-                        logger.info("Column: " + p.getColumn());
-                        logger.info("Radius: " + radius);
-                        foundClosestCreek = false;
-                        break outerloop;
-                    }
-                }
-
-            }
-        }
-
-        if (foundClosestCreek) {
-            logger.info("Found closest creek");
-            reachedEnd = true;
-            isFinal = true;
         }
     }
 }

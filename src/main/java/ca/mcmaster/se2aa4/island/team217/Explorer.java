@@ -67,17 +67,31 @@ public class Explorer implements IExplorerRaid {
     public String deliverFinalReport() {
         List<PointWithCreeks> creeks = map.getCreeks();
         PointWithCreeks closestCreek = map.getClosestCreek();
+        PointWithSite site = map.getSite();
+
+        if (closestCreek == null && site == null) {
+            logger.info("No creeks found");
+            return "No creeks found";
+        }
+        else if (site == null) {
+            logger.info("No emergency site found");
+            logger.info("The closest creek is {}", closestCreek.getIdentifiers().get(0));
+            return closestCreek.getIdentifiers().get(0);
+        }
+        else if (closestCreek == null) {
+            logger.info("No creeks found");
+            logger.info("The emergency site is {}", site.getIdentifier());
+            return site.getIdentifier();
+        }
+        // else{
+        //     return closestCreek.getIdentifiers().get(0);
+        // }
 
         for (PointWithCreeks creek : creeks) {
             logger.info("Creek: {}", creek.getIdentifiers().get(0));
             logger.info("Location: {}", creek.getRow() + ", " + creek.getColumn());
         }
-
-        PointWithSite site = map.getSite();
         double distance = map.computeMinDistance();
-        if (closestCreek == null) {
-            closestCreek = creeks.get(0);
-        }
         String report = closestCreek.getIdentifiers().get(0);
         logger.info("** The identifier of the emergency site is {}", site.getIdentifier());
         logger.info("The location of the emergency site is {}", site.getRow() + ", " + site.getColumn());
