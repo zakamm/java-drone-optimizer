@@ -3,12 +3,7 @@ package ca.mcmaster.se2aa4.island.team217.FindingGroundStages;
 import ca.mcmaster.se2aa4.island.team217.*;
 import ca.mcmaster.se2aa4.island.team217.MapRepresentation.*;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 public class EchoThreeSides implements ResponsePhase {
-
-    private final Logger logger = LogManager.getLogger();
 
     int counter = 0;
     boolean reachedEnd = false;
@@ -39,7 +34,6 @@ public class EchoThreeSides implements ResponsePhase {
     }
 
     public String nextDecision(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
-        logger.info(drone.getBatteryLevel());
         if (counter == 0) {
             counter++;
             return drone.echo(drone.initialHeading);

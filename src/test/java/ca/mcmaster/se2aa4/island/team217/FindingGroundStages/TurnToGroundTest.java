@@ -12,323 +12,317 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 public class TurnToGroundTest {
 
-    private final Logger logger = LogManager.getLogger();
+        TurnToGround turn;
+        MapInitializer map;
 
-    TurnToGround turn;
-    MapInitializer map;
+        @BeforeEach
+        void initialize() {
+                map = new MapInitializer(new Drone(1000, "N",
+                                new MapRepresenter()),
+                                new MapRepresenter());
+                turn = new TurnToGround(map);
+        }
 
-    @BeforeEach
-    void initialize() {
-        map = new MapInitializer(new Drone(1000, "N",
-                new MapRepresenter()),
-                new MapRepresenter());
-        turn = new TurnToGround(map);
-    }
+        @Test
+        void testReachedEndCase1() {
+                assertEquals(false, turn.reachedEnd());
+        }
 
-    @Test
-    void testReachedEndCase1() {
-        assertEquals(false, turn.reachedEnd());
-    }
+        @Test
+        void testReachedEndCase2() {
+                turn.reachedEnd = true;
+                assertEquals(true, turn.reachedEnd());
+        }
 
-    @Test
-    void testReachedEndCase2() {
-        turn.reachedEnd = true;
-        assertEquals(true, turn.reachedEnd());
-    }
+        @Test
+        void testGetNextPhase() {
+                assertEquals(FlyToGround.class, turn.getNextPhase().getClass());
 
-    @Test
-    void testGetNextPhase() {
-        assertEquals(FlyToGround.class, turn.getNextPhase().getClass());
+        }
 
-    }
+        @Test
+        void testIsFinal() {
+                assertEquals(false, turn.isFinal());
 
-    @Test
-    void testIsFinal() {
-        assertEquals(false, turn.isFinal());
+        }
 
-    }
+        @Test
+        void testNextDecisionCase0() {
+                map.directionToEcho = Heading.E;
 
-    @Test
-    void testNextDecisionCase0() {
-        map.directionToEcho = Heading.E;
-
-        turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
-                new MapRepresenter()),
-                new MapRepresenter());
-
-        assertEquals("left", turn.sideToTurn);
-
-    }
-
-    @Test
-    void testNextDecisionCase1() {
-        Drone drone = new Drone(1000, "S",
-                new MapRepresenter());
-
-        map.directionToEcho = Heading.E;
-
-        logger.info(drone.getCurrentHeading());
-        turn.counter = 0;
-
-        assertEquals(drone.heading(drone.getCurrentHeading().leftSide()),
                 turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
-                        new MapRepresenter()),
-                        new MapRepresenter()));
+                                new MapRepresenter()),
+                                new MapRepresenter());
 
-    }
+                assertEquals("left", turn.sideToTurn);
 
-    @Test
-    void testNextDecisionCase2() {
-        Drone drone = new Drone(1000, "S",
-                new MapRepresenter());
+        }
 
-        map.directionToEcho = drone.getCurrentHeading().leftSide();
+        @Test
+        void testNextDecisionCase1() {
+                Drone drone = new Drone(1000, "S",
+                                new MapRepresenter());
 
-        turn.sideToTurn = "left";
+                map.directionToEcho = Heading.E;
 
-        turn.counter = 1;
+                turn.counter = 0;
 
-        assertEquals(drone.fly(),
-                turn.nextDecision(new ResponseStorage(), drone,
-                        new MapRepresenter()));
+                assertEquals(drone.heading(drone.getCurrentHeading().leftSide()),
+                                turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
+                                                new MapRepresenter()),
+                                                new MapRepresenter()));
 
-    }
+        }
 
-    @Test
-    void testNextDecisionCase3() {
-        Drone drone = new Drone(1000, "S",
-                new MapRepresenter());
+        @Test
+        void testNextDecisionCase2() {
+                Drone drone = new Drone(1000, "S",
+                                new MapRepresenter());
 
-        map.directionToEcho = drone.getCurrentHeading().leftSide();
+                map.directionToEcho = drone.getCurrentHeading().leftSide();
 
-        turn.sideToTurn = "left";
+                turn.sideToTurn = "left";
 
-        turn.counter = 2;
+                turn.counter = 1;
 
-        assertEquals(drone.heading(drone.getCurrentHeading().leftSide()),
-                turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
-                        new MapRepresenter()),
-                        new MapRepresenter()));
+                assertEquals(drone.fly(),
+                                turn.nextDecision(new ResponseStorage(), drone,
+                                                new MapRepresenter()));
 
-    }
+        }
 
-    @Test
-    void testNextDecisionCase4() {
-        Drone drone = new Drone(1000, "S",
-                new MapRepresenter());
+        @Test
+        void testNextDecisionCase3() {
+                Drone drone = new Drone(1000, "S",
+                                new MapRepresenter());
 
-        map.directionToEcho = drone.getCurrentHeading().leftSide();
+                map.directionToEcho = drone.getCurrentHeading().leftSide();
 
-        turn.sideToTurn = "left";
+                turn.sideToTurn = "left";
 
-        turn.counter = 3;
+                turn.counter = 2;
 
-        assertEquals(drone.fly(),
-                turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
-                        new MapRepresenter()),
-                        new MapRepresenter()));
-    }
+                assertEquals(drone.heading(drone.getCurrentHeading().leftSide()),
+                                turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
+                                                new MapRepresenter()),
+                                                new MapRepresenter()));
 
-    @Test
-    void testNextDecisionCase5() {
-        Drone drone = new Drone(1000, "S",
-                new MapRepresenter());
+        }
 
-        map.directionToEcho = drone.getCurrentHeading().leftSide();
+        @Test
+        void testNextDecisionCase4() {
+                Drone drone = new Drone(1000, "S",
+                                new MapRepresenter());
 
-        turn.sideToTurn = "left";
+                map.directionToEcho = drone.getCurrentHeading().leftSide();
 
-        turn.counter = 4;
+                turn.sideToTurn = "left";
 
-        assertEquals(drone.heading(drone.getCurrentHeading().leftSide()),
-                turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
-                        new MapRepresenter()),
-                        new MapRepresenter()));
-    }
+                turn.counter = 3;
 
-    @Test
-    void testNextDecisionCase6() {
-        Drone drone = new Drone(1000, "S",
-                new MapRepresenter());
+                assertEquals(drone.fly(),
+                                turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
+                                                new MapRepresenter()),
+                                                new MapRepresenter()));
+        }
 
-        map.directionToEcho = drone.getCurrentHeading().leftSide();
+        @Test
+        void testNextDecisionCase5() {
+                Drone drone = new Drone(1000, "S",
+                                new MapRepresenter());
 
-        turn.sideToTurn = "left";
+                map.directionToEcho = drone.getCurrentHeading().leftSide();
 
-        turn.counter = 5;
+                turn.sideToTurn = "left";
 
-        assertEquals(drone.heading(drone.getCurrentHeading().leftSide()),
-                turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
-                        new MapRepresenter()),
-                        new MapRepresenter()));
-    }
+                turn.counter = 4;
 
-    @Test
-    void testNextDecisionCase7() {
-        Drone drone = new Drone(1000, "S",
-                new MapRepresenter());
+                assertEquals(drone.heading(drone.getCurrentHeading().leftSide()),
+                                turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
+                                                new MapRepresenter()),
+                                                new MapRepresenter()));
+        }
 
-        map.directionToEcho = drone.getCurrentHeading().leftSide();
+        @Test
+        void testNextDecisionCase6() {
+                Drone drone = new Drone(1000, "S",
+                                new MapRepresenter());
 
-        turn.sideToTurn = "left";
+                map.directionToEcho = drone.getCurrentHeading().leftSide();
 
-        turn.counter = 6;
+                turn.sideToTurn = "left";
 
-        assertEquals(drone.heading(drone.getCurrentHeading().leftSide()),
-                turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
-                        new MapRepresenter()),
-                        new MapRepresenter()));
-    }
+                turn.counter = 5;
 
-    @Test
-    void testNextDecisionCase8() {
-        Drone drone = new Drone(1000, "S",
-                new MapRepresenter());
+                assertEquals(drone.heading(drone.getCurrentHeading().leftSide()),
+                                turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
+                                                new MapRepresenter()),
+                                                new MapRepresenter()));
+        }
 
-        map.directionToEcho = drone.getCurrentHeading().rightSide();
+        @Test
+        void testNextDecisionCase7() {
+                Drone drone = new Drone(1000, "S",
+                                new MapRepresenter());
 
-        turn.sideToTurn = "right";
+                map.directionToEcho = drone.getCurrentHeading().leftSide();
 
-        turn.counter = 0;
+                turn.sideToTurn = "left";
 
-        assertEquals(drone.heading(drone.getCurrentHeading().rightSide()),
-                turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
-                        new MapRepresenter()),
-                        new MapRepresenter()));
-    }
+                turn.counter = 6;
 
-    @Test
-    void testNextDecisionCase9() {
-        Drone drone = new Drone(1000, "S",
-                new MapRepresenter());
+                assertEquals(drone.heading(drone.getCurrentHeading().leftSide()),
+                                turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
+                                                new MapRepresenter()),
+                                                new MapRepresenter()));
+        }
 
-        map.directionToEcho = drone.getCurrentHeading().rightSide();
+        @Test
+        void testNextDecisionCase8() {
+                Drone drone = new Drone(1000, "S",
+                                new MapRepresenter());
 
-        turn.sideToTurn = "right";
+                map.directionToEcho = drone.getCurrentHeading().rightSide();
 
-        turn.counter = 1;
+                turn.sideToTurn = "right";
 
-        assertEquals(drone.fly(),
-                turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
-                        new MapRepresenter()),
-                        new MapRepresenter()));
-    }
+                turn.counter = 0;
 
-    @Test
-    void testNextDecisionCase10() {
-        Drone drone = new Drone(1000, "S",
-                new MapRepresenter());
+                assertEquals(drone.heading(drone.getCurrentHeading().rightSide()),
+                                turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
+                                                new MapRepresenter()),
+                                                new MapRepresenter()));
+        }
 
-        map.directionToEcho = drone.getCurrentHeading().rightSide();
+        @Test
+        void testNextDecisionCase9() {
+                Drone drone = new Drone(1000, "S",
+                                new MapRepresenter());
 
-        turn.sideToTurn = "right";
+                map.directionToEcho = drone.getCurrentHeading().rightSide();
 
-        turn.counter = 2;
+                turn.sideToTurn = "right";
 
-        assertEquals(drone.heading(drone.getCurrentHeading().rightSide()),
-                turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
-                        new MapRepresenter()),
-                        new MapRepresenter()));
-    }
+                turn.counter = 1;
 
-    @Test
-    void testNextDecisionCase11() {
-        Drone drone = new Drone(1000, "S",
-                new MapRepresenter());
+                assertEquals(drone.fly(),
+                                turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
+                                                new MapRepresenter()),
+                                                new MapRepresenter()));
+        }
 
-        map.directionToEcho = drone.getCurrentHeading().rightSide();
+        @Test
+        void testNextDecisionCase10() {
+                Drone drone = new Drone(1000, "S",
+                                new MapRepresenter());
 
-        turn.sideToTurn = "right";
+                map.directionToEcho = drone.getCurrentHeading().rightSide();
 
-        turn.counter = 3;
+                turn.sideToTurn = "right";
 
-        assertEquals(drone.fly(),
-                turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
-                        new MapRepresenter()),
-                        new MapRepresenter()));
+                turn.counter = 2;
 
-    }
+                assertEquals(drone.heading(drone.getCurrentHeading().rightSide()),
+                                turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
+                                                new MapRepresenter()),
+                                                new MapRepresenter()));
+        }
 
-    @Test
-    void testNextDecisionCase12() {
-        Drone drone = new Drone(1000, "S",
-                new MapRepresenter());
+        @Test
+        void testNextDecisionCase11() {
+                Drone drone = new Drone(1000, "S",
+                                new MapRepresenter());
 
-        map.directionToEcho = drone.getCurrentHeading().rightSide();
+                map.directionToEcho = drone.getCurrentHeading().rightSide();
 
-        turn.sideToTurn = "right";
+                turn.sideToTurn = "right";
 
-        turn.counter = 4;
+                turn.counter = 3;
 
-        assertEquals(drone.heading(drone.getCurrentHeading().rightSide()),
-                turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
-                        new MapRepresenter()),
-                        new MapRepresenter()));
+                assertEquals(drone.fly(),
+                                turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
+                                                new MapRepresenter()),
+                                                new MapRepresenter()));
 
-    }
+        }
 
-    @Test
-    void testNextDecisionCase13() {
-        Drone drone = new Drone(1000, "S",
-                new MapRepresenter());
+        @Test
+        void testNextDecisionCase12() {
+                Drone drone = new Drone(1000, "S",
+                                new MapRepresenter());
 
-        map.directionToEcho = drone.getCurrentHeading().rightSide();
+                map.directionToEcho = drone.getCurrentHeading().rightSide();
 
-        turn.sideToTurn = "right";
+                turn.sideToTurn = "right";
 
-        turn.counter = 5;
+                turn.counter = 4;
 
-        assertEquals(drone.heading(drone.getCurrentHeading().rightSide()),
-                turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
-                        new MapRepresenter()),
-                        new MapRepresenter()));
+                assertEquals(drone.heading(drone.getCurrentHeading().rightSide()),
+                                turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
+                                                new MapRepresenter()),
+                                                new MapRepresenter()));
 
-    }
+        }
 
-    @Test
-    void testNextDecisionCase14() {
-        Drone drone = new Drone(1000, "S",
-                new MapRepresenter());
+        @Test
+        void testNextDecisionCase13() {
+                Drone drone = new Drone(1000, "S",
+                                new MapRepresenter());
 
-        map.directionToEcho = drone.getCurrentHeading().rightSide();
+                map.directionToEcho = drone.getCurrentHeading().rightSide();
 
-        turn.sideToTurn = "right";
+                turn.sideToTurn = "right";
 
-        turn.counter = 6;
+                turn.counter = 5;
 
-        assertEquals(drone.heading(drone.getCurrentHeading().rightSide()),
-                turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
-                        new MapRepresenter()),
-                        new MapRepresenter()));
+                assertEquals(drone.heading(drone.getCurrentHeading().rightSide()),
+                                turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
+                                                new MapRepresenter()),
+                                                new MapRepresenter()));
 
-    }
+        }
 
-    @Test
-    void testNextDecisionCase15() {
-        Drone drone = new Drone(1000, "N",
-                new MapRepresenter());
+        @Test
+        void testNextDecisionCase14() {
+                Drone drone = new Drone(1000, "S",
+                                new MapRepresenter());
 
-        map.directionToEcho = drone.getCurrentHeading().rightSide();
+                map.directionToEcho = drone.getCurrentHeading().rightSide();
 
-        turn.sideToTurn = "right";
+                turn.sideToTurn = "right";
 
-        turn.counter = 7;
+                turn.counter = 6;
 
-        assertNull(turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
-                new MapRepresenter()),
-                new MapRepresenter()));
-        assertEquals(true, turn.reachedEnd);
+                assertEquals(drone.heading(drone.getCurrentHeading().rightSide()),
+                                turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
+                                                new MapRepresenter()),
+                                                new MapRepresenter()));
 
-    }
+        }
 
-    @Test
-    void testProcessResponse() {
+        @Test
+        void testNextDecisionCase15() {
+                Drone drone = new Drone(1000, "N",
+                                new MapRepresenter());
 
-    }
+                map.directionToEcho = drone.getCurrentHeading().rightSide();
+
+                turn.sideToTurn = "right";
+
+                turn.counter = 7;
+
+                assertNull(turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
+                                new MapRepresenter()),
+                                new MapRepresenter()));
+                assertEquals(true, turn.reachedEnd);
+
+        }
+
+        @Test
+        void testProcessResponse() {
+
+        }
 
 }
