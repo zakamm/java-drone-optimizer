@@ -18,9 +18,9 @@ public class ExplorerTest {
     @Test
         void testAcknowledgeResults() {
         Explorer explorer = new Explorer();
-        explorer.initialize("{\"budget\":400,\"heading\":\"N\"}");
+        explorer.initialize("{\"budget\":900,\"heading\":\"N\"}");
         explorer.acknowledgeResults("{\"cost\":1,\"status\":\"success\",\"extras\":{\"range\":1}}");
-        assertEquals(399, explorer.drone.getBatteryLevel());
+        assertEquals(899, explorer.drone.getBatteryLevel());
     }
     @Test
         void testDeliverFinalReport() {
