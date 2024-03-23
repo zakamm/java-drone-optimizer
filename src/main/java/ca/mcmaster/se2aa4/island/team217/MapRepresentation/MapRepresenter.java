@@ -46,19 +46,30 @@ public class MapRepresenter {
 
     public void storeScanResults(ResponseStorage scanResults, Point currentLocation) {
 
+        if (!(scanResults.getCreeks().get(0).equals("null")) && !(scanResults.getSite().equals("null"))) {
+            // if there are creeks, add them to the POI list
+            currentLocation = new PointWithCreeks(currentLocation);
+            currentLocation = new PointWithSite(currentLocation);
+            currentLocation.storeScanResults(scanResults);
+            creeks.add((PointWithCreeks) currentLocation);
+            site = (PointWithSite) currentLocation;
+            closestCreek = creeks.get(0);
+            updateClosestCreek();
+        }
+        
         if (!(scanResults.getCreeks().get(0).equals("null"))) {
             // if there are creeks, add them to the POI list
-            PointWithCreeks pointWithCreeks = new PointWithCreeks(currentLocation);
-            pointWithCreeks.storeScanResults(scanResults);
-            creeks.add(pointWithCreeks);
+            currentLocation = new PointWithCreeks(currentLocation);
+            currentLocation.storeScanResults(scanResults);
+            creeks.add((PointWithCreeks) currentLocation);
             closestCreek = creeks.get(0);
             updateClosestCreek();
         }
 
         if (!(scanResults.getSite().equals("null"))) {
-            PointWithSite pointWithSite = new PointWithSite(currentLocation);
-            pointWithSite.storeScanResults(scanResults);
-            site = pointWithSite;
+            currentLocation = new PointWithSite(currentLocation);
+            currentLocation.storeScanResults(scanResults);
+            site = (PointWithSite) currentLocation;
             updateClosestCreek();
         } else {
             currentLocation.storeScanResults(scanResults);
