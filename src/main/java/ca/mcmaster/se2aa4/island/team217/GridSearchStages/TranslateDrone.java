@@ -8,9 +8,9 @@ import ca.mcmaster.se2aa4.island.team217.MapRepresentation.*;
 
 public class TranslateDrone implements Phase {
     private final Logger logger = LogManager.getLogger();
+    
     Boolean reachedEnd = false;
     Integer turnCounter = 0;
-    Integer distanceOutOfBounds;
 
     GridSearch gridSearch;
     String sideToTranslate;

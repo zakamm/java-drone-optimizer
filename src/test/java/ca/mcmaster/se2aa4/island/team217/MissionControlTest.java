@@ -7,8 +7,6 @@ import ca.mcmaster.se2aa4.island.team217.MapRepresentation.MapRepresenter;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MissionControlTest {
-   
-
 
     @Test
     public void testNextDecision() {

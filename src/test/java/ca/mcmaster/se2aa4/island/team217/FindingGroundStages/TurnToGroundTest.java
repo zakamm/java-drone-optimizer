@@ -1,12 +1,8 @@
 package ca.mcmaster.se2aa4.island.team217.FindingGroundStages;
 
-import ca.mcmaster.se2aa4.island.team217.Drone;
-import ca.mcmaster.se2aa4.island.team217.Heading;
+import ca.mcmaster.se2aa4.island.team217.*;
 import ca.mcmaster.se2aa4.island.team217.MapRepresentation.MapRepresenter;
-import ca.mcmaster.se2aa4.island.team217.FindingGroundStages.MapInitializer;
-import ca.mcmaster.se2aa4.island.team217.FindingGroundStages.TurnToGround;
-import ca.mcmaster.se2aa4.island.team217.FindingGroundStages.FlyToGround;
-import ca.mcmaster.se2aa4.island.team217.ResponseStorage;
+
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
