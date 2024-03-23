@@ -34,7 +34,7 @@ public class FlyToGroundTest {
 
                 map.distanceToGround = 1;
 
-                fly.nextDecision(new ResponseStorage(), new Drone(1000, "N",
+                fly.nextDecision(new Drone(1000, "N",
                                 new MapRepresenter()), new MapRepresenter());
 
                 assertEquals(true, fly.reachedEnd());
@@ -58,7 +58,7 @@ public class FlyToGroundTest {
                 map.distanceToGround = 1;
 
                 assertEquals(drone.scan(),
-                                fly.nextDecision(new ResponseStorage(), drone,
+                                fly.nextDecision(drone,
                                                 new MapRepresenter()));
         }
 
@@ -70,7 +70,7 @@ public class FlyToGroundTest {
                 map.distanceToGround = 2;
 
                 assertEquals(drone.fly(),
-                                fly.nextDecision(new ResponseStorage(), drone,
+                                fly.nextDecision(drone,
                                                 new MapRepresenter()));
 
         }

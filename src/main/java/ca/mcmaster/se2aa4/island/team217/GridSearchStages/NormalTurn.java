@@ -30,7 +30,7 @@ public class NormalTurn implements Phase {
         return false;
     }
 
-    public String nextDecision(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
+    public String nextDecision(Drone drone, MapRepresenter map) {
         if (counter == 2) {
             counter = 0;
             gridSearch.gridSearchDirection = drone.getCurrentHeading();

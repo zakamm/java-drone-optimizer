@@ -33,7 +33,7 @@ public class EchoCheck implements ResponsePhase {
         return isFinal;
     }
 
-    public String nextDecision(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
+    public String nextDecision(Drone drone, MapRepresenter map) {
         logger.info("EchoCheck");
         return drone.echo(drone.getCurrentHeading());
     }

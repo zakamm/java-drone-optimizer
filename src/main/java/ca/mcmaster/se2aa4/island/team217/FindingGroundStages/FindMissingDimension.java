@@ -34,7 +34,7 @@ public class FindMissingDimension implements ResponsePhase {
         return false;
     }
 
-    public String nextDecision(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
+    public String nextDecision(Drone drone, MapRepresenter map) {
         if (!foundDimension) {
             if (counter == 0) {
                 counter++;

@@ -52,7 +52,7 @@ public class TurnToGroundTest {
         void testNextDecisionCase0() {
                 map.directionToEcho = Heading.E;
 
-                turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
+                turn.nextDecision(new Drone(1000, "S",
                                 new MapRepresenter()),
                                 new MapRepresenter());
 
@@ -70,7 +70,7 @@ public class TurnToGroundTest {
                 turn.counter = 0;
 
                 assertEquals(drone.heading(drone.getCurrentHeading().leftSide()),
-                                turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
+                                turn.nextDecision(new Drone(1000, "S",
                                                 new MapRepresenter()),
                                                 new MapRepresenter()));
 
@@ -88,7 +88,7 @@ public class TurnToGroundTest {
                 turn.counter = 1;
 
                 assertEquals(drone.fly(),
-                                turn.nextDecision(new ResponseStorage(), drone,
+                                turn.nextDecision(drone,
                                                 new MapRepresenter()));
 
         }
@@ -105,7 +105,7 @@ public class TurnToGroundTest {
                 turn.counter = 2;
 
                 assertEquals(drone.heading(drone.getCurrentHeading().leftSide()),
-                                turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
+                                turn.nextDecision(new Drone(1000, "S",
                                                 new MapRepresenter()),
                                                 new MapRepresenter()));
 
@@ -123,7 +123,7 @@ public class TurnToGroundTest {
                 turn.counter = 3;
 
                 assertEquals(drone.fly(),
-                                turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
+                                turn.nextDecision(new Drone(1000, "S",
                                                 new MapRepresenter()),
                                                 new MapRepresenter()));
         }
@@ -140,7 +140,7 @@ public class TurnToGroundTest {
                 turn.counter = 4;
 
                 assertEquals(drone.heading(drone.getCurrentHeading().leftSide()),
-                                turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
+                                turn.nextDecision(new Drone(1000, "S",
                                                 new MapRepresenter()),
                                                 new MapRepresenter()));
         }
@@ -157,7 +157,7 @@ public class TurnToGroundTest {
                 turn.counter = 5;
 
                 assertEquals(drone.heading(drone.getCurrentHeading().leftSide()),
-                                turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
+                                turn.nextDecision(new Drone(1000, "S",
                                                 new MapRepresenter()),
                                                 new MapRepresenter()));
         }
@@ -174,7 +174,7 @@ public class TurnToGroundTest {
                 turn.counter = 6;
 
                 assertEquals(drone.heading(drone.getCurrentHeading().leftSide()),
-                                turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
+                                turn.nextDecision(new Drone(1000, "S",
                                                 new MapRepresenter()),
                                                 new MapRepresenter()));
         }
@@ -191,7 +191,7 @@ public class TurnToGroundTest {
                 turn.counter = 0;
 
                 assertEquals(drone.heading(drone.getCurrentHeading().rightSide()),
-                                turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
+                                turn.nextDecision(new Drone(1000, "S",
                                                 new MapRepresenter()),
                                                 new MapRepresenter()));
         }
@@ -208,7 +208,7 @@ public class TurnToGroundTest {
                 turn.counter = 1;
 
                 assertEquals(drone.fly(),
-                                turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
+                                turn.nextDecision(new Drone(1000, "S",
                                                 new MapRepresenter()),
                                                 new MapRepresenter()));
         }
@@ -225,7 +225,7 @@ public class TurnToGroundTest {
                 turn.counter = 2;
 
                 assertEquals(drone.heading(drone.getCurrentHeading().rightSide()),
-                                turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
+                                turn.nextDecision(new Drone(1000, "S",
                                                 new MapRepresenter()),
                                                 new MapRepresenter()));
         }
@@ -242,7 +242,7 @@ public class TurnToGroundTest {
                 turn.counter = 3;
 
                 assertEquals(drone.fly(),
-                                turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
+                                turn.nextDecision(new Drone(1000, "S",
                                                 new MapRepresenter()),
                                                 new MapRepresenter()));
 
@@ -260,7 +260,7 @@ public class TurnToGroundTest {
                 turn.counter = 4;
 
                 assertEquals(drone.heading(drone.getCurrentHeading().rightSide()),
-                                turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
+                                turn.nextDecision(new Drone(1000, "S",
                                                 new MapRepresenter()),
                                                 new MapRepresenter()));
 
@@ -278,7 +278,7 @@ public class TurnToGroundTest {
                 turn.counter = 5;
 
                 assertEquals(drone.heading(drone.getCurrentHeading().rightSide()),
-                                turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
+                                turn.nextDecision(new Drone(1000, "S",
                                                 new MapRepresenter()),
                                                 new MapRepresenter()));
 
@@ -296,7 +296,7 @@ public class TurnToGroundTest {
                 turn.counter = 6;
 
                 assertEquals(drone.heading(drone.getCurrentHeading().rightSide()),
-                                turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
+                                turn.nextDecision(new Drone(1000, "S",
                                                 new MapRepresenter()),
                                                 new MapRepresenter()));
 
@@ -313,7 +313,7 @@ public class TurnToGroundTest {
 
                 turn.counter = 7;
 
-                assertNull(turn.nextDecision(new ResponseStorage(), new Drone(1000, "S",
+                assertNull(turn.nextDecision(new Drone(1000, "S",
                                 new MapRepresenter()),
                                 new MapRepresenter()));
                 assertEquals(true, turn.reachedEnd);

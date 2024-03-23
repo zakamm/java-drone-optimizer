@@ -31,7 +31,7 @@ public class EchoThreeSidesTest {
                 assertEquals(false, echoT.reachedEnd());
 
                 for (int i = 0; i < 3; i++) {
-                        echoT.nextDecision(new ResponseStorage(), new Drone(1000,
+                        echoT.nextDecision(new Drone(1000,
                                         "N",
                                         new MapRepresenter()), new MapRepresenter());
                 }
@@ -69,7 +69,7 @@ public class EchoThreeSidesTest {
 
                 assertEquals(drone.echo(
                                 drone.initialHeading),
-                                echoT.nextDecision(new ResponseStorage(), drone,
+                                echoT.nextDecision(drone,
                                                 new MapRepresenter()));
 
         }
@@ -82,7 +82,7 @@ public class EchoThreeSidesTest {
                 echoT.counter = 1;
                 assertEquals(drone.echo(drone.initialHeading
                                 .rightSide()),
-                                echoT.nextDecision(new ResponseStorage(), drone,
+                                echoT.nextDecision(drone,
                                                 new MapRepresenter()));
         }
 
@@ -94,7 +94,7 @@ public class EchoThreeSidesTest {
                 echoT.counter = 2;
                 assertEquals(drone.echo(drone.initialHeading
                                 .leftSide()),
-                                echoT.nextDecision(new ResponseStorage(), drone,
+                                echoT.nextDecision(drone,
                                                 new MapRepresenter()));
         }
 

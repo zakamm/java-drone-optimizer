@@ -37,14 +37,11 @@ public class FlyNoScan implements Phase {
         return false;
     }
 
-    public String nextDecision(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
+    public String nextDecision(Drone drone, MapRepresenter map) {
         logger.info("FlyingNoScan");
         if (gridSearch.distanceToFly == 0) {
             reachedEnd = true;
             return null;
-            // } else if (skipFirstTile) {
-            // skipFirstTile = false;
-            // return drone.scan();
         } else {
             gridSearch.distanceToFly--;
             return drone.fly();

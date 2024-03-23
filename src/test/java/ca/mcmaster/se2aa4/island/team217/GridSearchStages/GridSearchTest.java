@@ -7,17 +7,30 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 import java.util.ArrayList;
+import org.junit.jupiter.api.BeforeEach;
 
 public class GridSearchTest {
 
-    @Test
-    public void testConstructor(){
-        MapRepresenter map = new MapRepresenter();
+    MapRepresenter map;
+    Drone drone;
+    GridSearch gridSearch;
+    ScanAndFly scanAndFly;
+    ResponseStorage responseStorage;
+
+    @BeforeEach
+    public void setUp() {
+        map = new MapRepresenter();
         map.columns = 53;
         map.rows = 53;
-        Drone drone = new Drone(500, "E", map);
+        map.initializeMap();
+        drone = new Drone(500, "E", map);
         drone.initializeCurrentLocation(10, 20, true);
-        GridSearch gridSearch = new GridSearch(drone, map);
+        gridSearch = new GridSearch(drone, map);
+        responseStorage = new ResponseStorage();
+    }
+
+    @Test
+    public void testConstructor(){
         assertEquals(gridSearch.middle, true);
         assertEquals(gridSearch.initialLocation.getRow(), 20);
         assertEquals(gridSearch.initialLocation.getColumn(), 10);
@@ -28,12 +41,6 @@ public class GridSearchTest {
 
     @Test
     public void testInitializeGeneralDirection() {
-        //setup
-        Drone drone = new Drone(500, "E", new MapRepresenter());
-        drone.initializeCurrentLocation(10, 20, true);
-        GridSearch gridSearch = new GridSearch(drone, new MapRepresenter());
-        gridSearch.map.columns = 53;
-        gridSearch.map.rows = 53;
 
         gridSearch.initialLocation = new NormalPoint(10, 20);
         gridSearch.initialHeading = Heading.E;
@@ -79,35 +86,43 @@ public class GridSearchTest {
     @Test 
     public void testFoundClosestCreek() {
         //setup
-        // MapRepresenter map = new MapRepresenter();
-        // map.columns = 53;
-        // map.rows = 53;
-        // map.initializeMap();
-        // Drone drone = new Drone(500, "E", map);
-        // drone.initializeCurrentLocation(10, 20, true);
-        // GridSearch gridSearch = new GridSearch(drone, new MapRepresenter());
-        // ResponseStorage responseStorage = new ResponseStorage();
-        // responseStorage.clear();
-        // List<String> testCreeks = new ArrayList<String>();
-        // testCreeks.add("testCreek");
-        // List<String> testBiomes = new ArrayList<String>();
-        // testBiomes.add("BEACH");
-        // testBiomes.add("MANGROVE");
-        // responseStorage.setBiomes(testBiomes);
-        // responseStorage.setCreeks(testCreeks);
-        // map.storeScanResults(responseStorage, new NormalPoint(8, 30));
-        // responseStorage.clear();
-        // responseStorage.setBiomes(testBiomes);
-        // responseStorage.setSite("testSite");
-        // map.storeScanResults(responseStorage, new NormalPoint(13, 24));
+        //set up for site but no creeks
+        responseStorage.setSite("site");
+        List<String> temp = new ArrayList<String>();
+        List<String> biomes = new ArrayList<String>();
+        biomes.add("beach");
+        responseStorage.setBiomes(biomes);
+        temp.add("null");
+        responseStorage.setCreeks(temp);
+        map.storeScanResults(responseStorage, new NormalPoint(8, 30));
 
-        // assertEquals(map.getClosestCreekDistance(), 5.0);
-        // assertFalse(gridSearch.foundClosestCreek(map));
+        //set up for no site but creeks
+        responseStorage.setSite("null");
+        List<String> temp2 = new ArrayList<String>();
+        temp2.add("creek");
+        responseStorage.setCreeks(temp2);
+        map.storeScanResults(responseStorage, new NormalPoint(11, 34));
 
+        //set all points in the map as scanned
+        for (List<Point> pointRow : map.map) {
+            for (Point p : pointRow) {
+                NormalPoint normalPoint = (NormalPoint) p;
+                normalPoint.setBeenScanned(true);
+            }
+        }
 
-        
-        // //test
-        // assertEquals(gridSearch.foundClosestCreek(new MapRepresenter()), true);
+        assertTrue(gridSearch.foundClosestCreek(map));
+
+        //set one point as not scanned
+        NormalPoint normalPoint = (NormalPoint) map.map.get(9).get(31);
+        normalPoint.setBeenScanned(false);
+        assertFalse(gridSearch.foundClosestCreek(map));
+
+        //borderline case where the distance is equal to the radius of 5
+        normalPoint.setBeenScanned(true);
+        normalPoint = (NormalPoint) map.map.get(5).get(26);
+        normalPoint.setBeenScanned(false);
+        assertFalse(gridSearch.foundClosestCreek(map));
     }
 
 }

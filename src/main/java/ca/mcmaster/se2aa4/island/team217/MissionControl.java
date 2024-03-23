@@ -59,7 +59,7 @@ public class MissionControl {
 
         while (!current.isFinal()) {
             while (!current.reachedEnd()) {
-                String decision = current.nextDecision(responseStorage, drone, map);
+                String decision = current.nextDecision( drone, map);
                 if (!(decision == null)) {
                     return decision;
                 }

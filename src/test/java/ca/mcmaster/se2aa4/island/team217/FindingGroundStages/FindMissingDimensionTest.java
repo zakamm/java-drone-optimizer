@@ -26,7 +26,7 @@ public class FindMissingDimensionTest {
         @Test
         void testReachedEndCase1() {
 
-                find.nextDecision(new ResponseStorage(), new Drone(1000, "N",
+                find.nextDecision(new Drone(1000, "N",
                                 new MapRepresenter()), new MapRepresenter());
 
                 assertEquals(false, find.reachedEnd());
@@ -38,7 +38,7 @@ public class FindMissingDimensionTest {
 
                 find.foundDimension = true;
 
-                find.nextDecision(new ResponseStorage(), new Drone(1000, "N",
+                find.nextDecision(new Drone(1000, "N",
                                 new MapRepresenter()), new MapRepresenter());
 
                 assertEquals(true, find.reachedEnd());
@@ -65,7 +65,7 @@ public class FindMissingDimensionTest {
                 find.foundDimension = true;
 
                 assertEquals(drone.scan(),
-                                find.nextDecision(new ResponseStorage(), drone,
+                                find.nextDecision(drone,
                                                 new MapRepresenter()));
 
                 assertEquals(true, find.reachedEnd);
@@ -82,7 +82,7 @@ public class FindMissingDimensionTest {
                 find.counter = 0;
 
                 assertEquals(drone.fly(),
-                                find.nextDecision(new ResponseStorage(), drone,
+                                find.nextDecision(drone,
                                                 new MapRepresenter()));
         }
 
@@ -96,7 +96,7 @@ public class FindMissingDimensionTest {
 
                 assertEquals(drone.echo(drone
                                 .getCurrentHeading()),
-                                find.nextDecision(new ResponseStorage(), drone,
+                                find.nextDecision(drone,
                                                 new MapRepresenter()));
 
         }

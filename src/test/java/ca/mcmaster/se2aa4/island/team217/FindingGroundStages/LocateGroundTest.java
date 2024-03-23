@@ -55,7 +55,7 @@ public class LocateGroundTest {
                 new MapRepresenter());
 
         assertEquals(drone.fly(),
-                loc.nextDecision(new ResponseStorage(), drone,
+                loc.nextDecision(drone,
                         new MapRepresenter()));
     }
 
@@ -69,7 +69,7 @@ public class LocateGroundTest {
 
         assertEquals(drone.echo(
                 map.directionToEcho),
-                loc.nextDecision(new ResponseStorage(), drone,
+                loc.nextDecision(drone,
                         new MapRepresenter()));
 
     }

@@ -37,7 +37,7 @@ public class FlyToPositionTurn implements ResponsePhase {
         return isFinal;
     }
 
-    public String nextDecision(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
+    public String nextDecision(Drone drone, MapRepresenter map) {
         logger.info("WE ARE IN FLY TO TURNING POSITION");
 
         if (!flyCheck) {

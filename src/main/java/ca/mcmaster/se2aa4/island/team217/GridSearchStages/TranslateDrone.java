@@ -31,7 +31,7 @@ public class TranslateDrone implements Phase {
         return false;
     }
 
-    public String nextDecision(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
+    public String nextDecision(Drone drone, MapRepresenter map) {
 
         if (turnCounter == 5) {
             turnCounter = 0;

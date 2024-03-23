@@ -34,7 +34,7 @@ public class TurnToGround implements Phase {
         return false;
     }
 
-    public String nextDecision(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
+    public String nextDecision(Drone drone, MapRepresenter map) {
         logger.info(drone.getCurrentHeading());
         if (counter == 0) {
             if (mapInitializer.directionToEcho == drone.getCurrentHeading().leftSide()) {
