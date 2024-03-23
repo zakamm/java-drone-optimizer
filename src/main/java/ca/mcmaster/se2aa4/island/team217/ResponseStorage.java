@@ -15,18 +15,8 @@ public class ResponseStorage {
     private List<String> biomes;
     private String site;
 
-    // used for singleton pattern implementation
-    private static ResponseStorage uniqueInstance = null;
-
     public ResponseStorage() {
 
-    }
-
-    public static ResponseStorage getInstance() {
-        if (uniqueInstance == null) {
-            uniqueInstance = new ResponseStorage();
-        }
-        return uniqueInstance;
     }
 
     public void setRange(Integer range) {

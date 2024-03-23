@@ -12,9 +12,12 @@ public class GridSearchTest {
 
     @Test
     public void testConstructor(){
-        Drone drone = Drone.getInstance(500, "E", MapRepresenter.getInstance());
+        MapRepresenter map = new MapRepresenter();
+        map.columns = 53;
+        map.rows = 53;
+        Drone drone = new Drone(500, "E", map);
         drone.initializeCurrentLocation(10, 20, true);
-        GridSearch gridSearch = new GridSearch(drone, MapRepresenter.getInstance());
+        GridSearch gridSearch = new GridSearch(drone, map);
         assertEquals(gridSearch.middle, true);
         assertEquals(gridSearch.initialLocation.getRow(), 20);
         assertEquals(gridSearch.initialLocation.getColumn(), 10);
@@ -26,9 +29,9 @@ public class GridSearchTest {
     @Test
     public void testInitializeGeneralDirection() {
         //setup
-        Drone drone = Drone.getInstance(500, "E", MapRepresenter.getInstance());
+        Drone drone = new Drone(500, "E", new MapRepresenter());
         drone.initializeCurrentLocation(10, 20, true);
-        GridSearch gridSearch = new GridSearch(drone, MapRepresenter.getInstance());
+        GridSearch gridSearch = new GridSearch(drone, new MapRepresenter());
         gridSearch.map.columns = 53;
         gridSearch.map.rows = 53;
 
@@ -76,14 +79,14 @@ public class GridSearchTest {
     @Test 
     public void testFoundClosestCreek() {
         //setup
-        // MapRepresenter map = MapRepresenter.getInstance();
+        // MapRepresenter map = new MapRepresenter();
         // map.columns = 53;
         // map.rows = 53;
         // map.initializeMap();
-        // Drone drone = Drone.getInstance(500, "E", map);
+        // Drone drone = new Drone(500, "E", map);
         // drone.initializeCurrentLocation(10, 20, true);
-        // GridSearch gridSearch = new GridSearch(drone, MapRepresenter.getInstance());
-        // ResponseStorage responseStorage = ResponseStorage.getInstance();
+        // GridSearch gridSearch = new GridSearch(drone, new MapRepresenter());
+        // ResponseStorage responseStorage = new ResponseStorage();
         // responseStorage.clear();
         // List<String> testCreeks = new ArrayList<String>();
         // testCreeks.add("testCreek");
@@ -104,7 +107,7 @@ public class GridSearchTest {
 
         
         // //test
-        // assertEquals(gridSearch.foundClosestCreek(MapRepresenter.getInstance()), true);
+        // assertEquals(gridSearch.foundClosestCreek(new MapRepresenter()), true);
     }
 
 }

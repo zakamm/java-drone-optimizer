@@ -16,7 +16,7 @@ public class PointwithSiteTest {
  //
      @Test
      public void testPointWithSite() {
-         ResponseStorage responseStorage = ResponseStorage.getInstance();
+         ResponseStorage responseStorage = new ResponseStorage();
          responseStorage.setBiomes(new ArrayList<>());
          NormalPoint normalPoint = new NormalPoint(5, 10);
          PointWithSite pointWithSite = new PointWithSite(normalPoint);
@@ -28,7 +28,7 @@ public class PointwithSiteTest {
      }
      @Test
      public void testStoreScanResults() {
-         ResponseStorage responseStorage = ResponseStorage.getInstance();
+         ResponseStorage responseStorage = new ResponseStorage();
          responseStorage.setBiomes(new ArrayList<>());
          PointWithSite pointWithSite = new PointWithSite(new NormalPoint(5, 5));
          responseStorage.setSite("site1");
@@ -40,7 +40,7 @@ public class PointwithSiteTest {
 
      @Test
      public void testGetIdentifier() {
-         ResponseStorage responseStorage = ResponseStorage.getInstance();
+         ResponseStorage responseStorage = new ResponseStorage();
          responseStorage.setBiomes(new ArrayList<>());
          PointWithSite pointWithSite = new PointWithSite(new NormalPoint(5, 5));
          responseStorage.setSite("site2");

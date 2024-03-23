@@ -13,9 +13,9 @@ public class FlyToGroundTest {
         @Test
         void testReachedEndCase1() {
 
-                FlyToGround fly = new FlyToGround(new MapInitializer(Drone.getInstance(1000, "N",
-                                MapRepresenter.getInstance()),
-                                MapRepresenter.getInstance()));
+                FlyToGround fly = new FlyToGround(new MapInitializer(new Drone(1000, "N",
+                                new MapRepresenter()),
+                                new MapRepresenter()));
 
                 assertEquals(false, fly.reachedEnd());
 
@@ -23,25 +23,25 @@ public class FlyToGroundTest {
 
         @Test
         void testReachedEndCase2() {
-                MapInitializer map = new MapInitializer(Drone.getInstance(1000, "N",
-                                MapRepresenter.getInstance()),
-                                MapRepresenter.getInstance());
+                MapInitializer map = new MapInitializer(new Drone(1000, "N",
+                                new MapRepresenter()),
+                                new MapRepresenter());
 
                 FlyToGround fly = new FlyToGround(map);
 
                 map.distanceToGround = 1;
 
-                fly.nextDecision(ResponseStorage.getInstance(), Drone.getInstance(1000, "N",
-                                MapRepresenter.getInstance()), MapRepresenter.getInstance());
+                fly.nextDecision(new ResponseStorage(), new Drone(1000, "N",
+                                new MapRepresenter()), new MapRepresenter());
 
                 assertEquals(true, fly.reachedEnd());
         }
 
         @Test
         void testGetNextPhase() {
-                MapInitializer map = new MapInitializer(Drone.getInstance(1000, "N",
-                                MapRepresenter.getInstance()),
-                                MapRepresenter.getInstance());
+                MapInitializer map = new MapInitializer(new Drone(1000, "N",
+                                new MapRepresenter()),
+                                new MapRepresenter());
 
                 FlyToGround fly = new FlyToGround(map);
 
@@ -51,10 +51,10 @@ public class FlyToGroundTest {
 
         @Test
         void testIsFinal() {
-                FlyToGround fly = new FlyToGround(new MapInitializer(Drone.getInstance(1000,
+                FlyToGround fly = new FlyToGround(new MapInitializer(new Drone(1000,
                                 "N",
-                                MapRepresenter.getInstance()),
-                                MapRepresenter.getInstance()));
+                                new MapRepresenter()),
+                                new MapRepresenter()));
 
                 assertEquals(false, fly.isFinal());
 
@@ -62,42 +62,42 @@ public class FlyToGroundTest {
 
         @Test
         void testNextDecisionCase1() {
-                MapInitializer map = new MapInitializer(Drone.getInstance(1000, "N",
-                                MapRepresenter.getInstance()),
-                                MapRepresenter.getInstance());
+                MapInitializer map = new MapInitializer(new Drone(1000, "N",
+                                new MapRepresenter()),
+                                new MapRepresenter());
                 FlyToGround fly = new FlyToGround(map);
-                Drone drone = Drone.getInstance(1000, "N",
-                                MapRepresenter.getInstance());
+                Drone drone = new Drone(1000, "N",
+                                new MapRepresenter());
 
                 map.distanceToGround = 1;
 
                 assertEquals(drone.scan(),
-                                fly.nextDecision(ResponseStorage.getInstance(), drone,
-                                                MapRepresenter.getInstance()));
+                                fly.nextDecision(new ResponseStorage(), drone,
+                                                new MapRepresenter()));
         }
 
         @Test
         void testNextDecisionCase2() {
-                MapInitializer map = new MapInitializer(Drone.getInstance(1000, "N",
-                                MapRepresenter.getInstance()),
-                                MapRepresenter.getInstance());
+                MapInitializer map = new MapInitializer(new Drone(1000, "N",
+                                new MapRepresenter()),
+                                new MapRepresenter());
                 FlyToGround fly = new FlyToGround(map);
-                Drone drone = Drone.getInstance(1000, "N",
-                                MapRepresenter.getInstance());
+                Drone drone = new Drone(1000, "N",
+                                new MapRepresenter());
 
                 map.distanceToGround = 2;
 
                 assertEquals(drone.fly(),
-                                fly.nextDecision(ResponseStorage.getInstance(), drone,
-                                                MapRepresenter.getInstance()));
+                                fly.nextDecision(new ResponseStorage(), drone,
+                                                new MapRepresenter()));
 
         }
 
         @Test
         void testProcessResponse() {
-                FlyToGround echoT = new FlyToGround(new MapInitializer(Drone.getInstance(1000, "N",
-                                MapRepresenter.getInstance()),
-                                MapRepresenter.getInstance()));
+                FlyToGround echoT = new FlyToGround(new MapInitializer(new Drone(1000, "N",
+                                new MapRepresenter()),
+                                new MapRepresenter()));
 
         }
 

@@ -18,15 +18,15 @@ public class ScanAndFlyTest {
 
     @BeforeEach
     public void setUp() {
-        map = MapRepresenter.getInstance();
+        map = new MapRepresenter();
         map.columns = 53;
         map.rows = 53;
         map.initializeMap();
-        drone = Drone.getInstance(500, "E", map);
+        drone = new Drone(500, "E", map);
         drone.initializeCurrentLocation(10, 20, true);
-        gridSearch = new GridSearch(drone, MapRepresenter.getInstance());
+        gridSearch = new GridSearch(drone, new MapRepresenter());
         scanAndFly = new ScanAndFly(gridSearch);
-        responseStorage = ResponseStorage.getInstance();
+        responseStorage = new ResponseStorage();
     }
 
     @Test

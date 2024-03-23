@@ -15,16 +15,16 @@ public class EchoThreeSidesTest {
 
     @Test
     void testReachedEnd() {
-        EchoThreeSides echoT = new EchoThreeSides(new MapInitializer(Drone.getInstance(1000, "N",
-                MapRepresenter.getInstance()),
-                MapRepresenter.getInstance()));
+        EchoThreeSides echoT = new EchoThreeSides(new MapInitializer(new Drone(1000, "N",
+                new MapRepresenter()),
+                new MapRepresenter()));
 
         assertEquals(false, echoT.reachedEnd());
 
         for (int i = 0; i < 3; i++) {
-            echoT.nextDecision(ResponseStorage.getInstance(), Drone.getInstance(1000,
+            echoT.nextDecision(new ResponseStorage(), new Drone(1000,
                     "N",
-                    MapRepresenter.getInstance()), MapRepresenter.getInstance());
+                    new MapRepresenter()), new MapRepresenter());
         }
 
         assertEquals(true, echoT.reachedEnd());
@@ -33,9 +33,9 @@ public class EchoThreeSidesTest {
 
     @Test
     void testGetNextPhaseCase1() {
-        MapInitializer map = new MapInitializer(Drone.getInstance(1000, "N",
-                MapRepresenter.getInstance()),
-                MapRepresenter.getInstance());
+        MapInitializer map = new MapInitializer(new Drone(1000, "N",
+                new MapRepresenter()),
+                new MapRepresenter());
 
         EchoThreeSides echoT = new EchoThreeSides(map);
 
@@ -47,9 +47,9 @@ public class EchoThreeSidesTest {
 
     @Test
     void testGetNextPhaseCase2() {
-        MapInitializer map = new MapInitializer(Drone.getInstance(1000, "N",
-                MapRepresenter.getInstance()),
-                MapRepresenter.getInstance());
+        MapInitializer map = new MapInitializer(new Drone(1000, "N",
+                new MapRepresenter()),
+                new MapRepresenter());
 
         EchoThreeSides echoT = new EchoThreeSides(map);
 
@@ -61,9 +61,9 @@ public class EchoThreeSidesTest {
 
     @Test
     void testIsFinal() {
-        EchoThreeSides echoT = new EchoThreeSides(new MapInitializer(Drone.getInstance(1000, "N",
-                MapRepresenter.getInstance()),
-                MapRepresenter.getInstance()));
+        EchoThreeSides echoT = new EchoThreeSides(new MapInitializer(new Drone(1000, "N",
+                new MapRepresenter()),
+                new MapRepresenter()));
 
         assertEquals(false, echoT.isFinal());
 
@@ -71,54 +71,54 @@ public class EchoThreeSidesTest {
 
     @Test
     void testNextDecisionCase1() {
-        EchoThreeSides echoT = new EchoThreeSides(new MapInitializer(Drone.getInstance(1000, "N",
-                MapRepresenter.getInstance()),
-                MapRepresenter.getInstance()));
-        Drone drone = Drone.getInstance(1000, "N",
-                MapRepresenter.getInstance());
+        EchoThreeSides echoT = new EchoThreeSides(new MapInitializer(new Drone(1000, "N",
+                new MapRepresenter()),
+                new MapRepresenter()));
+        Drone drone = new Drone(1000, "N",
+                new MapRepresenter());
 
         assertEquals(drone.echo(
                 drone.initialHeading),
-                echoT.nextDecision(ResponseStorage.getInstance(), drone,
-                        MapRepresenter.getInstance()));
+                echoT.nextDecision(new ResponseStorage(), drone,
+                        new MapRepresenter()));
 
     }
 
     @Test
     void testNextDecisionCase2() {
-        EchoThreeSides echoT = new EchoThreeSides(new MapInitializer(Drone.getInstance(1000, "N",
-                MapRepresenter.getInstance()),
-                MapRepresenter.getInstance()));
-        Drone drone = Drone.getInstance(1000, "N",
-                MapRepresenter.getInstance());
+        EchoThreeSides echoT = new EchoThreeSides(new MapInitializer(new Drone(1000, "N",
+                new MapRepresenter()),
+                new MapRepresenter()));
+        Drone drone = new Drone(1000, "N",
+                new MapRepresenter());
 
         echoT.counter = 1;
         assertEquals(drone.echo(drone.initialHeading
                 .rightSide()),
-                echoT.nextDecision(ResponseStorage.getInstance(), drone,
-                        MapRepresenter.getInstance()));
+                echoT.nextDecision(new ResponseStorage(), drone,
+                        new MapRepresenter()));
     }
 
     @Test
     void testNextDecisionCase3() {
-        EchoThreeSides echoT = new EchoThreeSides(new MapInitializer(Drone.getInstance(1000, "N",
-                MapRepresenter.getInstance()),
-                MapRepresenter.getInstance()));
-        Drone drone = Drone.getInstance(1000, "N",
-                MapRepresenter.getInstance());
+        EchoThreeSides echoT = new EchoThreeSides(new MapInitializer(new Drone(1000, "N",
+                new MapRepresenter()),
+                new MapRepresenter()));
+        Drone drone = new Drone(1000, "N",
+                new MapRepresenter());
 
         echoT.counter = 2;
         assertEquals(drone.echo(drone.initialHeading
                 .leftSide()),
-                echoT.nextDecision(ResponseStorage.getInstance(), drone,
-                        MapRepresenter.getInstance()));
+                echoT.nextDecision(new ResponseStorage(), drone,
+                        new MapRepresenter()));
     }
 
     @Test
     void testProcessResponse() {
-        EchoThreeSides echoT = new EchoThreeSides(new MapInitializer(Drone.getInstance(1000, "N",
-                MapRepresenter.getInstance()),
-                MapRepresenter.getInstance()));
+        EchoThreeSides echoT = new EchoThreeSides(new MapInitializer(new Drone(1000, "N",
+                new MapRepresenter()),
+                new MapRepresenter()));
 
     }
 }

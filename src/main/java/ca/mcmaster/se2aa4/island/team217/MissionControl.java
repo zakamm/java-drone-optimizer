@@ -19,26 +19,16 @@ public class MissionControl {
     Drone drone;
     MapRepresenter map;
 
-    ResponseStorage responseStorage = ResponseStorage.getInstance();
+    ResponseStorage responseStorage = new ResponseStorage();
     MapInitializer mapInitializer;
 
     Phase current;
 
-    // used for singleton pattern implementation
-    private static MissionControl uniqueInstance = null;
-
-    private MissionControl(Drone drone, MapRepresenter map) {
+    public MissionControl(Drone drone, MapRepresenter map) {
         this.drone = drone;
         this.map = map;
         this.mapInitializer = new MapInitializer(drone, map);
         this.current = new EchoThreeSides(mapInitializer);
-    }
-
-    public static MissionControl getInstance(Drone drone, MapRepresenter map) {
-        if (uniqueInstance == null) {
-            uniqueInstance = new MissionControl(drone, map);
-        }
-        return uniqueInstance;
     }
 
     /*
