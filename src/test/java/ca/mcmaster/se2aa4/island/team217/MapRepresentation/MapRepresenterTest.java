@@ -25,8 +25,6 @@ public class MapRepresenterTest {
         double distance = instance.distanceBetweenTwoPoints(point1, point2);
         assertEquals(5.0, distance);
     }
-
-
-
+    
 }
 
