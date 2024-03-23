@@ -12,15 +12,15 @@ public class GridSearchTest {
 
     @Test
     public void testConstructor(){
-        Drone drone = Drone.getInstance(500, "N", MapRepresenter.getInstance());
+        Drone drone = Drone.getInstance(500, "E", MapRepresenter.getInstance());
         drone.initializeCurrentLocation(10, 20, true);
         GridSearch gridSearch = new GridSearch(drone, MapRepresenter.getInstance());
         assertEquals(gridSearch.middle, true);
         assertEquals(gridSearch.initialLocation.getRow(), 20);
         assertEquals(gridSearch.initialLocation.getColumn(), 10);
-        assertEquals(gridSearch.initialHeading, Heading.N);
-        assertEquals(gridSearch.gridSearchDirection, Heading.N);
-        assertEquals(gridSearch.generalDirection, Heading.E);
+        assertEquals(gridSearch.initialHeading, Heading.E);
+        assertEquals(gridSearch.gridSearchDirection, Heading.E);
+        assertEquals(gridSearch.generalDirection, Heading.S);
     }
 
     @Test

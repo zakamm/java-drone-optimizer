@@ -54,4 +54,36 @@ public class ScanAndFlyTest {
         assertEquals(drone.echo(drone.getCurrentHeading()), scanAndFly.nextDecision(responseStorage, drone, map));
     }
 
+    @Test 
+    public void testProcessResponse() {
+        drone.decisionTaken("fly");
+        scanAndFly.processResponse(responseStorage, drone, map);
+        assertFalse(scanAndFly.flyCheck);
+        assertEquals(scanAndFly.getNextPhase(), null);
+
+        drone.decisionTaken("echo", "E");
+        responseStorage.setFound("OUT_OF_RANGE");
+        responseStorage.setRange(1);
+        gridSearch.gridSearchDirection = Heading.E;
+        gridSearch.generalDirection = Heading.N;
+        scanAndFly.processResponse(responseStorage, drone, map);
+        assertEquals(gridSearch.sideToTurn, "left");
+        assertTrue(gridSearch.atEdge);
+        assertTrue(scanAndFly.getNextPhase() instanceof FlyToPositionTurn);
+
+        responseStorage.setFound("FOUND");
+        responseStorage.setRange(1);
+        scanAndFly.processResponse(responseStorage, drone, map);
+        assertFalse(gridSearch.atEdge);
+        assertTrue(scanAndFly.getNextPhase() instanceof FlyNoScan);
+        assertEquals(gridSearch.distanceToFly, 2);
+
+        drone.decisionTaken("scan");
+        assertEquals(gridSearch.atEdge, true);
+        
+
+
+
+    }
+
 }

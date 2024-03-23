@@ -213,7 +213,7 @@ public class Drone {
     // these helper methods store the parameters of the next decision in the
     // variables action and direction and provide a string that will be returned to
     // takeDecision
-    String decisionTaken(String command) {
+    public String decisionTaken(String command) {
 
         // ensures the commands are valid
         if (!command.equals("fly") && !command.equals("scan") && !command.equals("stop")) {
@@ -224,7 +224,7 @@ public class Drone {
         return nextDecision;
     }
 
-    String decisionTaken(String command, String direction) {
+    public String decisionTaken(String command, String direction) {
 
         // need to make sure that the commands are valid
         if (!command.equals("echo") && !command.equals("heading")) {
