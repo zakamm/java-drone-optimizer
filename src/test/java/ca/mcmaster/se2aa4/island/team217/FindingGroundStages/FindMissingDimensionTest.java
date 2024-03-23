@@ -7,17 +7,27 @@ import ca.mcmaster.se2aa4.island.team217.MapRepresentation.MapRepresenter;
 import ca.mcmaster.se2aa4.island.team217.Drone;
 import ca.mcmaster.se2aa4.island.team217.ResponseStorage;
 
+import org.junit.jupiter.api.BeforeEach;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FindMissingDimensionTest {
+
+        FindMissingDimension find;
+        MapInitializer map;
+
+        @BeforeEach
+        void initialize() {
+                map = new MapInitializer(new Drone(1000, "N",
+                                new MapRepresenter()),
+                                new MapRepresenter());
+                find = new FindMissingDimension(map);
+        }
+
         @Test
         void testReachedEndCase1() {
-                FindMissingDimension find = new FindMissingDimension(new MapInitializer(Drone.getInstance(1000, "N",
-                                MapRepresenter.getInstance()),
-                                MapRepresenter.getInstance()));
 
-                find.nextDecision(ResponseStorage.getInstance(), Drone.getInstance(1000, "N",
-                                MapRepresenter.getInstance()), MapRepresenter.getInstance());
+                find.nextDecision(new Drone(1000, "N",
+                                new MapRepresenter()), new MapRepresenter());
 
                 assertEquals(false, find.reachedEnd());
 
@@ -25,14 +35,11 @@ public class FindMissingDimensionTest {
 
         @Test
         void testReachedEndCase2() {
-                FindMissingDimension find = new FindMissingDimension(new MapInitializer(Drone.getInstance(1000, "N",
-                                MapRepresenter.getInstance()),
-                                MapRepresenter.getInstance()));
 
                 find.foundDimension = true;
 
-                find.nextDecision(ResponseStorage.getInstance(), Drone.getInstance(1000, "N",
-                                MapRepresenter.getInstance()), MapRepresenter.getInstance());
+                find.nextDecision(new Drone(1000, "N",
+                                new MapRepresenter()), new MapRepresenter());
 
                 assertEquals(true, find.reachedEnd());
 
@@ -40,39 +47,26 @@ public class FindMissingDimensionTest {
 
         @Test
         void testGetNextPhase() {
-
-                FindMissingDimension find = new FindMissingDimension(new MapInitializer(Drone.getInstance(1000, "N",
-                                MapRepresenter.getInstance()),
-                                MapRepresenter.getInstance()));
-
                 assertEquals(ScanAndFly.class, find.getNextPhase().getClass());
 
         }
 
         @Test
         void testIsFinal() {
-                FindMissingDimension find = new FindMissingDimension(new MapInitializer(Drone.getInstance(1000, "N",
-                                MapRepresenter.getInstance()),
-                                MapRepresenter.getInstance()));
-
                 assertEquals(false, find.isFinal());
 
         }
 
         @Test
         void testNextDecisionCase1() {
-                FindMissingDimension find = new FindMissingDimension(new MapInitializer(Drone.getInstance(1000, "N",
-                                MapRepresenter.getInstance()),
-                                MapRepresenter.getInstance()));
-
-                Drone drone = Drone.getInstance(1000, "N",
-                                MapRepresenter.getInstance());
+                Drone drone = new Drone(1000, "N",
+                                new MapRepresenter());
 
                 find.foundDimension = true;
 
                 assertEquals(drone.scan(),
-                                find.nextDecision(ResponseStorage.getInstance(), drone,
-                                                MapRepresenter.getInstance()));
+                                find.nextDecision(drone,
+                                                new MapRepresenter()));
 
                 assertEquals(true, find.reachedEnd);
 
@@ -80,46 +74,35 @@ public class FindMissingDimensionTest {
 
         @Test
         void testNextDecisionCase2() {
-                FindMissingDimension find = new FindMissingDimension(new MapInitializer(Drone.getInstance(1000, "N",
-                                MapRepresenter.getInstance()),
-                                MapRepresenter.getInstance()));
-
-                Drone drone = Drone.getInstance(1000, "N",
-                                MapRepresenter.getInstance());
+                Drone drone = new Drone(1000, "N",
+                                new MapRepresenter());
 
                 find.foundDimension = false;
 
                 find.counter = 0;
 
                 assertEquals(drone.fly(),
-                                find.nextDecision(ResponseStorage.getInstance(), drone,
-                                                MapRepresenter.getInstance()));
+                                find.nextDecision(drone,
+                                                new MapRepresenter()));
         }
 
         @Test
         void testNextDecisionCase3() {
-                FindMissingDimension find = new FindMissingDimension(new MapInitializer(Drone.getInstance(1000, "N",
-                                MapRepresenter.getInstance()),
-                                MapRepresenter.getInstance()));
-
-                Drone drone = Drone.getInstance(1000, "N",
-                                MapRepresenter.getInstance());
+                Drone drone = new Drone(1000, "N",
+                                new MapRepresenter());
 
                 find.foundDimension = false;
                 find.counter = 1;
 
                 assertEquals(drone.echo(drone
                                 .getCurrentHeading()),
-                                find.nextDecision(ResponseStorage.getInstance(), drone,
-                                                MapRepresenter.getInstance()));
+                                find.nextDecision(drone,
+                                                new MapRepresenter()));
 
         }
 
         @Test
         void testProcessResponse() {
-                FindMissingDimension find = new FindMissingDimension(new MapInitializer(Drone.getInstance(1000, "N",
-                                MapRepresenter.getInstance()),
-                                MapRepresenter.getInstance()));
 
         }
 }

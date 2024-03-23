@@ -19,6 +19,7 @@ public class ExplorerTest {
         void testAcknowledgeResults() {
         Explorer explorer = new Explorer();
         explorer.initialize("{\"budget\":900,\"heading\":\"N\"}");
+        explorer.drone.decisionTaken("fly");
         explorer.acknowledgeResults("{\"cost\":1,\"status\":\"success\",\"extras\":{\"range\":1}}");
         assertEquals(899, explorer.drone.getBatteryLevel());
     }

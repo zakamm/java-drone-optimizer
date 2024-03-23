@@ -38,7 +38,7 @@ public class LocateGround implements ResponsePhase {
         return false;
     }
 
-    public String nextDecision(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
+    public String nextDecision(Drone drone, MapRepresenter map) {
         if (counter == 0) {
             counter++;
             return drone.fly();

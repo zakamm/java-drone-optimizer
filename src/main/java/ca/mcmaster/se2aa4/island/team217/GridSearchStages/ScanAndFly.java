@@ -40,7 +40,7 @@ public class ScanAndFly implements ResponsePhase {
         return isFinal;
     }
 
-    public String nextDecision(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
+    public String nextDecision(Drone drone, MapRepresenter map) {
         if (gridSearch.atEdge) {
             reachedEnd = true;
             return drone.echo(drone.getCurrentHeading());

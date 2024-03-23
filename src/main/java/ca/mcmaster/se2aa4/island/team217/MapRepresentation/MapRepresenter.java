@@ -22,10 +22,7 @@ public class MapRepresenter {
     public List<List<Point>> map = new ArrayList<>();
     private double closestCreekDistance = 0.0;
 
-    // used for singleton pattern implementation
-    private static MapRepresenter uniqueInstance = null;
-
-    MapRepresenter() {
+    public MapRepresenter() {
         // initialize with these dimensions until we find the actual dimensions of the map, refactored this later
         for (int i = 0; i < 200; i++) {
             List<Point> row = new ArrayList<>();
@@ -35,13 +32,6 @@ public class MapRepresenter {
             }
             map.add(row);
         }
-    }
-
-    public static MapRepresenter getInstance() {
-        if (uniqueInstance == null) {
-            uniqueInstance = new MapRepresenter();
-        }
-        return uniqueInstance;
     }
 
     public void storeScanResults(ResponseStorage scanResults, Point currentLocation) {
@@ -102,7 +92,7 @@ public class MapRepresenter {
 
     public void updateClosestCreek() {
         if (!creeks.isEmpty() && site != null) {
-            closestCreekDistance = uniqueInstance.computeMinDistance();
+            closestCreekDistance = this.computeMinDistance();
         }
     }
 

@@ -18,7 +18,7 @@ public class FindMissingDimension implements ResponsePhase {
 
     MapInitializer mapInitializer;
 
-    public FindMissingDimension(MapInitializer mapInitializer){
+    public FindMissingDimension(MapInitializer mapInitializer) {
         this.mapInitializer = mapInitializer;
     }
 
@@ -34,8 +34,8 @@ public class FindMissingDimension implements ResponsePhase {
         return false;
     }
 
-    public String nextDecision(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
-        if (!foundDimension){
+    public String nextDecision(Drone drone, MapRepresenter map) {
+        if (!foundDimension) {
             if (counter == 0) {
                 counter++;
                 flyCounter++;
@@ -44,21 +44,21 @@ public class FindMissingDimension implements ResponsePhase {
                 counter = 0;
                 return drone.echo(drone.getCurrentHeading());
             }
-        }
-        else{
+        } else {
             reachedEnd = true;
             return drone.scan();
         }
     }
 
-    public void processResponse(ResponseStorage responseStorage, Drone drone, MapRepresenter map){
+    public void processResponse(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
         if (drone.getAction().equals("echo")) {
-            if (responseStorage.getFound().equals("OUT_OF_RANGE")){
+            if (responseStorage.getFound().equals("OUT_OF_RANGE")) {
                 mapInitializer.initializeMapDimensions(drone.getCurrentHeading(), responseStorage.getRange());
                 mapInitializer.initializeMapDimensions(drone.getCurrentHeading().backSide(), flyCounter);
                 mapInitializer.initializeRowsAndColumns();
                 map.initializeMap();
-                drone.initializeCurrentLocation(mapInitializer.leftColumns, mapInitializer.topRows, mapInitializer.spawnedFacingGround);
+                drone.initializeCurrentLocation(mapInitializer.leftColumns, mapInitializer.topRows,
+                        mapInitializer.spawnedFacingGround);
                 foundDimension = true;
             }
         }

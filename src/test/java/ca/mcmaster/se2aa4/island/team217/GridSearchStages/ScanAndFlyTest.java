@@ -6,6 +6,9 @@ import ca.mcmaster.se2aa4.island.team217.MapRepresentation.*;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import org.junit.jupiter.api.BeforeEach;
 
 public class ScanAndFlyTest {
@@ -18,15 +21,15 @@ public class ScanAndFlyTest {
 
     @BeforeEach
     public void setUp() {
-        map = MapRepresenter.getInstance();
+        map = new MapRepresenter();
         map.columns = 53;
         map.rows = 53;
         map.initializeMap();
-        drone = Drone.getInstance(500, "E", map);
+        drone = new Drone(500, "E", map);
         drone.initializeCurrentLocation(10, 20, true);
-        gridSearch = new GridSearch(drone, MapRepresenter.getInstance());
+        gridSearch = new GridSearch(drone, map);
         scanAndFly = new ScanAndFly(gridSearch);
-        responseStorage = ResponseStorage.getInstance();
+        responseStorage = new ResponseStorage();
     }
 
     @Test
@@ -46,10 +49,10 @@ public class ScanAndFlyTest {
     @Test
     public void testNextDecision() {
         
-        assertEquals(drone.scan(), scanAndFly.nextDecision(responseStorage, drone, map));
-        assertEquals(drone.fly(), scanAndFly.nextDecision(responseStorage, drone, map));
+        assertEquals(drone.scan(), scanAndFly.nextDecision( drone, map));
+        assertEquals(drone.fly(), scanAndFly.nextDecision( drone, map));
         scanAndFly.gridSearch.atEdge = true;
-        assertEquals(drone.echo(drone.getCurrentHeading()), scanAndFly.nextDecision(responseStorage, drone, map));
+        assertEquals(drone.echo(drone.getCurrentHeading()), scanAndFly.nextDecision( drone, map));
     }
 
     @Test 
@@ -76,11 +79,66 @@ public class ScanAndFlyTest {
         assertTrue(scanAndFly.getNextPhase() instanceof FlyNoScan);
         assertEquals(gridSearch.distanceToFly, 2);
 
-        // drone.decisionTaken("scan");
-        // assertEquals(gridSearch.atEdge, true);
+        drone.decisionTaken("scan");
+        scanAndFly.processResponse(responseStorage, drone, map);
+        assertEquals(gridSearch.atEdge, true);
+    }
 
+    @Test 
+    public void testGetNextPhase() {
+        assertEquals(scanAndFly.getNextPhase(), null);
+    }
 
+    @Test 
+    public void testProcessResponseFoundClosestCreek() {
+        //set up for site but no creeks
+        responseStorage.setSite("site");
+        List<String> temp = new ArrayList<String>();
+        List<String> biomes = new ArrayList<String>();
+        biomes.add("beach");
+        responseStorage.setBiomes(biomes);
+        temp.add("null");
+        responseStorage.setCreeks(temp);
+        map.storeScanResults(responseStorage, new NormalPoint(8, 30));
 
+        //set up for no site but creeks
+        responseStorage.setSite("null");
+        List<String> temp2 = new ArrayList<String>();
+        temp2.add("creek");
+        responseStorage.setCreeks(temp2);
+        map.storeScanResults(responseStorage, new NormalPoint(11, 34));
+
+        drone.decisionTaken("scan");
+        scanAndFly.processResponse(responseStorage, drone, map);
+        assertFalse(scanAndFly.foundClosestCreek);
+
+        //set all points in the map as scanned
+        for (List<Point> pointRow : map.map) {
+            for (Point p : pointRow) {
+                NormalPoint normalPoint = (NormalPoint) p;
+                normalPoint.setBeenScanned(true);
+            }
+        }
+
+        scanAndFly.processResponse(responseStorage, drone, map);
+        assertTrue(scanAndFly.foundClosestCreek);
+        assertTrue(scanAndFly.reachedEnd());
+        assertTrue(scanAndFly.isFinal());
+    }
+
+    @Test  
+    public void testScannedGround(){
+        List<String> biomes = new ArrayList<String>();
+        biomes.add("beach");
+        responseStorage.setBiomes(biomes);
+        List<String> temp = new ArrayList<String>();
+        temp.add("null");
+        responseStorage.setCreeks(temp);
+        responseStorage.setSite("null");
+        map.storeScanResults(responseStorage, drone.getCurrentLocation());
+        drone.decisionTaken("scan");
+        scanAndFly.processResponse(responseStorage, drone, map);
+        assertFalse(gridSearch.atEdge);
 
     }
 

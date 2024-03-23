@@ -32,9 +32,9 @@ public class Explorer implements IExplorerRaid {
         String direction = info.getString("heading");
         Integer batteryLevel = info.getInt("budget");
 
-        map = MapRepresenter.getInstance();
-        drone = Drone.getInstance(batteryLevel, direction, map);
-        missionControl = MissionControl.getInstance(drone, map);
+        map = new MapRepresenter();
+        drone = new Drone(batteryLevel, direction, map);
+        missionControl = new MissionControl(drone, map);
 
         logger.info("The drone is facing {}", direction);
         logger.info("Battery level is {}", batteryLevel);

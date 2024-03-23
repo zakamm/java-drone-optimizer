@@ -22,23 +22,13 @@ public class Drone {
     private String action;
     private Heading direction;
 
-    // used for singleton pattern implementation
-    private static Drone uniqueInstance = null;
-
-    private Drone(Integer batteryLevel, String initialHeading, MapRepresenter map) {
+    public Drone(Integer batteryLevel, String initialHeading, MapRepresenter map) {
         this.batteryLevel = batteryLevel;
         this.currentHeading = Heading.valueOf(initialHeading);
         this.initialHeading = Heading.valueOf(initialHeading);
         // initialize it at (100, 100) for now
         this.currentLocation = new NormalPoint(100, 100);
         this.mapRepresenter = map;
-    }
-
-    public static Drone getInstance(Integer batteryLevel, String initialHeading, MapRepresenter map) {
-        if (uniqueInstance == null) {
-            uniqueInstance = new Drone(batteryLevel, initialHeading, map);
-        }
-        return uniqueInstance;
     }
 
     // this method also updates the current location of the drone
