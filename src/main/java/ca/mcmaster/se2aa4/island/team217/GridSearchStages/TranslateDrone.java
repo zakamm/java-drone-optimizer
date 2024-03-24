@@ -1,13 +1,9 @@
 package ca.mcmaster.se2aa4.island.team217.GridSearchStages;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import ca.mcmaster.se2aa4.island.team217.*;
 import ca.mcmaster.se2aa4.island.team217.MapRepresentation.*;
 
 public class TranslateDrone implements Phase {
-    private final Logger logger = LogManager.getLogger();
     
     Boolean reachedEnd = false;
     Integer turnCounter = 0;
@@ -56,10 +52,8 @@ public class TranslateDrone implements Phase {
     // direction
     // it only needs two squares above and to the side to perform the maneuver
     private String translateOver(String sideToTranslate, Drone drone) {
-        logger.info("Translating the Drone over to the {} side", sideToTranslate);
 
         if (sideToTranslate.equals("left")) {
-            // Only needs one spot above it turn
             if (turnCounter == 0) {
                 turnCounter++;
                 return drone.heading(drone.getCurrentHeading().leftSide());
@@ -77,7 +71,6 @@ public class TranslateDrone implements Phase {
                 return drone.heading(drone.getCurrentHeading().leftSide());
             }
         } else if (sideToTranslate.equals("right")) {
-            // needs one spot above it to turn
             if (turnCounter == 0) {
                 turnCounter++;
                 return drone.heading(drone.getCurrentHeading().rightSide());

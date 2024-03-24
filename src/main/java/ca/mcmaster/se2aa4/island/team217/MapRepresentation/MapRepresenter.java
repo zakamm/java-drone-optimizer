@@ -2,15 +2,10 @@ package ca.mcmaster.se2aa4.island.team217.MapRepresentation;
 
 import ca.mcmaster.se2aa4.island.team217.*;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class MapRepresenter {
-
-    private final Logger logger = LogManager.getLogger();
 
     // used for map initialization
     public int columns = 0;
@@ -70,7 +65,6 @@ public class MapRepresenter {
         map.clear();
 
         // initialize the map with the given dimensions
-        logger.info("Initializing map with dimensions: " + columns + "x" + rows);
         for (int i = 0; i < rows; i++) {
             List<Point> row = new ArrayList<>();
             for (int j = 0; j < columns; j++) {
@@ -101,12 +95,8 @@ public class MapRepresenter {
         double tolerance = 0.05;
         for (PointWithCreeks creek : creeks) {
             double distance = distanceBetweenTwoPoints(creek, site);
-            logger.info("Distance: " + distance);
-            logger.info("creek: " + creek.getRow() + " " + creek.getColumn());
             if (distance < minDistance) {
-                logger.info("Distance: " + distance);
                 closestCreek = creek;
-                logger.info("Closest creek: " + closestCreek.getRow() + " " + closestCreek.getColumn());
                 minDistance = distance;
             }
         }

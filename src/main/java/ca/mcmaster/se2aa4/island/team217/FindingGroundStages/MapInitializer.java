@@ -1,14 +1,9 @@
 package ca.mcmaster.se2aa4.island.team217.FindingGroundStages;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import ca.mcmaster.se2aa4.island.team217.*;
 import ca.mcmaster.se2aa4.island.team217.MapRepresentation.*;
 
 public class MapInitializer {
-
-    private final Logger logger = LogManager.getLogger();
 
     Integer topRows;
     Integer bottomRows;
@@ -82,7 +77,6 @@ public class MapInitializer {
                 directionToEcho = Heading.N;
             }
         }
-        logger.info("Direction to Echo: " + directionToEcho);
     }
 
 }

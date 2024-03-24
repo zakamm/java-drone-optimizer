@@ -3,14 +3,7 @@ package ca.mcmaster.se2aa4.island.team217.FindingGroundStages;
 import ca.mcmaster.se2aa4.island.team217.*;
 import ca.mcmaster.se2aa4.island.team217.MapRepresentation.*;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.util.Objects;
-
 public class TurnToGround implements Phase {
-
-    private final Logger logger = LogManager.getLogger();
 
     boolean reachedEnd = false;
     int counter = 0;
@@ -35,7 +28,6 @@ public class TurnToGround implements Phase {
     }
 
     public String nextDecision(Drone drone, MapRepresenter map) {
-        logger.info(drone.getCurrentHeading());
         if (counter == 0) {
             if (mapInitializer.directionToEcho == drone.getCurrentHeading().leftSide()) {
                 sideToTurn = "left";
@@ -63,7 +55,6 @@ public class TurnToGround implements Phase {
                 return drone.fly();
             } else if (counter == 2) {
                 counter++;
-                logger.info(drone.getCurrentHeading());
                 return drone.heading(drone.getCurrentHeading().leftSide());
             } else if (counter == 3) {
                 counter++;

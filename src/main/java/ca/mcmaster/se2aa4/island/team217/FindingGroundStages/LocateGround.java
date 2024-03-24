@@ -1,14 +1,9 @@
 package ca.mcmaster.se2aa4.island.team217.FindingGroundStages;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import ca.mcmaster.se2aa4.island.team217.*;
 import ca.mcmaster.se2aa4.island.team217.MapRepresentation.*;
 
 public class LocateGround implements ResponsePhase {
-
-    private final Logger logger = LogManager.getLogger();
 
     Boolean flyCheck = true;
     Boolean foundLand = false;
@@ -51,7 +46,6 @@ public class LocateGround implements ResponsePhase {
     }
 
     public void processResponse(ResponseStorage responseStorage, Drone drone, MapRepresenter map) {
-        logger.info(mapInitializer.distanceToGround);
         if (responseStorage.getFound().equals("GROUND")) {
             reachedEnd = true;
             mapInitializer.distanceToGround = responseStorage.getRange() + 1;

@@ -1,15 +1,11 @@
 package ca.mcmaster.se2aa4.island.team217.GridSearchStages;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import ca.mcmaster.se2aa4.island.team217.*;
 import ca.mcmaster.se2aa4.island.team217.MapRepresentation.*;
 import java.util.List;
 import java.util.ArrayList;
 
 public class ScanAndFly implements ResponsePhase {
-    private final Logger logger = LogManager.getLogger();
 
     Boolean reachedEnd = false;
     Boolean isFinal = false;
@@ -45,12 +41,10 @@ public class ScanAndFly implements ResponsePhase {
             reachedEnd = true;
             return drone.echo(drone.getCurrentHeading());
         } else if (!flyCheck) {
-            logger.info("Scanning");
             flyCheck = true;
             return drone.scan();
         } else if (flyCheck) {
             flyCheck = false;
-            logger.info("Flying");
             return drone.fly();
         }
         return null;
@@ -64,7 +58,6 @@ public class ScanAndFly implements ResponsePhase {
             if (map.getSite() != null && !map.getCreeks().isEmpty()) {
                 foundClosestCreek = gridSearch.foundClosestCreek(map);
                 if (foundClosestCreek) {
-                    logger.info("Found closest creek");
                     reachedEnd = true;
                     isFinal = true;
                 }
