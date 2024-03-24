@@ -10,4 +10,6 @@ public interface Point {
     Boolean getGround();
 
     void storeScanResults(ResponseStorage scanResults);
+    boolean getBeenScanned();
+    void setBeenScanned(boolean beenScanned);
 }

@@ -17,10 +17,10 @@ public class MapRepresenter {
     public int rows = 0;
 
     private List<PointWithCreeks> creeks = new ArrayList<>();
-    PointWithCreeks closestCreek;
-    PointWithSite site;
+    private PointWithCreeks closestCreek;
+    private PointWithSite site;
     public List<List<Point>> map = new ArrayList<>();
-    double closestCreekDistance = 0.0;
+    private double closestCreekDistance = 0.0;
 
     public MapRepresenter() {
         // initialize with these dimensions until we find the actual dimensions of the map, refactored this later
@@ -39,24 +39,23 @@ public class MapRepresenter {
         if (!(scanResults.getCreeks().get(0).equals("null")) && !(scanResults.getSite().equals("null"))) {
             // if there are creeks, add them to the POI list
             currentLocation = new PointWithCreeks(currentLocation);
-            currentLocation = new PointWithSite(currentLocation);
             currentLocation.storeScanResults(scanResults);
             creeks.add((PointWithCreeks) currentLocation);
+
+            currentLocation = new PointWithSite(currentLocation);
+            currentLocation.storeScanResults(scanResults);
             site = (PointWithSite) currentLocation;
+
             closestCreek = creeks.get(0);
             updateClosestCreek();
-        }
-        
-        if (!(scanResults.getCreeks().get(0).equals("null"))) {
+        } else if (!(scanResults.getCreeks().get(0).equals("null"))) {
             // if there are creeks, add them to the POI list
             currentLocation = new PointWithCreeks(currentLocation);
             currentLocation.storeScanResults(scanResults);
             creeks.add((PointWithCreeks) currentLocation);
             closestCreek = creeks.get(0);
             updateClosestCreek();
-        }
-
-        if (!(scanResults.getSite().equals("null"))) {
+        } else if (!(scanResults.getSite().equals("null"))) {
             currentLocation = new PointWithSite(currentLocation);
             currentLocation.storeScanResults(scanResults);
             site = (PointWithSite) currentLocation;
@@ -85,9 +84,6 @@ public class MapRepresenter {
             }
             map.add(row);
         }
-        logger.info("Number of rows" + map.size());
-        logger.info("Number of columns" + map.get(0).size());
-
     }
 
     public void updateClosestCreek() {
@@ -96,7 +92,7 @@ public class MapRepresenter {
         }
     }
 
-    public double computeMinDistance() {
+    private double computeMinDistance() {
         if (site == null) {
             return 0;
         }

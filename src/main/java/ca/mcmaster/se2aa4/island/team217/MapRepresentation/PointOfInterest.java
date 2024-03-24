@@ -32,6 +32,15 @@ public abstract class PointOfInterest implements Point {
         poi.addBiomes(biomes);
     }
 
+    @Override
+    public boolean getBeenScanned() {
+        return poi.getBeenScanned();
+    }
+    @Override
+    public void setBeenScanned(boolean beenScanned) {
+        poi.setBeenScanned(beenScanned);
+    }
+    
     // Abstract method for storeScanResults
     @Override
     public abstract void storeScanResults(ResponseStorage scanResults);
