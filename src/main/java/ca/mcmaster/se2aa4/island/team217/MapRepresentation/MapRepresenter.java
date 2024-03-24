@@ -17,10 +17,10 @@ public class MapRepresenter {
     public int rows = 0;
 
     private List<PointWithCreeks> creeks = new ArrayList<>();
-    private PointWithCreeks closestCreek;
-    private PointWithSite site;
+    PointWithCreeks closestCreek;
+    PointWithSite site;
     public List<List<Point>> map = new ArrayList<>();
-    private double closestCreekDistance = 0.0;
+    double closestCreekDistance = 0.0;
 
     public MapRepresenter() {
         // initialize with these dimensions until we find the actual dimensions of the map, refactored this later
