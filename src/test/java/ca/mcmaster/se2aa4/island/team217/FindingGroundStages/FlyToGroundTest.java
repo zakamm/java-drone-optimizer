@@ -76,7 +76,11 @@ public class FlyToGroundTest {
 
         @Test
         void testProcessResponse() {
-
+                MapInitializer mapInitializer = new MapInitializer(new Drone(1000, "N", new MapRepresenter()), new MapRepresenter());
+                FlyToGround instance = new FlyToGround(mapInitializer);
+                String decision = instance.nextDecision(new Drone(1000, "N", new MapRepresenter()), new MapRepresenter());
+                assertEquals("{\"action\": \"fly\"}", decision);
+                assertEquals(-1, mapInitializer.distanceToGround);
         }
 
-}
+        }

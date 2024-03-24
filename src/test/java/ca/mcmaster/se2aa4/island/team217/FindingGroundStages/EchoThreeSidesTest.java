@@ -98,6 +98,14 @@ public class EchoThreeSidesTest {
 
         @Test
         void testProcessResponse() {
-
+                        MapInitializer mapInitializer = new MapInitializer(new Drone(1000, "N", new MapRepresenter()), new MapRepresenter());
+                        EchoThreeSides instance = new EchoThreeSides(mapInitializer);
+                        ResponseStorage responseStorage = new ResponseStorage();
+                        responseStorage.setFound("OUT_OF_RANGE");
+                        responseStorage.setRange(0);
+                        Drone drone = new Drone(1000, "N", new MapRepresenter());
+                        MapRepresenter map = new MapRepresenter();
+                        instance.processResponse(responseStorage, drone, map);
+                        assertEquals(0, mapInitializer.distanceToGround);
+                }
         }
-}

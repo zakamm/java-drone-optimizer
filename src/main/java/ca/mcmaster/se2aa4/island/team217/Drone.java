@@ -18,8 +18,7 @@ public class Drone {
 
     public MapRepresenter mapRepresenter;
 
-    // parameters of the next decision
-    private String action;
+    public String action;
     private Heading direction;
 
     public Drone(Integer batteryLevel, String initialHeading, MapRepresenter map) {

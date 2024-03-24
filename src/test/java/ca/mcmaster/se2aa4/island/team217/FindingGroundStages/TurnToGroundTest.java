@@ -318,7 +318,10 @@ public class TurnToGroundTest {
 
         @Test
         void testProcessResponse() {
-
+                MapInitializer mapInitializer = new MapInitializer(new Drone(1000, "N", new MapRepresenter()), new MapRepresenter());
+                TurnToGround instance = new TurnToGround(mapInitializer);
+                String decision = instance.nextDecision(new Drone(1000, "N", new MapRepresenter()), new MapRepresenter());
+                assertEquals("{\"action\": \"heading\", \"parameters\": { \"direction\": \"E\"}}", decision);
+                assertEquals(1, instance.counter);
         }
-
-}
+        }
