@@ -30,6 +30,8 @@ public class FindMissingDimension implements ResponsePhase {
     }
 
     public String nextDecision(Drone drone, MapRepresenter map) {
+        // Fly to opposite side of the island and then find the missing dimension, end
+        // by scanning the ground
         if (!foundDimension) {
             if (counter == 0) {
                 counter++;
