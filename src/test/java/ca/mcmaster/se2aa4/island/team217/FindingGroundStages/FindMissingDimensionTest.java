@@ -18,8 +18,8 @@ public class FindMissingDimensionTest {
         @BeforeEach
         void initialize() {
                 map = new MapInitializer(new Drone(1000, "N",
-                        new MapRepresenter()),
-                        new MapRepresenter());
+                                new MapRepresenter()),
+                                new MapRepresenter());
                 find = new FindMissingDimension(map);
         }
 
@@ -27,7 +27,7 @@ public class FindMissingDimensionTest {
         void testReachedEndCase1() {
 
                 find.nextDecision(new Drone(1000, "N",
-                        new MapRepresenter()), new MapRepresenter());
+                                new MapRepresenter()), new MapRepresenter());
 
                 assertEquals(false, find.reachedEnd());
 
@@ -39,7 +39,7 @@ public class FindMissingDimensionTest {
                 find.foundDimension = true;
 
                 find.nextDecision(new Drone(1000, "N",
-                        new MapRepresenter()), new MapRepresenter());
+                                new MapRepresenter()), new MapRepresenter());
 
                 assertEquals(true, find.reachedEnd());
 
@@ -60,13 +60,13 @@ public class FindMissingDimensionTest {
         @Test
         void testNextDecisionCase1() {
                 Drone drone = new Drone(1000, "N",
-                        new MapRepresenter());
+                                new MapRepresenter());
 
                 find.foundDimension = true;
 
                 assertEquals(drone.scan(),
-                        find.nextDecision(drone,
-                                new MapRepresenter()));
+                                find.nextDecision(drone,
+                                                new MapRepresenter()));
 
                 assertEquals(true, find.reachedEnd);
 
@@ -75,34 +75,49 @@ public class FindMissingDimensionTest {
         @Test
         void testNextDecisionCase2() {
                 Drone drone = new Drone(1000, "N",
-                        new MapRepresenter());
+                                new MapRepresenter());
 
                 find.foundDimension = false;
 
                 find.counter = 0;
 
                 assertEquals(drone.fly(),
-                        find.nextDecision(drone,
-                                new MapRepresenter()));
+                                find.nextDecision(drone,
+                                                new MapRepresenter()));
         }
 
         @Test
         void testNextDecisionCase3() {
                 Drone drone = new Drone(1000, "N",
-                        new MapRepresenter());
+                                new MapRepresenter());
 
                 find.foundDimension = false;
                 find.counter = 1;
 
                 assertEquals(drone.echo(drone
                                 .getCurrentHeading()),
-                        find.nextDecision(drone,
-                                new MapRepresenter()));
+                                find.nextDecision(drone,
+                                                new MapRepresenter()));
 
         }
 
         @Test
         void testProcessResponse() {
+                MapInitializer mapInitializer = new MapInitializer(new Drone(1000, "N", new MapRepresenter()),
+                                new MapRepresenter());
+                FindMissingDimension instance = new FindMissingDimension(mapInitializer);
+                ResponseStorage responseStorage = new ResponseStorage();
+                Drone drone = new Drone(1000, "N", new MapRepresenter());
+                MapRepresenter map = new MapRepresenter();
+                responseStorage.setFound("OUT_OF_RANGE");
+                responseStorage.setRange(0);
+                drone.decisionTaken("echo", "E");
+                mapInitializer.topRows = 0;
+                mapInitializer.bottomRows = 0;
+                mapInitializer.rightColumns = 52;
+                mapInitializer.leftColumns = 0;
+                instance.processResponse(responseStorage, drone, map);
+                assertEquals(true, instance.foundDimension);
         }
 
-        }
+}
