@@ -70,31 +70,21 @@ public class Explorer implements IExplorerRaid {
         PointWithSite site = map.getSite();
 
         if (closestCreek == null && site == null) {
-            // logger.info("No creeks found");
             return "No creeks found";
         } else if (site == null) {
             logger.info("No emergency site found");
             logger.info("The closest creek is {}", closestCreek.getIdentifiers().get(0));
             return closestCreek.getIdentifiers().get(0);
         } else if (closestCreek == null) {
-            // logger.info("No creeks found");
-            // logger.info("The emergency site is {}", site.getIdentifier());
             return site.getIdentifier();
         }
         double distance = map.getClosestCreekDistance();
         String report = closestCreek.getIdentifiers().get(0);
         logger.info("** The identifier of the emergency site is {}",
                 site.getIdentifier());
-        // logger.info("The location of the emergency site is {}", site.getRow() + ", "
-        // + site.getColumn());
-        // logger.info("** The distance between emergency site and closest creek is {}",
-        // distance);
         logger.info("** The identifier of the closest creek is {}",
                 closestCreek.getIdentifiers().get(0));
-        // logger.info("** The location of the closest creek is {}",
-        // closestCreek.getRow() + ", " + closestCreek.getColumn());
-        // logger.info("** Delivering the final report");
-        // logger.info("** The drone has stopped");
+        logger.info("** Delivering the final report");
 
         return report;
     }
