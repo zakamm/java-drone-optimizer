@@ -1,14 +1,9 @@
 package ca.mcmaster.se2aa4.island.team217;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import ca.mcmaster.se2aa4.island.team217.Heading;
 import ca.mcmaster.se2aa4.island.team217.MapRepresentation.*;
 
 public class Drone {
-
-    private final Logger logger = LogManager.getLogger();
 
     private Integer batteryLevel;
     private Point currentLocation;
@@ -18,8 +13,7 @@ public class Drone {
 
     public MapRepresenter mapRepresenter;
 
-    // parameters of the next decision
-    private String action;
+    public String action;
     private Heading direction;
 
     public Drone(Integer batteryLevel, String initialHeading, MapRepresenter map) {
@@ -55,12 +49,8 @@ public class Drone {
                     break;
             }
         } catch (IndexOutOfBoundsException e) {
-            logger.info("Out of bounds");
             return decisionTaken("stop");
         }
-
-        logger.info(currentLocation.getRow() + " " + currentLocation.getColumn());
-
         return decisionTaken("fly");
     }
 
@@ -69,23 +59,16 @@ public class Drone {
         int columns;
         this.spawnedFacingGround = spawnedFacingGround;
 
-        // we didnt change heading and so leftColumns and topRows are the same as the
-        // current
-        // location
+        // we didnt change heading and so leftColumns and topRows are the same as the current location
         if (spawnedFacingGround) {
             rows = topRows;
             columns = leftColumns;
         }
-        // since we changed heading, leftColumns and topRows are off by a bit, the 100
-        // we
-        // intialized currentLocation at (100, 100)
+        // since we changed heading, leftColumns and topRows are off by a bit, the 100 we intialized currentLocation at (100, 100)
         else {
             rows = topRows + currentLocation.getRow() - 100;
             columns = leftColumns + currentLocation.getColumn() - 100;
         }
-        logger.info("Current location, X" + currentLocation.getRow() + " Y" + currentLocation.getColumn());
-        logger.info(rows);
-        logger.info(columns);
         currentLocation = mapRepresenter.map.get(rows).get(columns);
     }
 
@@ -142,10 +125,8 @@ public class Drone {
                 }
             }
         } catch (IndexOutOfBoundsException e) {
-            logger.info("Out of bounds");
             return decisionTaken("stop");
         }
-        logger.info(currentLocation.getRow() + " " + currentLocation.getColumn());
         return decisionTaken("heading", heading.toString());
     }
 

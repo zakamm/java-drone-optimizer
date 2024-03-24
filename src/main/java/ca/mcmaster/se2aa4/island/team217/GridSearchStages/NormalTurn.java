@@ -1,14 +1,10 @@
 package ca.mcmaster.se2aa4.island.team217.GridSearchStages;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import ca.mcmaster.se2aa4.island.team217.*;
 import ca.mcmaster.se2aa4.island.team217.MapRepresentation.*;
 
 public class NormalTurn implements Phase {
-    private final Logger logger = LogManager.getLogger();
-
+    
     Boolean reachedEnd = false;
 
     GridSearch gridSearch;
@@ -62,7 +58,4 @@ public class NormalTurn implements Phase {
         }
         return null;
     }
-
-    // idea of an intializer method that calls some sort of method that is required
-    // to instantiate this phase
 }

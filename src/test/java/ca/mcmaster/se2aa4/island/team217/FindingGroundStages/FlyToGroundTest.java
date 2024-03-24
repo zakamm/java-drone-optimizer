@@ -74,9 +74,4 @@ public class FlyToGroundTest {
 
         }
 
-        @Test
-        void testProcessResponse() {
-
-        }
-
 }

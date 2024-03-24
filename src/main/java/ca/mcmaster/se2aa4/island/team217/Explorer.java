@@ -86,12 +86,7 @@ public class Explorer implements IExplorerRaid {
         // else{
         //     return closestCreek.getIdentifiers().get(0);
         // }
-
-        for (PointWithCreeks creek : creeks) {
-            logger.info("Creek: {}", creek.getIdentifiers().get(0));
-            logger.info("Location: {}", creek.getRow() + ", " + creek.getColumn());
-        }
-        double distance = map.computeMinDistance();
+        double distance = map.getClosestCreekDistance();
         String report = closestCreek.getIdentifiers().get(0);
         logger.info("** The identifier of the emergency site is {}", site.getIdentifier());
         logger.info("The location of the emergency site is {}", site.getRow() + ", " + site.getColumn());

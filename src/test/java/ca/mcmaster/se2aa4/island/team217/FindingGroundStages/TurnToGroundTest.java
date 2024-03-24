@@ -315,10 +315,4 @@ public class TurnToGroundTest {
                 assertEquals(true, turn.reachedEnd);
 
         }
-
-        @Test
-        void testProcessResponse() {
-
-        }
-
 }

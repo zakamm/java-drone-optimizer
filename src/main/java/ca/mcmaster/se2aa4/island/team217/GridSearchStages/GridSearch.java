@@ -3,14 +3,9 @@ package ca.mcmaster.se2aa4.island.team217.GridSearchStages;
 import ca.mcmaster.se2aa4.island.team217.*;
 import ca.mcmaster.se2aa4.island.team217.MapRepresentation.*;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.util.List;
 
 public class GridSearch {
-    
-    private final Logger logger = LogManager.getLogger();
     
     Heading generalDirection;
     Heading gridSearchDirection;
@@ -78,12 +73,6 @@ public class GridSearch {
                 if (distance <= radius) {
                     NormalPoint normalPoint = (NormalPoint) p;
                     if (!normalPoint.getBeenScanned()){
-                        // logger the biomes to make sure it is indeed ground
-                        logger.info("NOT SCANNED");
-                        logger.info("Distance: " + distance);
-                        logger.info("Row: " + p.getRow());
-                        logger.info("Column: " + p.getColumn());
-                        logger.info("Radius: " + radius);
                         foundClosestCreek = false;
                         return foundClosestCreek;
                     }

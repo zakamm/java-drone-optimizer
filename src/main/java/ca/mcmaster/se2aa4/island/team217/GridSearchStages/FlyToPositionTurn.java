@@ -1,15 +1,11 @@
 package ca.mcmaster.se2aa4.island.team217.GridSearchStages;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import ca.mcmaster.se2aa4.island.team217.*;
 import ca.mcmaster.se2aa4.island.team217.MapRepresentation.*;
 import java.util.List;
 import java.util.ArrayList;
 
 public class FlyToPositionTurn implements ResponsePhase {
-    private final Logger logger = LogManager.getLogger();
 
     Boolean reachedEnd = false;
     Boolean isFinal = false;
@@ -38,15 +34,11 @@ public class FlyToPositionTurn implements ResponsePhase {
     }
 
     public String nextDecision(Drone drone, MapRepresenter map) {
-        logger.info("WE ARE IN FLY TO TURNING POSITION");
-
         if (!flyCheck) {
-            logger.info("ECHOING");
             flyCheck = true;
             return drone.echo(gridSearch.generalDirection);
         } else if (flyCheck) {
             flyCheck = false;
-            logger.info("Flying");
             return drone.fly();
         }
         return null;
@@ -56,7 +48,6 @@ public class FlyToPositionTurn implements ResponsePhase {
         if (drone.getAction().equals("echo")) {
             if (responseStorage.getFound().equals("OUT_OF_RANGE")
                     || (responseStorage.getFound().equals("GROUND") && responseStorage.getRange() > 3)) {
-                logger.info("REACHED END");
                 nextPhase = new NormalTurn(gridSearch);
                 reachedEnd = true;
             }

@@ -1,17 +1,11 @@
 package ca.mcmaster.se2aa4.island.team217.GridSearchStages;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import ca.mcmaster.se2aa4.island.team217.*;
 import ca.mcmaster.se2aa4.island.team217.MapRepresentation.*;
 
 public class FlyNoScan implements Phase {
-    private final Logger logger = LogManager.getLogger();
 
     Boolean reachedEnd = false;
-
-    // Boolean skipFirstTile = true;
 
     GridSearch gridSearch;
 
@@ -38,7 +32,6 @@ public class FlyNoScan implements Phase {
     }
 
     public String nextDecision(Drone drone, MapRepresenter map) {
-        logger.info("FlyingNoScan");
         if (gridSearch.distanceToFly == 0) {
             reachedEnd = true;
             return null;

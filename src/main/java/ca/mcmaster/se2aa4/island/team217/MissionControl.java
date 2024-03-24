@@ -16,6 +16,7 @@ import java.util.ArrayList;
 public class MissionControl {
 
     private final Logger logger = LogManager.getLogger();
+    
     Drone drone;
     MapRepresenter map;
 
