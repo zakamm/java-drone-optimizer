@@ -1,4 +1,7 @@
 @startuml
+
+
+title Drone and Map Exploration
 participant Explorer
 participant MissionControl
 participant Drone
@@ -28,8 +31,8 @@ activate ResponseStorage
 ResponseStorage --> MissionControl: return instance
 deactivate ResponseStorage
 
-box "Finding Ground" #LightBlue
-loop Main Loop
+group "Finding Ground"
+loop FindingGround
     MissionControl -> Phase: new Phase(mapInitializer)
     activate Phase
     Phase --> MissionControl: return instance
@@ -75,10 +78,10 @@ loop Main Loop
         break
     end
 end
-end box
+end group
 
 group "Grid Search"
-    loop foundClosestCreek [site != null && !creeks.isEmpty]
+    loop GridSearch
         MissionControl -> ResponsePhase: new ResponsePhase(mapInitializer)
         activate ResponsePhase
         ResponsePhase --> MissionControl: return instance

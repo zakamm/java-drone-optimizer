@@ -41,12 +41,12 @@ package "GridSearchStages" {
       -gridSearch: GridSearch
       +TranslateDrone(GridSearch): void
   }
-  FlyToPositionTurn *-- GridSearch
-  EchoCheck *-> GridSearch
-  FlyNoScan *-> GridSearch
-  NormalTurn *-> GridSearch
-  ScanAndFly *-> GridSearch
-  TranslateDrone *-> GridSearch
+  FlyToPositionTurn "1" *-- "1" GridSearch
+  EchoCheck "1" *-> "1" GridSearch
+  FlyNoScan "1" *-> "1" GridSearch
+  NormalTurn "1" *-> "1" GridSearch
+  ScanAndFly "1" *-> "1" GridSearch
+  TranslateDrone "1" *-> "1" GridSearch
 }
 
   ResponsePhase <|.. FlyToPositionTurn
@@ -85,11 +85,11 @@ package "FindingGroundStages" {
       +MapInitializer(Drone, MapRepresenter): void
       +initializeMap(): void
   }
-  EchoThreeSides *-- MapInitializer
-  FlyToGround *-- MapInitializer
-  TurnToGround *-- MapInitializer
-  FindMissingDimension *-- MapInitializer
-  LocateGround *-- MapInitializer
+  EchoThreeSides "1" *-- "1" MapInitializer
+  FlyToGround "1" *-- "1" MapInitializer
+  TurnToGround "1" *-- "1" MapInitializer
+  FindMissingDimension "1" *-- "1" MapInitializer
+  LocateGround "1" *-- "1" MapInitializer
 }
 
   ResponsePhase <|.. EchoThreeSides
@@ -137,12 +137,12 @@ package "MapRepresentation" {
       +PointWithSite(String): void
       +getIdentifier(): String
   }
-  MapRepresenter o-- Point
-  NormalPoint ..|> Point
-  PointOfInterest ..|> Point
-  PointOfInterest *-- Point
+  MapRepresenter "1" o-- "0 ..*   " Point
   PointWithCreeks --|> PointOfInterest
   PointWithSite --|> PointOfInterest
+  PointOfInterest *-- Point
+  PointOfInterest "      0..*" ..|> "1" Point
+  NormalPoint ..|> Point
 }
 
 class Drone {
@@ -203,13 +203,13 @@ class ResponseStorage {
     +storeResponse(String, JSONObject): void
 }
 
-Drone o-> Point
-Drone *-> Heading
-Explorer o-> MissionControl
-MissionControl o-> Drone
-MissionControl o-> MapRepresenter
-MissionControl o-> ResponseStorage
-MissionControl *-> Phase
+Drone "1" o-> "1" Point
+Drone "1" *-> "1" Heading
+Explorer "1" o-> "1" MissionControl
+MissionControl "1" o-> "1" Drone
+MissionControl "1" o-> "1" MapRepresenter
+MissionControl "1" o-> "1" ResponseStorage
+MissionControl "1" *-> "1" Phase
 interface ResponsePhase extends Phase
 
 @enduml
