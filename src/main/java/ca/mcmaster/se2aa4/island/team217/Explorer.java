@@ -71,22 +71,19 @@ public class Explorer implements IExplorerRaid {
 
         if (closestCreek == null && site == null) {
             return "No creeks found";
-        } else if (site == null) {
-            logger.info("No emergency site found");
+        }
+        else if (site == null) {
             logger.info("The closest creek is {}", closestCreek.getIdentifiers().get(0));
             return closestCreek.getIdentifiers().get(0);
-        } else if (closestCreek == null) {
+        }
+        else if (closestCreek == null) {
             return site.getIdentifier();
         }
-        double distance = map.getClosestCreekDistance();
-        String report = closestCreek.getIdentifiers().get(0);
-        logger.info("** The identifier of the emergency site is {}",
-                site.getIdentifier());
-        logger.info("** The identifier of the closest creek is {}",
-                closestCreek.getIdentifiers().get(0));
-        logger.info("** Delivering the final report");
-
-        return report;
+        else{
+            logger.info("** The identifier of the closest creek is {}", closestCreek.getIdentifiers().get(0));
+            logger.info("** Delivering the final report");
+            return closestCreek.getIdentifiers().get(0);
+        }
     }
 
     public static void main(String[] args) {
