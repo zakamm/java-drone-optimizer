@@ -4,6 +4,8 @@ import ca.mcmaster.se2aa4.island.team217.*;
 import ca.mcmaster.se2aa4.island.team217.MapRepresentation.*;
 import ca.mcmaster.se2aa4.island.team217.GridSearchStages.*;
 
+
+// if we spawn facing ground, fly all the way to the other side of the island and then find the missing dimension
 public class FindMissingDimension implements ResponsePhase {
 
     int counter = 0;
