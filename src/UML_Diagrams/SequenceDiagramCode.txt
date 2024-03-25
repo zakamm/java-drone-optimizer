@@ -1,0 +1,128 @@
+@startuml
+participant Explorer
+participant MissionControl
+participant Drone
+participant MapRepresenter
+participant Phase
+participant ResponsePhase
+participant Point
+participant ResponseStorage
+
+Explorer -> Drone: new Drone()
+activate Drone
+Drone --> Explorer: return instance
+deactivate Drone
+
+Explorer -> MapRepresenter: new MapRepresenter()
+activate MapRepresenter
+MapRepresenter --> Explorer: return map
+deactivate MapRepresenter
+
+Explorer -> MissionControl: new MissionControl(drone, map)
+activate MissionControl
+MissionControl --> Explorer: return instance
+deactivate MissionControl
+
+MissionControl -> ResponseStorage: new ResponseStorage()
+activate ResponseStorage
+ResponseStorage --> MissionControl: return instance
+deactivate ResponseStorage
+
+box "Finding Ground" #LightBlue
+loop Main Loop
+    MissionControl -> Phase: new Phase(mapInitializer)
+    activate Phase
+    Phase --> MissionControl: return instance
+    deactivate Phase
+
+    MissionControl -> Phase: nextDecision(drone, map)
+    activate Phase
+    Phase --> MissionControl: return decision
+    deactivate Phase
+
+    MissionControl -> ResponseStorage: storeResponse(response)
+    activate ResponseStorage
+    ResponseStorage --> MissionControl: return
+    deactivate ResponseStorage
+
+    MissionControl -> Point: storeScanResults(scanResults)
+    activate Point
+    Point --> MissionControl: return
+    deactivate Point
+
+    MissionControl -> Phase: reachedEnd()
+    activate Phase
+    Phase --> MissionControl: return reachedEnd
+    deactivate Phase
+
+    alt reachedEnd == true
+        MissionControl -> Phase: getNextPhase()
+        activate Phase
+        Phase --> MissionControl: return nextPhase
+        deactivate Phase
+    end
+
+    MissionControl -> Phase: isFinal()
+    activate Phase
+    Phase --> MissionControl: return isFinal
+    deactivate Phase
+
+    alt isFinal == true
+        MissionControl -> Drone: stop()
+        activate Drone
+        Drone --> MissionControl: return
+        deactivate Drone
+        break
+    end
+end
+end box
+
+group "Grid Search"
+    loop foundClosestCreek [site != null && !creeks.isEmpty]
+        MissionControl -> ResponsePhase: new ResponsePhase(mapInitializer)
+        activate ResponsePhase
+        ResponsePhase --> MissionControl: return instance
+        deactivate ResponsePhase
+
+        MissionControl -> ResponsePhase: nextDecision(drone, map)
+        activate ResponsePhase
+        ResponsePhase --> MissionControl: return decision
+        deactivate ResponsePhase
+
+        MissionControl -> ResponseStorage: storeResponse(response)
+        activate ResponseStorage
+        ResponseStorage --> MissionControl: return
+        deactivate ResponseStorage
+
+        MissionControl -> Point: storeScanResults(scanResults)
+        activate Point
+        Point --> MissionControl: return
+        deactivate Point
+
+        MissionControl -> ResponsePhase: reachedEnd()
+        activate ResponsePhase
+        ResponsePhase --> MissionControl: return reachedEnd
+        deactivate ResponsePhase
+
+        alt reachedEnd == true
+            MissionControl -> ResponsePhase: getNextPhase()
+            activate ResponsePhase
+            ResponsePhase --> MissionControl: return nextPhase
+            deactivate ResponsePhase
+        end
+
+        MissionControl -> ResponsePhase: isFinal()
+        activate ResponsePhase
+        ResponsePhase --> MissionControl: return isFinal
+        deactivate ResponsePhase
+
+        alt isFinal == true
+            MissionControl -> Drone: stop()
+            activate Drone
+            Drone --> MissionControl: return
+            deactivate Drone
+            break
+        end
+    end
+end
+@enduml

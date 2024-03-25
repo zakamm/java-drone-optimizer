@@ -1,0 +1,94 @@
+@startuml
+
+@startuml
+skin rose
+
+package "MapRepresentation" {
+
+  class MapRepresenter {
+      +columns: int
+      +rows: int
+      -creeks: List<PointWithCreeks>
+      -closestCreek: PointWithCreeks
+      -site: PointWithSite
+      +map: List<List<Point>>
+      -closestCreekDistance: double
+      +MapRepresenter(): void
+      +storeScanResults(ResponseStorage, Point): void
+      +initializeMap(): void
+      +updateClosestCreek(): void
+      -computeMinDistance(): double
+      +distanceBetweenTwoPoints(Point, Point): double
+      +getCreeks(): List<PointWithCreeks>
+      +getClosestCreek(): PointWithCreeks
+      +getSite(): PointWithSite
+      +getClosestCreekDistance(): Double
+      +setAsScanned(Drone, int, Heading): void
+  }
+  
+  interface Point {
+      +getRow(): int
+      +getColumn(): int
+      +addBiomes(List<String>): void
+      +getGround(): Boolean
+      +storeScanResults(ResponseStorage): void
+      +getBeenScanned(): Boolean
+      +setBeenScanned(Boolean): void 
+  }
+  
+  abstract class PointOfInterest {
+      #poi: Point
+      +getRow(): int
+      +getColumn(): int
+      +getGround(): Boolean
+      +addBiomes(List<String>): void
+      +getBeenScanned(): Boolean
+      +setBeenScanned(Boolean): void 
+      {abstract} storeScanResults(ResponseStorage): void
+  }
+  
+  class PointWithCreeks {
+      -identifiers: List<String>
+      +getIdentifiers(): List<String>
+      +storeScanResults(ResponseStorage): void
+  }
+  
+  class PointWithSite {
+      -identifier: String
+      +getIdentifier(): String
+      +storeScanResults(ResponseStorage): void
+  }
+  
+  class NormalPoint {
+      - rowNumber: int
+      - columnNumber: int
+      - isGround: Boolean
+      - beenScanned: Boolean
+      - biomes: List<String>
+      +getRow(): int
+      +getColumn(): int
+      +getGround(): Boolean
+      +addBiomes(List<String>): void
+      +storeScanResults(ResponseStorage): void
+  }
+  
+  MapRepresenter o-- Point
+  PointWithCreeks --|> PointOfInterest
+  PointWithSite --|> PointOfInterest
+  PointOfInterest *-- Point
+  PointOfInterest ..|> Point
+  NormalPoint ..|> Point
+}
+
+class MissionControl {
+    -drone: Drone
+    -map: MapRepresenter
+    -responseStorage: ResponseStorage
+    -mapInitializer: MapInitializer
+    -current: Phase
+    +MissionControl(Drone, MapRepresenter): void
+    +nextDecision(): String
+}
+
+MissionControl *-- MapRepresenter
+@enduml
