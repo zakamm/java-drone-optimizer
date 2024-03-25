@@ -1,0 +1,215 @@
+@startuml
+
+@startuml
+skin rose
+
+package "GridSearchStages" {
+  class EchoCheck {
+    -gridSearch: GridSearch
+    +EchoCheck(GridSearch): void
+  }
+  
+  class FlyNoScan {
+      -gridSearch: GridSearch
+      +FlyNoScan(GridSearch): void
+  }
+  
+  class FlyToPositionTurn {
+      -gridSearch: GridSearch
+      +FlyToPositionTurn(GridSearch): void
+  }
+  
+  class GridSearch {
+      -drone: Drone
+      -map: MapRepresenter
+      +GridSearch(Drone, MapRepresenter): void
+      +initializeGeneralDirection(): void
+      +foundClosestCreek(MapRepresenter): Boolean
+  }
+  
+  class NormalTurn {
+      -gridSearch: GridSearch
+      +NormalTurn(GridSearch): void
+  }
+  
+  class ScanAndFly {
+      -gridSearch: GridSearch
+      +ScanAndFly(GridSearch): void
+  }
+  
+  class TranslateDrone {
+      -gridSearch: GridSearch
+      +TranslateDrone(GridSearch): void
+  }
+  FlyToPositionTurn "1" *-- "1" GridSearch
+  EchoCheck "1" *-> "1" GridSearch
+  FlyNoScan "1" *-> "1" GridSearch
+  NormalTurn "1" *-> "1" GridSearch
+  ScanAndFly "1" *-> "1" GridSearch
+  TranslateDrone "1" *-> "1" GridSearch
+}
+
+  ResponsePhase <|.. FlyToPositionTurn
+  Phase <|.. NormalTurn
+  ResponsePhase <|.. ScanAndFly
+  ResponsePhase <|.. EchoCheck
+  ResponsePhase <|.. TranslateDrone
+  Phase <|.. FlyNoScan
+
+package "FindingGroundStages" {
+  class EchoThreeSides {
+    -mapInitializer: MapInitializer
+    +EchoThreeSides(MapInitializer): void
+  }
+  class FindMissingDimension {
+    -mapInitializer: MapInitializer
+    +FindMissingDimension(MapInitializer): void
+  }
+  
+  class FlyToGround {
+      -mapInitializer: MapInitializer
+      +FlyToGround(MapInitializer): void
+  }
+  
+  class LocateGround {
+      -mapInitializer: MapInitializer
+      +LocateGround(MapInitializer): void
+  }
+  class TurnToGround {
+    -mapInitializer: MapInitializer
+    +TurnToGround(MapInitializer): void
+  }
+  class MapInitializer {
+      -drone: Drone
+      -map: MapRepresenter
+      +MapInitializer(Drone, MapRepresenter): void
+      +initializeMap(): void
+  }
+  EchoThreeSides "1" *-- "1" MapInitializer
+  FlyToGround "1" *-- "1" MapInitializer
+  TurnToGround "1" *-- "1" MapInitializer
+  FindMissingDimension "1" *-- "1" MapInitializer
+  LocateGround "1" *-- "1" MapInitializer
+}
+
+  ResponsePhase <|.. EchoThreeSides
+  Phase <|.. FlyToGround
+  ResponsePhase <|.. LocateGround
+  ResponsePhase <|.. FindMissingDimension
+  Phase <|.. TurnToGround
+
+package "MapRepresentation" {
+  class MapRepresenter {
+    -map: List<List<Point>>
+    +MapRepresenter(): void
+    +storeScanResults(ResponseStorage, Point): void
+    +getClosestCreek(): PointWithCreeks
+    +getSite(): PointWithSite
+  }
+  class NormalPoint {
+    +NormalPoint(int, int): void
+    +getBeenScanned(): boolean
+    +setBeenScanned(boolean): void
+  }
+  
+  interface Point {
+      +Point(): void
+      +getRow(): int 
+      +getColumn(): int
+      +addBiomes(List<String>): void
+      +storeScanResults(ResponseStorage): void
+  }
+  
+  abstract class PointOfInterest {
+      -poi: Point
+      +PointOfInterest(Point): void
+      +storeScanResults(ResponseStorage): void
+  }
+  
+  class PointWithCreeks {
+      -creeks: List<String>
+      +PointWithCreeks(List<String>): void
+      +getIdentifiers(): List<String>
+  }
+  
+  class PointWithSite {
+      -identifier: String
+      +PointWithSite(String): void
+      +getIdentifier(): String
+  }
+  MapRepresenter "1" o-- "0 ..*   " Point
+  PointWithCreeks --|> PointOfInterest
+  PointWithSite --|> PointOfInterest
+  PointOfInterest *-- Point
+  PointOfInterest "      0..*" ..|> "1" Point
+  NormalPoint ..|> Point
+}
+
+class Drone {
+    -batteryLevel: Integer
+    -currentLocation: Point
+    -currentHeading: Heading
+    +Drone(Integer, String, MapRepresenter): void
+    +fly(): String
+    +initializeCurrentLocation(Integer, Integer, Boolean): void
+    +heading(Heading): String
+    +echo(Heading): String
+    +scan(): String
+    +stop(): String
+}
+
+class Explorer {
+    -drone: Drone
+    -map: MapRepresenter
+    -missionControl: MissionControl
+}
+
+enum Heading {
+    +Heading(): void
+    +leftSide(): Heading
+    +rightSide(): Heading
+    +backSide(): Heading
+}
+
+class MissionControl {
+    -drone: Drone
+    -map: MapRepresenter
+    -responseStorage: ResponseStorage
+    -mapInitializer: MapInitializer
+    -current: Phase
+    +MissionControl(Drone, MapRepresenter): void
+    +nextDecision(): String
+}
+
+interface Phase {
+    +reachedEnd(): Boolean
+    +nextDecision(Drone, MapRepresenter): String
+    +getNextPhase(): Phase
+    +isFinal(): Boolean
+}
+
+interface ResponsePhase {
+    +processResponse(ResponseStorage, Drone, MapRepresenter): void
+}
+
+class ResponseStorage {
+    -range: Integer
+    -cost: Integer
+    -found: String
+    -creeks: List<String>
+    -biomes: List<String>
+    -site: String
+    +ResponseStorage(): void
+    +storeResponse(String, JSONObject): void
+}
+
+Drone "1" o-> "1" Point
+Drone "1" *-> "1" Heading
+Explorer "1" o-> "1" MissionControl
+MissionControl "1" o-> "1" Drone
+MissionControl "1" o-> "1" MapRepresenter
+MissionControl "1" o-> "1" ResponseStorage
+MissionControl "1" *-> "1" Phase
+interface ResponsePhase extends Phase
+
+@enduml
